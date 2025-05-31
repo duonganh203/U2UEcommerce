@@ -1,95 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Star, Heart, Filter, Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { fetchProducts, transformProductForUI, type Product } from "@/lib/api";
 
-// Dummy products data
-const dummyProducts = [
-   {
-      id: "1",
-      name: "Premium Wireless Headphones",
-      brand: "AudioTech",
-      price: 299.99,
-      originalPrice: 399.99,
-      discount: 25,
-      rating: 4.5,
-      reviewCount: 128,
-      image: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      category: "Electronics",
-      inStock: true,
-   },
-   {
-      id: "2",
-      name: "Smart Fitness Watch",
-      brand: "FitTech",
-      price: 199.99,
-      originalPrice: 249.99,
-      discount: 20,
-      rating: 4.3,
-      reviewCount: 89,
-      image: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      category: "Electronics",
-      inStock: true,
-   },
-   {
-      id: "3",
-      name: "Professional Camera Lens",
-      brand: "PhotoPro",
-      price: 849.99,
-      originalPrice: 999.99,
-      discount: 15,
-      rating: 4.8,
-      reviewCount: 234,
-      image: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      category: "Photography",
-      inStock: true,
-   },
-   {
-      id: "4",
-      name: "Bluetooth Speaker",
-      brand: "SoundWave",
-      price: 89.99,
-      originalPrice: 119.99,
-      discount: 25,
-      rating: 4.2,
-      reviewCount: 156,
-      image: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      category: "Electronics",
-      inStock: false,
-   },
-   {
-      id: "5",
-      name: "Gaming Mechanical Keyboard",
-      brand: "GameTech",
-      price: 159.99,
-      originalPrice: 199.99,
-      discount: 20,
-      rating: 4.6,
-      reviewCount: 98,
-      image: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      category: "Gaming",
-      inStock: true,
-   },
-   {
-      id: "6",
-      name: "Wireless Mouse",
-      brand: "TechMouse",
-      price: 49.99,
-      originalPrice: 69.99,
-      discount: 28,
-      rating: 4.1,
-      reviewCount: 67,
-      image: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      category: "Electronics",
-      inStock: true,
-   },
-];
+// Type definitions for UI components
+type Category = string;
+type SortOption = {
+   value: string;
+   label: string;
+};
 
-const categories = ["All", "Electronics", "Photography", "Gaming"];
-const sortOptions = [
+type TransformedProduct = {
+   id: string;
+   name: string;
+   brand: string;
+   price: number;
+   originalPrice?: number;
+   discount: number;
+   rating: number;
+   reviewCount: number;
+   image: string;
+   images: string[];
+   category: string;
+   inStock: boolean;
+   stockCount: number;
+   description: string;
+   reviews: any[];
+};
+
+const categories: Category[] = ["All", "Electronics", "Photography", "Gaming"];
+const sortOptions: SortOption[] = [
    { value: "featured", label: "Featured" },
    { value: "price-low", label: "Price: Low to High" },
    { value: "price-high", label: "Price: High to Low" },
@@ -98,28 +42,58 @@ const sortOptions = [
 ];
 
 export default function ProductsPage() {
-   const [selectedCategory, setSelectedCategory] = useState("All");
+   const [products, setProducts] = useState<TransformedProduct[]>([]);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState<string | null>(null);
+   const [selectedCategory, setSelectedCategory] = useState<Category>("All");
    const [sortBy, setSortBy] = useState("featured");
    const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
    const [wishlistedItems, setWishlistedItems] = useState<string[]>([]);
 
-   const filteredProducts = dummyProducts.filter(
+   // Fetch products on component mount and when filters change
+   useEffect(() => {
+      const loadProducts = async () => {
+         try {
+            setLoading(true);
+            const params: any = {};
+
+            if (selectedCategory !== "All") {
+               params.category = selectedCategory;
+            }
+
+            if (sortBy === "price-low") {
+               params.sort = "price";
+               params.order = "asc";
+            } else if (sortBy === "price-high") {
+               params.sort = "price";
+               params.order = "desc";
+            } else if (sortBy === "rating") {
+               params.sort = "rating";
+               params.order = "desc";
+            }
+
+            const response = await fetchProducts(params);
+            const transformedProducts = response.data.map(
+               transformProductForUI
+            );
+            setProducts(transformedProducts);
+         } catch (err) {
+            setError("Failed to load products");
+            console.error("Error loading products:", err);
+         } finally {
+            setLoading(false);
+         }
+      };
+
+      loadProducts();
+   }, [selectedCategory, sortBy]);
+
+   const filteredProducts = products.filter(
       (product) =>
          selectedCategory === "All" || product.category === selectedCategory
    );
 
-   const sortedProducts = [...filteredProducts].sort((a, b) => {
-      switch (sortBy) {
-         case "price-low":
-            return a.price - b.price;
-         case "price-high":
-            return b.price - a.price;
-         case "rating":
-            return b.rating - a.rating;
-         default:
-            return 0;
-      }
-   });
+   const sortedProducts = [...filteredProducts];
 
    const toggleWishlist = (productId: string) => {
       setWishlistedItems((prev) =>
@@ -142,11 +116,7 @@ export default function ProductsPage() {
       ));
    };
 
-   const ProductCard = ({
-      product,
-   }: {
-      product: (typeof dummyProducts)[0];
-   }) => {
+   const ProductCard = ({ product }: { product: any }) => {
       const isWishlisted = wishlistedItems.includes(product.id);
 
       if (viewMode === "list") {
@@ -376,30 +346,69 @@ export default function ProductsPage() {
             {/* Results Count */}
             <div className="mb-6">
                <p className="text-gray-600">
-                  Showing {sortedProducts.length} of {dummyProducts.length}{" "}
-                  products
+                  Showing {sortedProducts.length} products
                </p>
             </div>
 
+            {/* Loading State */}
+            {loading && (
+               <div className="flex justify-center items-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                  <span className="ml-2 text-gray-600">
+                     Loading products...
+                  </span>
+               </div>
+            )}
+
+            {/* Error State */}
+            {error && (
+               <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+                  <p className="text-red-600">{error}</p>
+                  <Button
+                     variant="outline"
+                     size="sm"
+                     className="mt-2"
+                     onClick={() => window.location.reload()}
+                  >
+                     Try Again
+                  </Button>
+               </div>
+            )}
+
             {/* Products Grid/List */}
-            <div
-               className={
-                  viewMode === "grid"
-                     ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                     : "space-y-4"
-               }
-            >
-               {sortedProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-               ))}
-            </div>
+            {!loading && !error && (
+               <div
+                  className={
+                     viewMode === "grid"
+                        ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                        : "space-y-4"
+                  }
+               >
+                  {sortedProducts.length > 0 ? (
+                     sortedProducts.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                     ))
+                  ) : (
+                     <div className="col-span-full text-center py-12">
+                        <p className="text-gray-500 text-lg">
+                           No products found
+                        </p>
+                        <p className="text-gray-400 text-sm mt-2">
+                           Try adjusting your filters or search terms
+                        </p>
+                     </div>
+                  )}
+               </div>
+            )}
 
             {/* Load More Button */}
-            <div className="text-center mt-12">
-               <Button variant="outline" size="lg">
-                  Load More Products
-               </Button>
-            </div>
+            {!loading && !error && sortedProducts.length > 0 && (
+               <div className="text-center mt-12">
+                  <Button variant="outline" size="lg">
+                     Load More Products
+                  </Button>
+               </div>
+            )}
          </div>
       </div>
    );

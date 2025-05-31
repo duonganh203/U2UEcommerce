@@ -75,7 +75,7 @@ export default function Navbar() {
                      <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
                   ) : session ? (
                      <div className="flex items-center space-x-3">
-                        <Link href="/dashboard">
+                        <Link href="/dashboard" className="text-black">
                            <Button variant="ghost" size="sm">
                               Dashboard
                            </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 import Image from "next/image";
 import {
    Star,
@@ -14,50 +14,52 @@ import {
    RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { fetchProductById, transformProductForUI } from "@/lib/api";
 
-// Dummy product data
-const dummyProduct = {
-   id: "1",
-   name: "Premium Wireless Headphones",
-   brand: "AudioTech",
-   price: 299.99,
-   originalPrice: 399.99,
-   discount: 25,
-   rating: 4.5,
-   reviewCount: 128,
-   inStock: true,
-   stockCount: 15,
-   images: [
-      "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-   ],
-   description:
-      "Experience premium audio quality with our latest wireless headphones. Featuring advanced noise cancellation, 30-hour battery life, and crystal-clear sound reproduction.",
-   features: [
-      "Active Noise Cancellation",
-      "30-hour battery life",
-      "Bluetooth 5.0 connectivity",
-      "Premium leather headband",
-      "Touch controls",
-      "Fast charging (15 min = 3 hours)",
-   ],
-   specifications: {
-      "Driver Size": "40mm",
-      "Frequency Response": "20Hz - 20kHz",
-      Impedance: "32 ohms",
-      Weight: "280g",
-      Connectivity: "Bluetooth 5.0, 3.5mm",
-      Battery: "30 hours playback",
-   },
-   colors: [
-      { name: "Midnight Black", value: "#000000" },
-      { name: "Space Gray", value: "#4A5568" },
-      { name: "Rose Gold", value: "#E53E3E" },
-   ],
-   sizes: ["One Size"],
+// ProductColor type definition
+type ProductColor = {
+   name: string;
+   value: string;
 };
+
+// Additional type definitions for map items
+type ProductFeature = string;
+
+type ProductSize = string;
+
+type ProductSpecifications = Record<string, string>;
+
+type ProductImage = string;
+
+type ProductTab = "description" | "specifications" | "reviews";
+
+type DummyReview = {
+   id: number;
+   user: string;
+   rating: number;
+   comment: string;
+   date: string;
+};
+
+// Complete product interface for this page
+interface ProductPageData {
+   id: string;
+   name: string;
+   brand: string;
+   price: number;
+   originalPrice?: number;
+   discount: number;
+   rating: number;
+   reviewCount: number;
+   inStock: boolean;
+   stockCount: number;
+   images: ProductImage[];
+   description: string;
+   features: ProductFeature[];
+   specifications: ProductSpecifications;
+   colors: ProductColor[];
+   sizes: ProductSize[];
+}
 
 // Dummy reviews data
 const dummyReviews = [
@@ -86,15 +88,81 @@ const dummyReviews = [
    },
 ];
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+export default function ProductPage({
+   params,
+}: {
+   params: Promise<{ id: string }>;
+}) {
+   const resolvedParams = use(params);
+   const [product, setProduct] = useState<ProductPageData | null>(null);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState<string | null>(null);
    const [selectedImage, setSelectedImage] = useState(0);
    const [selectedColor, setSelectedColor] = useState(0);
    const [selectedSize, setSelectedSize] = useState(0);
    const [quantity, setQuantity] = useState(1);
    const [isWishlisted, setIsWishlisted] = useState(false);
-   const [activeTab, setActiveTab] = useState("description");
+   const [activeTab, setActiveTab] = useState<ProductTab>("description");
 
-   const product = dummyProduct; // In real app, fetch based on params.id
+   // Fetch product data
+   useEffect(() => {
+      const loadProduct = async () => {
+         try {
+            setLoading(true);
+            const response = await fetchProductById(resolvedParams.id);
+            const transformedProduct = transformProductForUI(response.data);
+
+            // Add some default values for UI compatibility
+            const productWithDefaults = {
+               ...transformedProduct,
+               features: [
+                  "High quality materials",
+                  "Premium build",
+                  "Excellent performance",
+                  "Great value for money",
+               ],
+               specifications: {
+                  Brand: transformedProduct.brand,
+                  Category: transformedProduct.category,
+                  "In Stock": transformedProduct.stockCount.toString(),
+               },
+               colors: [{ name: "Default", value: "#000000" }],
+               sizes: ["One Size"],
+            };
+
+            setProduct(productWithDefaults);
+         } catch (err) {
+            setError("Failed to load product");
+            console.error("Error loading product:", err);
+         } finally {
+            setLoading(false);
+         }
+      };
+
+      loadProduct();
+   }, [resolvedParams.id]);
+
+   if (loading) {
+      return (
+         <div className="min-h-screen bg-white flex justify-center items-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            <span className="ml-2 text-gray-600">Loading product...</span>
+         </div>
+      );
+   }
+
+   if (error || !product) {
+      return (
+         <div className="min-h-screen bg-white flex justify-center items-center">
+            <div className="text-center">
+               <p className="text-red-600 text-lg mb-4">
+                  {error || "Product not found"}
+               </p>
+               <Button onClick={() => window.history.back()}>Go Back</Button>
+            </div>
+         </div>
+      );
+   }
 
    const handleQuantityChange = (change: number) => {
       setQuantity(Math.max(1, Math.min(product.stockCount, quantity + change)));
@@ -160,24 +228,26 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
                   {/* Thumbnail Images */}
                   <div className="grid grid-cols-4 gap-2">
-                     {product.images.map((image, index) => (
-                        <button
-                           key={index}
-                           onClick={() => setSelectedImage(index)}
-                           className={`aspect-square relative bg-white rounded overflow-hidden border-2 ${
-                              selectedImage === index
-                                 ? "border-indigo-500"
-                                 : "border-gray-200"
-                           }`}
-                        >
-                           <Image
-                              src={image}
-                              alt={`${product.name} ${index + 1}`}
-                              fill
-                              className="object-cover"
-                           />
-                        </button>
-                     ))}
+                     {product.images.map(
+                        (image: ProductImage, index: number) => (
+                           <button
+                              key={index}
+                              onClick={() => setSelectedImage(index)}
+                              className={`aspect-square relative bg-white rounded overflow-hidden border-2 ${
+                                 selectedImage === index
+                                    ? "border-indigo-500"
+                                    : "border-gray-200"
+                              }`}
+                           >
+                              <Image
+                                 src={image}
+                                 alt={`${product.name} ${index + 1}`}
+                                 fill
+                                 className="object-cover"
+                              />
+                           </button>
+                        )
+                     )}
                   </div>
                </div>
 
@@ -206,11 +276,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                         <span className="text-3xl font-bold text-gray-900">
                            ${product.price}
                         </span>
-                        {product.originalPrice > product.price && (
-                           <span className="text-lg text-gray-500 line-through">
-                              ${product.originalPrice}
-                           </span>
-                        )}
+                        {product.originalPrice &&
+                           product.originalPrice > product.price && (
+                              <span className="text-lg text-gray-500 line-through">
+                                 ${product.originalPrice}
+                              </span>
+                           )}
                      </div>
                   </div>
 
@@ -238,19 +309,21 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                         Color
                      </h3>
                      <div className="flex space-x-3">
-                        {product.colors.map((color, index) => (
-                           <button
-                              key={index}
-                              onClick={() => setSelectedColor(index)}
-                              className={`w-8 h-8 rounded-full border-2 ${
-                                 selectedColor === index
-                                    ? "border-gray-900"
-                                    : "border-gray-300"
-                              }`}
-                              style={{ backgroundColor: color.value }}
-                              title={color.name}
-                           />
-                        ))}
+                        {product.colors.map(
+                           (color: ProductColor, index: number) => (
+                              <button
+                                 key={index}
+                                 onClick={() => setSelectedColor(index)}
+                                 className={`w-8 h-8 rounded-full border-2 ${
+                                    selectedColor === index
+                                       ? "border-gray-900"
+                                       : "border-gray-300"
+                                 }`}
+                                 style={{ backgroundColor: color.value }}
+                                 title={color.name}
+                              />
+                           )
+                        )}
                      </div>
                   </div>
 
@@ -260,7 +333,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                         Size
                      </h3>
                      <div className="flex space-x-2">
-                        {product.sizes.map((size, index) => (
+                        {product.sizes.map((size: string, index: number) => (
                            <button
                               key={index}
                               onClick={() => setSelectedSize(index)}
@@ -324,15 +397,17 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                         Key Features
                      </h3>
                      <ul className="space-y-2">
-                        {product.features.map((feature, index) => (
-                           <li
-                              key={index}
-                              className="flex items-center text-sm text-gray-600"
-                           >
-                              <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></div>
-                              {feature}
-                           </li>
-                        ))}
+                        {product.features.map(
+                           (feature: ProductFeature, index: number) => (
+                              <li
+                                 key={index}
+                                 className="flex items-center text-sm text-gray-600"
+                              >
+                                 <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></div>
+                                 {feature}
+                              </li>
+                           )
+                        )}
                      </ul>
                   </div>
 
@@ -366,21 +441,25 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             <div className="mt-16">
                <div className="border-b border-gray-200">
                   <nav className="flex space-x-8">
-                     {["description", "specifications", "reviews"].map(
-                        (tab) => (
-                           <button
-                              key={tab}
-                              onClick={() => setActiveTab(tab)}
-                              className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
-                                 activeTab === tab
-                                    ? "border-indigo-500 text-indigo-600"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                              }`}
-                           >
-                              {tab}
-                           </button>
-                        )
-                     )}
+                     {(
+                        [
+                           "description",
+                           "specifications",
+                           "reviews",
+                        ] as ProductTab[]
+                     ).map((tab: ProductTab) => (
+                        <button
+                           key={tab}
+                           onClick={() => setActiveTab(tab)}
+                           className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
+                              activeTab === tab
+                                 ? "border-indigo-500 text-indigo-600"
+                                 : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                           }`}
+                        >
+                           {tab}
+                        </button>
+                     ))}
                   </nav>
                </div>
 
@@ -395,19 +474,19 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
                   {activeTab === "specifications" && (
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {Object.entries(product.specifications).map(
-                           ([key, value]) => (
-                              <div
-                                 key={key}
-                                 className="flex justify-between py-2 border-b border-gray-200"
-                              >
-                                 <span className="font-medium text-gray-900">
-                                    {key}
-                                 </span>
-                                 <span className="text-gray-600">{value}</span>
-                              </div>
-                           )
-                        )}
+                        {Object.entries(
+                           product.specifications as ProductSpecifications
+                        ).map(([key, value]) => (
+                           <div
+                              key={key}
+                              className="flex justify-between py-2 border-b border-gray-200"
+                           >
+                              <span className="font-medium text-gray-900">
+                                 {key}
+                              </span>
+                              <span className="text-gray-600">{value}</span>
+                           </div>
+                        ))}
                      </div>
                   )}
 
@@ -421,7 +500,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                         </div>
 
                         <div className="space-y-6">
-                           {dummyReviews.map((review) => (
+                           {dummyReviews.map((review: DummyReview) => (
                               <div
                                  key={review.id}
                                  className="border-b border-gray-200 pb-6"
