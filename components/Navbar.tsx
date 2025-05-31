@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
 
 export default function Navbar() {
    const { data: session, status } = useSession();
+   const { totalItems } = useCart();
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
    const navigation = [
@@ -64,9 +66,11 @@ export default function Navbar() {
                   <Link href="/cart">
                      <button className="relative p-2 text-gray-700 hover:text-indigo-600 transition-colors">
                         <ShoppingCart className="h-6 w-6" />
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                           2
-                        </span>
+                        {totalItems > 0 && (
+                           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                              {totalItems}
+                           </span>
+                        )}
                      </button>
                   </Link>
 
@@ -151,7 +155,7 @@ export default function Navbar() {
                         <Link href="/cart">
                            <button className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 w-full">
                               <ShoppingCart className="h-5 w-5" />
-                              <span>Cart (2)</span>
+                              <span>Cart ({totalItems})</span>
                            </button>
                         </Link>
 

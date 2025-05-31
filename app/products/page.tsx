@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Heart, Filter, Grid, List } from "lucide-react";
+import { Star, Heart, Filter, Grid, List, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fetchProducts, transformProductForUI, type Product } from "@/lib/api";
+import { useCart } from "@/contexts/CartContext";
 
 // Type definitions for UI components
 type Category = string;
@@ -49,6 +50,7 @@ export default function ProductsPage() {
    const [sortBy, setSortBy] = useState("featured");
    const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
    const [wishlistedItems, setWishlistedItems] = useState<string[]>([]);
+   const { addToCart } = useCart();
 
    // Fetch products on component mount and when filters change
    useEffect(() => {
@@ -101,6 +103,18 @@ export default function ProductsPage() {
             ? prev.filter((id) => id !== productId)
             : [...prev, productId]
       );
+   };
+
+   const handleAddToCart = (product: TransformedProduct) => {
+      if (!product.inStock) return;
+
+      addToCart({
+         id: product.id,
+         name: product.name,
+         price: product.price,
+         image: product.image,
+         stockCount: product.stockCount,
+      });
    };
 
    const renderStars = (rating: number) => {
@@ -192,8 +206,14 @@ export default function ProductsPage() {
                            >
                               {product.inStock ? "In Stock" : "Out of Stock"}
                            </span>
-                           <Button size="sm" disabled={!product.inStock}>
-                              Add to Cart
+                           <Button
+                              size="sm"
+                              disabled={!product.inStock}
+                              onClick={() => handleAddToCart(product)}
+                              className="flex items-center space-x-2"
+                           >
+                              <ShoppingCart className="w-4 h-4" />
+                              <span>Add to Cart</span>
                            </Button>
                         </div>
                      </div>
@@ -264,8 +284,14 @@ export default function ProductsPage() {
                   </span>
                </div>
 
-               <Button className="w-full" size="sm" disabled={!product.inStock}>
-                  Add to Cart
+               <Button
+                  className="w-full flex items-center justify-center space-x-2"
+                  size="sm"
+                  disabled={!product.inStock}
+                  onClick={() => handleAddToCart(product)}
+               >
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Add to Cart</span>
                </Button>
             </div>
          </div>

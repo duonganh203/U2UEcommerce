@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fetchProductById, transformProductForUI } from "@/lib/api";
+import { useCart } from "@/contexts/CartContext";
 
 // ProductColor type definition
 type ProductColor = {
@@ -103,6 +104,7 @@ export default function ProductPage({
    const [quantity, setQuantity] = useState(1);
    const [isWishlisted, setIsWishlisted] = useState(false);
    const [activeTab, setActiveTab] = useState<ProductTab>("description");
+   const { addToCart } = useCart();
 
    // Fetch product data
    useEffect(() => {
@@ -166,6 +168,19 @@ export default function ProductPage({
 
    const handleQuantityChange = (change: number) => {
       setQuantity(Math.max(1, Math.min(product.stockCount, quantity + change)));
+   };
+
+   const handleAddToCart = () => {
+      if (!product || !product.inStock) return;
+
+      addToCart({
+         id: product.id,
+         name: product.name,
+         price: product.price,
+         image: product.images[0] || "/placeholder.jpg",
+         stockCount: product.stockCount,
+         quantity: quantity,
+      });
    };
 
    const renderStars = (rating: number) => {
@@ -381,6 +396,7 @@ export default function ProductPage({
                            className="flex-1"
                            size="lg"
                            disabled={!product.inStock}
+                           onClick={handleAddToCart}
                         >
                            <ShoppingCart className="w-5 h-5 mr-2" />
                            Add to Cart

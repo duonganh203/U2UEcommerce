@@ -5,48 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-// Dummy cart data
-const dummyCartItems = [
-   {
-      id: "1",
-      name: "Premium Wireless Headphones",
-      price: 299.99,
-      quantity: 1,
-      image: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-   },
-   {
-      id: "2",
-      name: "Smart Fitness Watch",
-      price: 199.99,
-      quantity: 2,
-      image: "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-   },
-];
+import { useCart } from "@/contexts/CartContext";
 
 export default function CartPage() {
-   const [cartItems, setCartItems] = useState(dummyCartItems);
+   const {
+      items: cartItems,
+      updateQuantity,
+      removeFromCart,
+      totalPrice,
+   } = useCart();
 
-   const updateQuantity = (id: string, change: number) => {
-      setCartItems((prev) =>
-         prev
-            .map((item) =>
-               item.id === id
-                  ? { ...item, quantity: Math.max(0, item.quantity + change) }
-                  : item
-            )
-            .filter((item) => item.quantity > 0)
-      );
-   };
-
-   const removeItem = (id: string) => {
-      setCartItems((prev) => prev.filter((item) => item.id !== id));
-   };
-
-   const subtotal = cartItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-   );
+   // Calculate additional costs based on cart total
+   const subtotal = totalPrice;
    const shipping = subtotal > 50 ? 0 : 9.99;
    const tax = subtotal * 0.08;
    const total = subtotal + shipping + tax;
@@ -115,7 +85,10 @@ export default function CartPage() {
                                  <div className="flex items-center space-x-2">
                                     <button
                                        onClick={() =>
-                                          updateQuantity(item.id, -1)
+                                          updateQuantity(
+                                             item.id,
+                                             item.quantity - 1
+                                          )
                                        }
                                        className="p-1 border border-gray-300 rounded hover:bg-gray-50"
                                     >
@@ -126,7 +99,10 @@ export default function CartPage() {
                                     </span>
                                     <button
                                        onClick={() =>
-                                          updateQuantity(item.id, 1)
+                                          updateQuantity(
+                                             item.id,
+                                             item.quantity + 1
+                                          )
                                        }
                                        className="p-1 border border-gray-300 rounded hover:bg-gray-50"
                                     >
@@ -140,7 +116,7 @@ export default function CartPage() {
                                        {(item.price * item.quantity).toFixed(2)}
                                     </p>
                                     <button
-                                       onClick={() => removeItem(item.id)}
+                                       onClick={() => removeFromCart(item.id)}
                                        className="text-red-500 hover:text-red-700 text-sm mt-1"
                                     >
                                        Remove
