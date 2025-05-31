@@ -1,19 +1,55 @@
+import { z } from "zod";
+
+// Zod schemas for form validation
+export const loginSchema = z.object({
+   email: z
+      .string()
+      .min(1, "Email is required")
+      .email("Please enter a valid email address"),
+   password: z.string().min(1, "Password is required"),
+});
+
+export const signupSchema = z
+   .object({
+      firstName: z
+         .string()
+         .min(1, "First name is required")
+         .min(2, "First name must be at least 2 characters"),
+      lastName: z
+         .string()
+         .min(1, "Last name is required")
+         .min(2, "Last name must be at least 2 characters"),
+      email: z
+         .string()
+         .min(1, "Email is required")
+         .email("Please enter a valid email address"),
+      password: z
+         .string()
+         .min(8, "Password must be at least 8 characters long")
+         .regex(
+            /(?=.*[a-z])/,
+            "Password must contain at least one lowercase letter"
+         )
+         .regex(
+            /(?=.*[A-Z])/,
+            "Password must contain at least one uppercase letter"
+         )
+         .regex(/(?=.*\d)/, "Password must contain at least one number"),
+      confirmPassword: z.string().min(1, "Please confirm your password"),
+   })
+   .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+   });
+
+// Type inference from Zod schemas
+export type LoginFormData = z.infer<typeof loginSchema>;
+export type SignupFormData = z.infer<typeof signupSchema>;
+
+// Legacy validation functions (keeping for backward compatibility)
 export interface ValidationResult {
    isValid: boolean;
    errors: string[];
-}
-
-export interface LoginFormData {
-   email: string;
-   password: string;
-}
-
-export interface SignupFormData {
-   firstName: string;
-   lastName: string;
-   email: string;
-   password: string;
-   confirmPassword: string;
 }
 
 export function validateEmail(email: string): boolean {
