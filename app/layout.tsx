@@ -1,42 +1,41 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/providers/AuthProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
-const geistSans = Geist({
-   variable: "--font-geist-sans",
-   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-   variable: "--font-geist-mono",
-   subsets: ["latin"],
+const poppins = Poppins({
+    weight: ["300", "400", "500", "600", "700"],
+    subsets: ["latin"],
+    variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-   title: "E-commerce Platform",
-   description: "Your one-stop e-commerce solution",
+    title: "E-commerce Platform",
+    description: "Your one-stop e-commerce solution",
 };
 
 export default function RootLayout({
-   children,
+    children,
 }: Readonly<{
-   children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-   return (
-      <html lang="en">
-         <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-         >
-            <AuthProvider>
-               <CartProvider>
-                  <Navbar />
-                  {children}
-               </CartProvider>
-            </AuthProvider>
-         </body>
-      </html>
-   );
+    return (
+        <html lang='en' className={poppins.variable} suppressHydrationWarning>
+            <body className='font-sans antialiased'>
+                <ThemeProvider>
+                    <AuthProvider>
+                        <CartProvider>
+                            <div className='min-h-screen bg-background text-foreground'>
+                                <Navbar />
+                                {children}
+                            </div>
+                        </CartProvider>
+                    </AuthProvider>
+                </ThemeProvider>
+            </body>
+        </html>
+    );
 }

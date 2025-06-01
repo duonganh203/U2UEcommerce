@@ -31,6 +31,7 @@ type TransformedProduct = {
    stockCount: number;
    description: string;
    reviews: any[];
+   discountPercentage: number;
 };
 
 const categories: Category[] = ["All", "Electronics", "Photography", "Gaming"];
@@ -75,9 +76,16 @@ export default function ProductsPage() {
             }
 
             const response = await fetchProducts(params);
-            const transformedProducts = response.data.map(
-               transformProductForUI
-            );
+            const transformedProducts = response.data.map((product: any) => {
+               const transformed = transformProductForUI(product);
+               return {
+                  ...transformed,
+                  originalPrice:
+                     transformed.originalPrice !== undefined
+                        ? Number(transformed.originalPrice)
+                        : undefined,
+               };
+            });
             setProducts(transformedProducts);
          } catch (err) {
             setError("Failed to load products");
@@ -114,9 +122,9 @@ export default function ProductsPage() {
          price: product.price,
          image: product.image,
          stockCount: product.stockCount,
+         discountPercentage: product.discountPercentage,
       });
    };
-
    const renderStars = (rating: number) => {
       return Array.from({ length: 5 }, (_, i) => (
          <Star
@@ -124,7 +132,7 @@ export default function ProductsPage() {
             className={`w-4 h-4 ${
                i < Math.floor(rating)
                   ? "fill-yellow-400 text-yellow-400"
-                  : "text-gray-300"
+                  : "text-muted-foreground"
             }`}
          />
       ));
@@ -132,10 +140,9 @@ export default function ProductsPage() {
 
    const ProductCard = ({ product }: { product: any }) => {
       const isWishlisted = wishlistedItems.includes(product.id);
-
       if (viewMode === "list") {
          return (
-            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden">
+            <div className="bg-card rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden">
                <div className="flex">
                   <div className="w-48 h-48 relative">
                      <Image
@@ -145,7 +152,7 @@ export default function ProductsPage() {
                         className="object-cover"
                      />
                      {product.discount > 0 && (
-                        <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
+                        <div className="absolute top-2 left-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs font-medium">
                            -{product.discount}%
                         </div>
                      )}
@@ -153,10 +160,10 @@ export default function ProductsPage() {
                   <div className="flex-1 p-6">
                      <div className="flex justify-between items-start mb-2">
                         <div>
-                           <p className="text-sm text-gray-600">
+                           <p className="text-sm text-muted-foreground">
                               {product.brand}
                            </p>
-                           <h3 className="text-lg font-semibold text-gray-900 hover:text-indigo-600">
+                           <h3 className="text-lg font-semibold text-foreground hover:text-primary">
                               <Link href={`/products/${product.id}`}>
                                  {product.name}
                               </Link>
@@ -164,13 +171,13 @@ export default function ProductsPage() {
                         </div>
                         <button
                            onClick={() => toggleWishlist(product.id)}
-                           className="p-2 hover:bg-gray-100 rounded-full"
+                           className="p-2 hover:bg-muted rounded-full"
                         >
                            <Heart
                               className={`w-5 h-5 ${
                                  isWishlisted
-                                    ? "fill-red-500 text-red-500"
-                                    : "text-gray-400"
+                                    ? "fill-destructive text-destructive"
+                                    : "text-muted-foreground"
                               }`}
                            />
                         </button>
@@ -180,18 +187,18 @@ export default function ProductsPage() {
                         <div className="flex">
                            {renderStars(product.rating)}
                         </div>
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-muted-foreground">
                            ({product.reviewCount})
                         </span>
                      </div>
 
                      <div className="flex items-center justify-between">
                         <div className="flex items-baseline space-x-2">
-                           <span className="text-xl font-bold text-gray-900">
+                           <span className="text-xl font-bold text-foreground">
                               ${product.price}
                            </span>
                            {product.originalPrice > product.price && (
-                              <span className="text-sm text-gray-500 line-through">
+                              <span className="text-sm text-muted-foreground line-through">
                                  ${product.originalPrice}
                               </span>
                            )}
@@ -200,8 +207,8 @@ export default function ProductsPage() {
                            <span
                               className={`text-sm ${
                                  product.inStock
-                                    ? "text-green-600"
-                                    : "text-red-600"
+                                    ? "text-primary"
+                                    : "text-destructive"
                               }`}
                            >
                               {product.inStock ? "In Stock" : "Out of Stock"}
@@ -222,9 +229,8 @@ export default function ProductsPage() {
             </div>
          );
       }
-
       return (
-         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden group">
+         <div className="bg-card rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden group">
             <div className="aspect-square relative">
                <Image
                   src={product.image}
@@ -233,51 +239,53 @@ export default function ProductsPage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                />
                {product.discount > 0 && (
-                  <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
+                  <div className="absolute top-2 left-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs font-medium">
                      -{product.discount}%
                   </div>
                )}
                <button
                   onClick={() => toggleWishlist(product.id)}
-                  className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow"
+                  className="absolute top-2 right-2 p-2 bg-card rounded-full shadow-md hover:shadow-lg transition-shadow"
                >
                   <Heart
                      className={`w-4 h-4 ${
                         isWishlisted
-                           ? "fill-red-500 text-red-500"
-                           : "text-gray-400"
+                           ? "fill-destructive text-destructive"
+                           : "text-muted-foreground"
                      }`}
                   />
                </button>
             </div>
 
             <div className="p-4">
-               <p className="text-sm text-gray-600 mb-1">{product.brand}</p>
-               <h3 className="font-semibold text-gray-900 mb-2 hover:text-indigo-600">
+               <p className="text-sm text-muted-foreground mb-1">
+                  {product.brand}
+               </p>
+               <h3 className="font-semibold text-foreground mb-2 hover:text-primary">
                   <Link href={`/products/${product.id}`}>{product.name}</Link>
                </h3>
 
                <div className="flex items-center space-x-1 mb-2">
                   <div className="flex">{renderStars(product.rating)}</div>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-muted-foreground">
                      ({product.reviewCount})
                   </span>
                </div>
 
                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-baseline space-x-2">
-                     <span className="text-lg font-bold text-gray-900">
+                     <span className="text-lg font-bold text-foreground">
                         ${product.price}
                      </span>
                      {product.originalPrice > product.price && (
-                        <span className="text-sm text-gray-500 line-through">
+                        <span className="text-sm text-muted-foreground line-through">
                            ${product.originalPrice}
                         </span>
                      )}
                   </div>
                   <span
                      className={`text-sm ${
-                        product.inStock ? "text-green-600" : "text-red-600"
+                        product.inStock ? "text-primary" : "text-destructive"
                      }`}
                   >
                      {product.inStock ? "In Stock" : "Out of Stock"}
@@ -297,16 +305,15 @@ export default function ProductsPage() {
          </div>
       );
    };
-
    return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Header */}
             <div className="mb-8">
-               <h1 className="text-3xl font-bold text-gray-900 mb-2">
+               <h1 className="text-3xl font-bold text-foreground mb-2">
                   Products
                </h1>
-               <p className="text-gray-600">
+               <p className="text-muted-foreground">
                   Discover our amazing collection of products
                </p>
             </div>
@@ -321,8 +328,8 @@ export default function ProductsPage() {
                         onClick={() => setSelectedCategory(category)}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                            selectedCategory === category
-                              ? "bg-indigo-600 text-white"
-                              : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-card text-foreground hover:bg-muted border border-border"
                         }`}
                      >
                         {category}
@@ -335,7 +342,7 @@ export default function ProductsPage() {
                   <select
                      value={sortBy}
                      onChange={(e) => setSortBy(e.target.value)}
-                     className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+                     className="border border-input rounded-md px-3 py-2 text-sm bg-background text-foreground"
                   >
                      {sortOptions.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -344,13 +351,13 @@ export default function ProductsPage() {
                      ))}
                   </select>
 
-                  <div className="flex items-center border border-gray-300 rounded-md">
+                  <div className="flex items-center border border-input rounded-md">
                      <button
                         onClick={() => setViewMode("grid")}
                         className={`p-2 ${
                            viewMode === "grid"
-                              ? "bg-indigo-50 text-indigo-600"
-                              : "text-gray-400"
+                              ? "bg-primary/10 text-primary"
+                              : "text-muted-foreground"
                         }`}
                      >
                         <Grid className="w-4 h-4" />
@@ -359,8 +366,8 @@ export default function ProductsPage() {
                         onClick={() => setViewMode("list")}
                         className={`p-2 ${
                            viewMode === "list"
-                              ? "bg-indigo-50 text-indigo-600"
-                              : "text-gray-400"
+                              ? "bg-primary/10 text-primary"
+                              : "text-muted-foreground"
                         }`}
                      >
                         <List className="w-4 h-4" />
@@ -371,7 +378,7 @@ export default function ProductsPage() {
 
             {/* Results Count */}
             <div className="mb-6">
-               <p className="text-gray-600">
+               <p className="text-muted-foreground">
                   Showing {sortedProducts.length} products
                </p>
             </div>
@@ -379,8 +386,8 @@ export default function ProductsPage() {
             {/* Loading State */}
             {loading && (
                <div className="flex justify-center items-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                  <span className="ml-2 text-gray-600">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <span className="ml-2 text-muted-foreground">
                      Loading products...
                   </span>
                </div>
@@ -388,8 +395,8 @@ export default function ProductsPage() {
 
             {/* Error State */}
             {error && (
-               <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
-                  <p className="text-red-600">{error}</p>
+               <div className="bg-destructive/10 border border-destructive/20 rounded-md p-4 mb-6">
+                  <p className="text-destructive">{error}</p>
                   <Button
                      variant="outline"
                      size="sm"
@@ -416,10 +423,10 @@ export default function ProductsPage() {
                      ))
                   ) : (
                      <div className="col-span-full text-center py-12">
-                        <p className="text-gray-500 text-lg">
+                        <p className="text-muted-foreground text-lg">
                            No products found
                         </p>
-                        <p className="text-gray-400 text-sm mt-2">
+                        <p className="text-muted-foreground/60 text-sm mt-2">
                            Try adjusting your filters or search terms
                         </p>
                      </div>
