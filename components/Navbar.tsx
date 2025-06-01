@@ -2,8 +2,25 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
+import {
+   ShoppingCart,
+   User,
+   Search,
+   Menu,
+   X,
+   Settings,
+   LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuLabel,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
 import { ModeToggle } from "./ModeToggle";
@@ -77,25 +94,73 @@ export default function Navbar() {
                   {status === "loading" ? (
                      <div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
                   ) : session ? (
-                     <div className="flex items-center space-x-3">
-                        <Link href="/sell-item">
-                           <Button variant="default" size="sm">
-                              Sell Item
+                     <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                           <Button
+                              variant="ghost"
+                              className="relative h-8 w-8 rounded-full"
+                           >
+                              <Avatar className="h-8 w-8">
+                                 <AvatarImage
+                                    src={session.user?.image || ""}
+                                    alt={session.user?.name || "User"}
+                                 />
+                                 <AvatarFallback>
+                                    {session.user?.name
+                                       ?.charAt(0)
+                                       .toUpperCase() ||
+                                       session.user?.email
+                                          ?.charAt(0)
+                                          .toUpperCase() ||
+                                       "U"}
+                                 </AvatarFallback>
+                              </Avatar>
                            </Button>
-                        </Link>
-                        <Link href="/dashboard" className="text-foreground">
-                           <Button variant="ghost" size="sm">
-                              Dashboard
-                           </Button>
-                        </Link>
-                        <Button
-                           variant="outline"
-                           size="sm"
-                           onClick={() => signOut()}
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                           className="w-56"
+                           align="end"
+                           forceMount
                         >
-                           Sign Out
-                        </Button>
-                     </div>
+                           <DropdownMenuLabel className="font-normal">
+                              <div className="flex flex-col space-y-1">
+                                 <p className="text-sm font-medium leading-none">
+                                    {session.user?.name || "User"}
+                                 </p>
+                                 <p className="text-xs leading-none text-muted-foreground">
+                                    {session.user?.email}
+                                 </p>
+                              </div>
+                           </DropdownMenuLabel>
+                           <DropdownMenuSeparator />
+                           <DropdownMenuItem asChild>
+                              <Link
+                                 href="/sell-item"
+                                 className="w-full cursor-pointer"
+                              >
+                                 <Settings className="mr-2 h-4 w-4" />
+                                 <span>Sell Item</span>
+                              </Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuItem asChild>
+                              <Link
+                                 href="/dashboard"
+                                 className="w-full cursor-pointer"
+                              >
+                                 <User className="mr-2 h-4 w-4" />
+                                 <span>Dashboard</span>
+                              </Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuSeparator />
+                           <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => signOut()}
+                           >
+                              <LogOut className="mr-2 h-4 w-4" />
+                              <span>Sign Out</span>
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
                   ) : (
                      <div className="flex items-center space-x-2">
                         <Link href="/login">
@@ -163,23 +228,75 @@ export default function Navbar() {
 
                         {session ? (
                            <div className="space-y-2">
-                              <Link href="/dashboard" className="block">
-                                 <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="w-full justify-start"
+                              <DropdownMenu>
+                                 <DropdownMenuTrigger asChild>
+                                    <Button
+                                       variant="ghost"
+                                       className="w-full justify-start"
+                                    >
+                                       <Avatar className="h-6 w-6 mr-2">
+                                          <AvatarImage
+                                             src={session.user?.image || ""}
+                                             alt={session.user?.name || "User"}
+                                          />
+                                          <AvatarFallback className="text-xs">
+                                             {session.user?.name
+                                                ?.charAt(0)
+                                                .toUpperCase() ||
+                                                session.user?.email
+                                                   ?.charAt(0)
+                                                   .toUpperCase() ||
+                                                "U"}
+                                          </AvatarFallback>
+                                       </Avatar>
+                                       <span>
+                                          {session.user?.name || "User"}
+                                       </span>
+                                    </Button>
+                                 </DropdownMenuTrigger>
+                                 <DropdownMenuContent
+                                    className="w-56"
+                                    align="start"
                                  >
-                                    Dashboard
-                                 </Button>
-                              </Link>
-                              <Button
-                                 variant="outline"
-                                 size="sm"
-                                 className="w-full"
-                                 onClick={() => signOut()}
-                              >
-                                 Sign Out
-                              </Button>
+                                    <DropdownMenuLabel className="font-normal">
+                                       <div className="flex flex-col space-y-1">
+                                          <p className="text-sm font-medium leading-none">
+                                             {session.user?.name || "User"}
+                                          </p>
+                                          <p className="text-xs leading-none text-muted-foreground">
+                                             {session.user?.email}
+                                          </p>
+                                       </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem asChild>
+                                       <Link
+                                          href="/sell-item"
+                                          className="w-full cursor-pointer"
+                                       >
+                                          <Settings className="mr-2 h-4 w-4" />
+                                          <span>Sell Item</span>
+                                       </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                       <Link
+                                          href="/dashboard"
+                                          className="w-full cursor-pointer"
+                                       >
+                                          <User className="mr-2 h-4 w-4" />
+                                          <span>Dashboard</span>
+                                       </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                       className="cursor-pointer"
+                                       onClick={() => signOut()}
+                                    >
+                                       <LogOut className="mr-2 h-4 w-4" />
+                                       <span>Sign Out</span>
+                                    </DropdownMenuItem>
+                                 </DropdownMenuContent>
+                              </DropdownMenu>
                            </div>
                         ) : (
                            <div className="space-y-2">
