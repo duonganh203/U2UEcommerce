@@ -11,6 +11,7 @@ export interface Product {
    rating: number;
    numReviews: number;
    reviews?: Review[];
+   discountPercentage: number;
    createdAt: string;
    updatedAt: string;
 }
@@ -90,13 +91,20 @@ export async function fetchProductById(id: string): Promise<ProductResponse> {
 
 // Transform API product to UI format for backward compatibility
 export function transformProductForUI(product: Product) {
+   // Calculate actual discount percentage and original price
+   const actualDiscountPercentage = product.discountPercentage || 0;
+   const originalPrice =
+      actualDiscountPercentage > 0
+         ? (product.price / (1 - actualDiscountPercentage / 100)).toFixed(2)
+         : (product.price * 1.2).toFixed(2); // Fallback to 20% markup if no discount
+
    return {
       id: product._id,
       name: product.name,
       brand: product.brand,
       price: product.price,
-      originalPrice: product.price * 1.2, // Assume 20% discount for UI
-      discount: 20,
+      originalPrice: originalPrice,
+      discount: actualDiscountPercentage > 0 ? actualDiscountPercentage : 20, // Use actual discount or fallback
       rating: product.rating,
       reviewCount: product.numReviews,
       image: product.images[0] || "",
@@ -106,5 +114,6 @@ export function transformProductForUI(product: Product) {
       stockCount: product.countInStock,
       description: product.description,
       reviews: product.reviews || [],
+      discountPercentage: product.discountPercentage,
    };
 }

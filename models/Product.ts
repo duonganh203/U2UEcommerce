@@ -16,6 +16,7 @@ export interface IProduct extends mongoose.Document {
       comment: string;
       createdAt: Date;
    }>;
+   discountPercentage: number;
    createdAt: Date;
    updatedAt: Date;
 }
@@ -93,6 +94,12 @@ const productSchema = new mongoose.Schema(
             },
          },
       ],
+      discountPercentage: {
+         type: Number,
+         min: 0,
+         max: 100,
+         default: 0,
+      },
    },
    {
       timestamps: true,
