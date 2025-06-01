@@ -6,6 +6,7 @@ import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
+import { ModeToggle } from "./ModeToggle";
 
 export default function Navbar() {
     const { data: session, status } = useSession();
@@ -60,6 +61,7 @@ export default function Navbar() {
                         </div>
                     </div>{" "}
                     {/* Right side buttons */}
+                    <ModeToggle />
                     <div className='hidden md:flex items-center space-x-4'>
                         {/* Cart */}
                         <Link href='/cart'>
