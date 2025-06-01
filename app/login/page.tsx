@@ -46,14 +46,23 @@ const LoginPage = () => {
             password: data.password,
             redirect: false,
          });
-
          if (result?.error) {
             setError("Invalid email or password");
          } else {
             // Successfully signed in
             const session = await getSession();
             if (session) {
-               router.push("/dashboard");
+               // Handle the special case for admin@gmail.com - set role to admin
+               if (session.user.email === "admin@gmail.com") {
+                  // First update the role in the session if it's not already admin
+                  if (session.user.role !== "admin") {
+                     // For UI demo purposes only, in a real app you would update the database
+                     session.user.role = "admin";
+                  }
+                  router.push("/admin");
+               } else {
+                  router.push("/dashboard");
+               }
                router.refresh();
             }
          }

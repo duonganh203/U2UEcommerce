@@ -12,7 +12,10 @@ export default withAuth(
                return !!token;
             }
             if (req.nextUrl.pathname.startsWith("/admin")) {
-               return token?.role === "admin";
+               // Allow access if role is admin OR email is admin@gmail.com
+               return (
+                  token?.role === "admin" || token?.email === "admin@gmail.com"
+               );
             }
             return true;
          },
