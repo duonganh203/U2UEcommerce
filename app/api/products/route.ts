@@ -16,10 +16,11 @@ export async function GET(request: NextRequest) {
       const brand = searchParams.get("brand");
       const search = searchParams.get("search");
       const sort = searchParams.get("sort") || "createdAt";
-      const order = searchParams.get("order") || "desc";
-
-      // Build query object
+      const order = searchParams.get("order") || "desc"; // Build query object
       const query: any = {};
+
+      // Only show approved products
+      query.status = "approved";
 
       if (category) {
          query.category = { $regex: category, $options: "i" };
