@@ -6,34 +6,39 @@ import { authOptions } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
    try {
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.id) {
+         return NextResponse.json(
+            { success: false, error: "Authentication required" },
+            { status: 401 }
+         );
+      }
+
       await connectDB();
 
       // Get query parameters for pagination and filtering
       const { searchParams } = new URL(request.url);
       const page = parseInt(searchParams.get("page") || "1");
-      const limit = parseInt(searchParams.get("limit") || "10");
-      const category = searchParams.get("category");
-      const brand = searchParams.get("brand");
+      const limit = parseInt(searchParams.get("limit") || "20");
       const search = searchParams.get("search");
+      const status = searchParams.get("status");
       const sort = searchParams.get("sort") || "createdAt";
       const order = searchParams.get("order") || "desc";
 
-      // Build query object
-      const query: any = {};
-
-      if (category) {
-         query.category = { $regex: category, $options: "i" };
-      }
-
-      if (brand) {
-         query.brand = { $regex: brand, $options: "i" };
-      }
+      // Build query object - only get products from current user
+      const query: any = { seller: session.user.id };
 
       if (search) {
          query.$or = [
             { name: { $regex: search, $options: "i" } },
             { description: { $regex: search, $options: "i" } },
+            { category: { $regex: search, $options: "i" } },
          ];
+      }
+
+      if (status && status !== "all") {
+         query.status = status;
       }
 
       // Calculate skip value for pagination
@@ -55,9 +60,37 @@ export async function GET(request: NextRequest) {
       const total = await Product.countDocuments(query);
       const totalPages = Math.ceil(total / limit);
 
+      // Calculate stats
+      const stats = await Product.aggregate([
+         { $match: { seller: session.user.id } },
+         {
+            $group: {
+               _id: null,
+               totalListings: { $sum: 1 },
+               activeListings: {
+                  $sum: { $cond: [{ $eq: ["$status", "approved"] }, 1, 0] },
+               },
+               pendingListings: {
+                  $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] },
+               },
+               totalValue: { $sum: "$price" },
+               avgPrice: { $avg: "$price" },
+            },
+         },
+      ]);
+
+      const statsData = stats[0] || {
+         totalListings: 0,
+         activeListings: 0,
+         pendingListings: 0,
+         totalValue: 0,
+         avgPrice: 0,
+      };
+
       return NextResponse.json({
          success: true,
          data: products,
+         stats: statsData,
          pagination: {
             currentPage: page,
             totalPages,
@@ -67,18 +100,18 @@ export async function GET(request: NextRequest) {
          },
       });
    } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching user listings:", error);
       return NextResponse.json(
          {
             success: false,
-            error: "Failed to fetch products",
+            error: "Failed to fetch listings",
          },
          { status: 500 }
       );
    }
 }
 
-export async function POST(request: NextRequest) {
+export async function DELETE(request: NextRequest) {
    try {
       const session = await getServerSession(authOptions);
 
@@ -91,70 +124,37 @@ export async function POST(request: NextRequest) {
 
       await connectDB();
 
-      const body = await request.json();
-      const {
-         name,
-         description,
-         price,
-         category,
-         brand,
-         images,
-         countInStock,
-         condition,
-         tags,
-         shipping,
-         location,
-      } = body;
+      const { searchParams } = new URL(request.url);
+      const productId = searchParams.get("id");
 
-      // Validation
-      if (
-         !name ||
-         !description ||
-         !price ||
-         !category ||
-         !images ||
-         images.length === 0
-      ) {
+      if (!productId) {
          return NextResponse.json(
-            { success: false, error: "Missing required fields" },
+            { success: false, error: "Product ID is required" },
             { status: 400 }
          );
       }
 
-      // Create new product with pending status
-      const newProduct = new Product({
-         name,
-         description,
-         price: parseFloat(price),
-         category,
-         brand: brand || "Unknown",
-         images,
-         countInStock: parseInt(countInStock) || 1,
-         condition,
-         tags: tags ? tags.split(",").map((tag: string) => tag.trim()) : [],
-         shipping,
-         location,
+      // Find and delete product only if it belongs to the current user
+      const deletedProduct = await Product.findOneAndDelete({
+         _id: productId,
          seller: session.user.id,
-         status: "pending", // Set status to pending when listing item
-         isActive: true,
-         rating: 0,
-         numReviews: 0,
-         reviews: [],
-         discountPercentage: 0,
       });
 
-      const savedProduct = await newProduct.save();
+      if (!deletedProduct) {
+         return NextResponse.json(
+            { success: false, error: "Product not found or unauthorized" },
+            { status: 404 }
+         );
+      }
 
       return NextResponse.json({
          success: true,
-         data: savedProduct,
-         message:
-            "Product listed successfully! It will be reviewed before going live.",
+         message: "Product deleted successfully",
       });
    } catch (error) {
-      console.error("Error creating product:", error);
+      console.error("Error deleting product:", error);
       return NextResponse.json(
-         { success: false, error: "Failed to create product" },
+         { success: false, error: "Failed to delete product" },
          { status: 500 }
       );
    }

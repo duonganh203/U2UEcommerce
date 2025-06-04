@@ -10,66 +10,108 @@ import {
    Edit3,
    Trash2,
    Eye,
-   MoreHorizontal,
    Search,
-   Filter,
    Package,
    DollarSign,
-   TrendingUp,
    Clock,
    AlertCircle,
    CheckCircle2,
+   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-// Mock data for demonstration
-const mockListings = [
-   {
-      id: "1",
-      title: "MacBook Pro M2 16-inch",
-      category: "Electronics",
-      price: 2299.99,
-      condition: "like-new",
-      status: "active",
-      views: 124,
-      inquiries: 8,
-      dateCreated: "2025-05-28",
-      images: ["/api/placeholder/300/300"],
-   },
-   {
-      id: "2",
-      title: "Vintage Leather Jacket",
-      category: "Clothing & Fashion",
-      price: 149.99,
-      condition: "good",
-      status: "sold",
-      views: 89,
-      inquiries: 15,
-      dateCreated: "2025-05-25",
-      images: ["/api/placeholder/300/300"],
-   },
-   {
-      id: "3",
-      title: "Professional Camera Lens",
-      category: "Photography",
-      price: 899.99,
-      condition: "new",
-      status: "pending",
-      views: 45,
-      inquiries: 3,
-      dateCreated: "2025-05-30",
-      images: ["/api/placeholder/300/300"],
-   },
-];
+interface Product {
+   _id: string;
+   name: string;
+   category: string;
+   price: number;
+   condition: string;
+   status: "pending" | "approved" | "rejected";
+   images: string[];
+   createdAt: string;
+   brand?: string;
+   countInStock: number;
+   description?: string;
+   rating?: number;
+   numReviews?: number;
+}
+
+interface Stats {
+   totalListings: number;
+   activeListings: number;
+   pendingListings: number;
+   rejectedListings: number;
+   totalValue: number;
+   avgPrice: number;
+}
 
 export default function ManageProductsPage() {
    const { data: session, status } = useSession();
    const router = useRouter();
-   const [listings, setListings] = useState(mockListings);
+   const [listings, setListings] = useState<Product[]>([]);
+   const [stats, setStats] = useState<Stats>({
+      totalListings: 0,
+      activeListings: 0,
+      pendingListings: 0,
+      rejectedListings: 0,
+      totalValue: 0,
+      avgPrice: 0,
+   });
+   const [loading, setLoading] = useState(true);
    const [searchTerm, setSearchTerm] = useState("");
    const [filterStatus, setFilterStatus] = useState("all");
    const [sortBy, setSortBy] = useState("newest");
+
+   // Fetch listings data
+   const fetchListings = async () => {
+      try {
+         setLoading(true);
+         const response = await fetch("/api/products/my-listings");
+         if (response.ok) {
+            const data = await response.json();
+            console.log("Fetched listings:", data);
+            setListings(data.data || []);
+            setStats(
+               data.stats || {
+                  totalListings: 0,
+                  activeListings: 0,
+                  pendingListings: 0,
+                  rejectedListings: 0,
+                  totalValue: 0,
+                  avgPrice: 0,
+               }
+            );
+         } else {
+            console.error("Failed to fetch listings");
+         }
+      } catch (error) {
+         console.error("Error fetching listings:", error);
+      } finally {
+         setLoading(false);
+      }
+   };
+
+   // Handle delete listing
+   const handleDelete = async (productId: string) => {
+      if (!confirm("Are you sure you want to delete this listing?")) return;
+
+      try {
+         const response = await fetch(`/api/products/${productId}`, {
+            method: "DELETE",
+         });
+
+         if (response.ok) {
+            // Refresh listings after successful delete
+            fetchListings();
+         } else {
+            alert("Failed to delete listing");
+         }
+      } catch (error) {
+         console.error("Error deleting listing:", error);
+         alert("Error deleting listing");
+      }
+   };
 
    useEffect(() => {
       if (status === "loading") return;
@@ -77,9 +119,10 @@ export default function ManageProductsPage() {
          router.push("/login");
          return;
       }
+      fetchListings();
    }, [session, status, router]);
 
-   if (status === "loading") {
+   if (status === "loading" || loading) {
       return (
          <div className="min-h-screen flex items-center justify-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
@@ -93,14 +136,12 @@ export default function ManageProductsPage() {
 
    const getStatusIcon = (status: string) => {
       switch (status) {
-         case "active":
+         case "approved":
             return <CheckCircle2 className="h-4 w-4 text-green-500" />;
          case "pending":
             return <Clock className="h-4 w-4 text-yellow-500" />;
-         case "sold":
-            return <CheckCircle2 className="h-4 w-4 text-blue-500" />;
-         case "paused":
-            return <AlertCircle className="h-4 w-4 text-orange-500" />;
+         case "rejected":
+            return <AlertCircle className="h-4 w-4 text-red-500" />;
          default:
             return <AlertCircle className="h-4 w-4 text-muted-foreground" />;
       }
@@ -108,32 +149,25 @@ export default function ManageProductsPage() {
 
    const getStatusColor = (status: string) => {
       switch (status) {
-         case "active":
+         case "approved":
             return "bg-green-100 text-green-800 border-green-200";
          case "pending":
             return "bg-yellow-100 text-yellow-800 border-yellow-200";
-         case "sold":
-            return "bg-blue-100 text-blue-800 border-blue-200";
-         case "paused":
-            return "bg-orange-100 text-orange-800 border-orange-200";
+         case "rejected":
+            return "bg-red-100 text-red-800 border-red-200";
          default:
             return "bg-gray-100 text-gray-800 border-gray-200";
       }
    };
 
-   const filteredListings = listings.filter((listing) => {
+   const filteredListings = listings.filter((listing: Product) => {
       const matchesSearch =
-         listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+         listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
          listing.category.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesFilter =
          filterStatus === "all" || listing.status === filterStatus;
       return matchesSearch && matchesFilter;
    });
-
-   const totalValue = listings.reduce((sum, listing) => sum + listing.price, 0);
-   const activeListings = listings.filter((l) => l.status === "active").length;
-   const soldListings = listings.filter((l) => l.status === "sold").length;
-   const totalViews = listings.reduce((sum, listing) => sum + listing.views, 0);
 
    return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -162,10 +196,10 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Active Listings
+                           Total Listings
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                           {activeListings}
+                           {stats.totalListings}
                         </p>
                      </div>
                      <Package className="h-8 w-8 text-primary" />
@@ -176,10 +210,10 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Items Sold
+                           Approved
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                           {soldListings}
+                           {stats.activeListings}
                         </p>
                      </div>
                      <CheckCircle2 className="h-8 w-8 text-green-500" />
@@ -190,13 +224,13 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Total Value
+                           Pending
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                           ${totalValue.toLocaleString()}
+                           {stats.pendingListings}
                         </p>
                      </div>
-                     <DollarSign className="h-8 w-8 text-blue-500" />
+                     <Clock className="h-8 w-8 text-yellow-500" />
                   </div>
                </div>
 
@@ -204,13 +238,13 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Total Views
+                           Total Value
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                           {totalViews}
+                           ${stats.totalValue.toLocaleString()}
                         </p>
                      </div>
-                     <TrendingUp className="h-8 w-8 text-purple-500" />
+                     <DollarSign className="h-8 w-8 text-blue-500" />
                   </div>
                </div>
             </div>
@@ -236,10 +270,9 @@ export default function ManageProductsPage() {
                      className="px-3 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                   >
                      <option value="all">All Status</option>
-                     <option value="active">Active</option>
+                     <option value="approved">Approved</option>
                      <option value="pending">Pending</option>
-                     <option value="sold">Sold</option>
-                     <option value="paused">Paused</option>
+                     <option value="rejected">Rejected</option>
                   </select>
 
                   {/* Sort */}
@@ -252,7 +285,6 @@ export default function ManageProductsPage() {
                      <option value="oldest">Oldest First</option>
                      <option value="price-high">Price: High to Low</option>
                      <option value="price-low">Price: Low to High</option>
-                     <option value="views">Most Views</option>
                   </select>
                </div>
             </div>
@@ -282,16 +314,25 @@ export default function ManageProductsPage() {
                </div>
             ) : (
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredListings.map((listing) => (
+                  {filteredListings.map((listing: Product) => (
                      <div
-                        key={listing.id}
+                        key={listing._id}
                         className="bg-card rounded-2xl shadow-lg border overflow-hidden hover:shadow-xl transition-shadow"
                      >
                         {/* Image */}
                         <div className="relative h-48 bg-muted">
-                           <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20 flex items-center justify-center">
-                              <Package className="h-12 w-12 text-muted-foreground" />
-                           </div>
+                           {listing.images && listing.images.length > 0 ? (
+                              <Image
+                                 src={listing.images[0]}
+                                 alt={listing.name}
+                                 fill
+                                 className="object-cover"
+                              />
+                           ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20 flex items-center justify-center">
+                                 <Package className="h-12 w-12 text-muted-foreground" />
+                              </div>
+                           )}
                            <div
                               className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-medium border flex items-center gap-1 ${getStatusColor(
                                  listing.status
@@ -307,15 +348,16 @@ export default function ManageProductsPage() {
                         <div className="p-4">
                            <div className="flex justify-between items-start mb-2">
                               <h3 className="font-semibold text-foreground line-clamp-1">
-                                 {listing.title}
+                                 {listing.name}
                               </h3>
                               <div className="relative group">
                                  <Button
                                     variant="ghost"
                                     size="sm"
                                     className="h-8 w-8 p-0"
+                                    onClick={() => handleDelete(listing._id)}
                                  >
-                                    <MoreHorizontal className="h-4 w-4" />
+                                    <Trash2 className="h-4 w-4 text-red-500" />
                                  </Button>
                               </div>
                            </div>
@@ -324,29 +366,22 @@ export default function ManageProductsPage() {
                               {listing.category} • {listing.condition}
                            </p>
 
-                           <p className="text-xl font-bold text-primary mb-3">
-                              ${listing.price.toLocaleString()}
-                           </p>
-
-                           {/* Stats */}
-                           <div className="flex justify-between text-sm text-muted-foreground mb-4">
-                              <span className="flex items-center gap-1">
-                                 <Eye className="h-3 w-3" />
-                                 {listing.views} views
+                           <div className="flex justify-between items-center mb-3">
+                              <span className="text-2xl font-bold text-foreground">
+                                 ${listing.price.toLocaleString()}
                               </span>
-                              <span>{listing.inquiries} inquiries</span>
+                              <span className="text-sm text-muted-foreground">
+                                 Stock: {listing.countInStock}
+                              </span>
+                           </div>
+
+                           <div className="text-xs text-muted-foreground mb-4">
+                              Listed{" "}
+                              {new Date(listing.createdAt).toLocaleDateString()}
                            </div>
 
                            {/* Actions */}
                            <div className="flex gap-2">
-                              <Button
-                                 variant="outline"
-                                 size="sm"
-                                 className="flex-1"
-                              >
-                                 <Eye className="h-3 w-3 mr-1" />
-                                 View
-                              </Button>
                               <Button
                                  variant="outline"
                                  size="sm"
@@ -358,9 +393,10 @@ export default function ManageProductsPage() {
                               <Button
                                  variant="outline"
                                  size="sm"
-                                 className="px-2"
+                                 className="flex-1"
                               >
-                                 <Trash2 className="h-3 w-3 text-destructive" />
+                                 <Eye className="h-3 w-3 mr-1" />
+                                 View
                               </Button>
                            </div>
                         </div>
@@ -378,39 +414,43 @@ export default function ManageProductsPage() {
                   <Link href="/sell-item">
                      <Button
                         variant="outline"
-                        className="w-full h-auto p-4 flex flex-col items-center gap-2"
+                        className="w-full flex items-center gap-2 h-12"
                      >
-                        <Plus className="h-6 w-6 text-primary" />
-                        <span className="font-medium">List New Item</span>
-                        <span className="text-xs text-muted-foreground">
-                           Add another product to sell
-                        </span>
+                        <Plus className="h-4 w-4" />
+                        <div className="text-left">
+                           <div className="font-medium">List New Item</div>
+                           <div className="text-xs text-muted-foreground">
+                              Create a new product listing
+                           </div>
+                        </div>
                      </Button>
                   </Link>
 
                   <Button
                      variant="outline"
-                     className="w-full h-auto p-4 flex flex-col items-center gap-2"
+                     className="w-full flex items-center gap-2 h-12"
                   >
-                     <TrendingUp className="h-6 w-6 text-green-500" />
-                     <span className="font-medium">View Analytics</span>
-                     <span className="text-xs text-muted-foreground">
-                        See detailed performance data
-                     </span>
+                     <Package className="h-4 w-4" />
+                     <div className="text-left">
+                        <div className="font-medium">Bulk Edit</div>
+                        <div className="text-xs text-muted-foreground">
+                           Update multiple listings
+                        </div>
+                     </div>
                   </Button>
 
-                  <Link href="/profile">
-                     <Button
-                        variant="outline"
-                        className="w-full h-auto p-4 flex flex-col items-center gap-2"
-                     >
-                        <Package className="h-6 w-6 text-blue-500" />
-                        <span className="font-medium">Seller Profile</span>
-                        <span className="text-xs text-muted-foreground">
-                           Manage your seller information
-                        </span>
-                     </Button>
-                  </Link>
+                  <Button
+                     variant="outline"
+                     className="w-full flex items-center gap-2 h-12"
+                  >
+                     <DollarSign className="h-4 w-4" />
+                     <div className="text-left">
+                        <div className="font-medium">Analytics</div>
+                        <div className="text-xs text-muted-foreground">
+                           View performance metrics
+                        </div>
+                     </div>
+                  </Button>
                </div>
             </div>
          </div>

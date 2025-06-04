@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import { Product } from "@/models/Product";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import mongoose from "mongoose";
 
 export async function GET(
@@ -127,6 +129,15 @@ export async function DELETE(
    { params }: { params: { id: string } }
 ) {
    try {
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.id) {
+         return NextResponse.json(
+            { success: false, error: "Authentication required" },
+            { status: 401 }
+         );
+      }
+
       await connectDB();
 
       const { id } = await params;
@@ -142,10 +153,10 @@ export async function DELETE(
          );
       }
 
-      // Delete product
-      const deletedProduct = await Product.findByIdAndDelete(id);
+      // First find the product to check ownership
+      const product = await Product.findById(id);
 
-      if (!deletedProduct) {
+      if (!product) {
          return NextResponse.json(
             {
                success: false,
@@ -154,6 +165,20 @@ export async function DELETE(
             { status: 404 }
          );
       }
+
+      // Check if the user is the seller of this product
+      if (product.seller.toString() !== session.user.id) {
+         return NextResponse.json(
+            {
+               success: false,
+               error: "You can only delete your own products",
+            },
+            { status: 403 }
+         );
+      }
+
+      // Delete product
+      const deletedProduct = await Product.findByIdAndDelete(id);
 
       return NextResponse.json({
          success: true,

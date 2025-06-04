@@ -18,7 +18,19 @@ export interface IProduct extends mongoose.Document {
    }>;
    discountPercentage: number;
    seller: mongoose.Types.ObjectId;
+   status: "pending" | "approved" | "rejected";
    isActive: boolean;
+   condition: "new" | "like-new" | "good" | "fair" | "poor";
+   tags: string[];
+   shipping: {
+      freeShipping: boolean;
+      localPickup: boolean;
+      calculatedShipping: boolean;
+   };
+   location: {
+      city: string;
+      state: string;
+   };
    createdAt: Date;
    updatedAt: Date;
 }
@@ -107,9 +119,50 @@ const productSchema = new mongoose.Schema(
          ref: "User",
          required: true,
       },
+      status: {
+         type: String,
+         enum: ["pending", "approved", "rejected"],
+         default: "pending",
+         required: true,
+      },
       isActive: {
          type: Boolean,
          default: true,
+      },
+      condition: {
+         type: String,
+         enum: ["new", "like-new", "good", "fair", "poor"],
+         required: true,
+      },
+      tags: [
+         {
+            type: String,
+            trim: true,
+         },
+      ],
+      shipping: {
+         freeShipping: {
+            type: Boolean,
+            default: false,
+         },
+         localPickup: {
+            type: Boolean,
+            default: false,
+         },
+         calculatedShipping: {
+            type: Boolean,
+            default: false,
+         },
+      },
+      location: {
+         city: {
+            type: String,
+            trim: true,
+         },
+         state: {
+            type: String,
+            trim: true,
+         },
       },
    },
    {

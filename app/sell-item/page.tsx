@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
    Upload,
    X,
@@ -14,19 +16,25 @@ import {
    AlertCircle,
    Info,
    Eye,
+   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { uploadMultipleImages } from "@/lib/cloudinary";
 
 export default function SellItemPage() {
+   const { data: session, status } = useSession();
+   const router = useRouter();
    const [images, setImages] = useState<File[]>([]);
+   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
    const [dragActive, setDragActive] = useState(false);
    const [selectedCategory, setSelectedCategory] = useState("");
    const [selectedCondition, setSelectedCondition] = useState("");
    const [showPreview, setShowPreview] = useState(false);
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [isSubmitted, setIsSubmitted] = useState(false);
+   const [isUploadingImages, setIsUploadingImages] = useState(false);
    const [errors, setErrors] = useState<Record<string, string>>({});
    const [formData, setFormData] = useState({
       title: "",
@@ -110,37 +118,105 @@ export default function SellItemPage() {
    const removeImage = (index: number) => {
       setImages((prev) => prev.filter((_, i) => i !== index));
    };
-
-   const handleSubmit = (e: React.FormEvent) => {
+   const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setErrors({});
+
       // Basic validation
+      const newErrors: Record<string, string> = {};
       if (!formData.title) {
-         setErrors((prev) => ({ ...prev, title: "Title is required" }));
+         newErrors.title = "Title is required";
       }
       if (!selectedCategory) {
-         setErrors((prev) => ({ ...prev, category: "Category is required" }));
+         newErrors.category = "Category is required";
       }
       if (!selectedCondition) {
-         setErrors((prev) => ({ ...prev, condition: "Condition is required" }));
+         newErrors.condition = "Condition is required";
       }
       if (!formData.price) {
-         setErrors((prev) => ({ ...prev, price: "Price is required" }));
+         newErrors.price = "Price is required";
       }
-      if (Object.keys(errors).length > 0) return;
+      if (images.length === 0) {
+         newErrors.images = "At least one image is required";
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+         setErrors(newErrors);
+         return;
+      }
 
       setIsSubmitting(true);
-      // TODO: Implement form submission logic
-      setTimeout(() => {
-         setIsSubmitting(false);
-         setIsSubmitted(true);
-         console.log("Form submitted", {
-            formData,
-            selectedCategory,
-            selectedCondition,
-            images,
+      setIsUploadingImages(true);
+
+      try {
+         // Upload images to Cloudinary
+         const uploadedImages = await uploadMultipleImages(images);
+         const imageUrls = uploadedImages.map((img) => img.secure_url);
+         setUploadedImageUrls(imageUrls);
+         setIsUploadingImages(false);
+
+         // Create product data
+         const productData = {
+            name: formData.title,
+            description: formData.description,
+            price: formData.price,
+            category: selectedCategory,
+            brand: formData.brand,
+            images: imageUrls,
+            countInStock: formData.quantity,
+            condition: selectedCondition,
+            tags: formData.tags,
+            shipping: {
+               freeShipping: formData.freeShipping,
+               localPickup: formData.localPickup,
+               calculatedShipping: formData.calculatedShipping,
+            },
+            location: {
+               city: formData.city,
+               state: formData.state,
+            },
+         };
+
+         // Submit product to API
+         const response = await fetch("/api/products", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify(productData),
          });
-      }, 2000);
+
+         const result = await response.json();
+
+         if (result.success) {
+            setIsSubmitted(true);
+            // Reset form
+            setFormData({
+               title: "",
+               description: "",
+               price: "",
+               brand: "",
+               quantity: "1",
+               tags: "",
+               city: "",
+               state: "",
+               freeShipping: false,
+               localPickup: false,
+               calculatedShipping: false,
+            });
+            setImages([]);
+            setSelectedCategory("");
+            setSelectedCondition("");
+         } else {
+            setErrors({ submit: result.error || "Failed to create listing" });
+         }
+      } catch (error) {
+         console.error("Error submitting form:", error);
+         setErrors({ submit: "An error occurred while creating your listing" });
+      } finally {
+         setIsSubmitting(false);
+         setIsUploadingImages(false);
+      }
    };
 
    const handleInputChange = (field: string, value: string | boolean) => {
@@ -161,6 +237,20 @@ export default function SellItemPage() {
       };
       return suggestions[category] || "Research similar items for pricing";
    };
+
+   // Redirect if not authenticated
+   if (status === "loading") {
+      return (
+         <div className="min-h-screen flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin" />
+         </div>
+      );
+   }
+
+   if (status === "unauthenticated") {
+      router.push("/login");
+      return null;
+   }
 
    return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -184,8 +274,7 @@ export default function SellItemPage() {
                      <span className="text-sm text-muted-foreground ml-auto">
                         {images.length}/10 photos
                      </span>
-                  </div>
-
+                  </div>{" "}
                   <div
                      className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all ${
                         dragActive
@@ -197,27 +286,51 @@ export default function SellItemPage() {
                      onDragOver={handleDrag}
                      onDrop={handleDrop}
                   >
-                     <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                     <h3 className="text-lg font-medium mb-2">
-                        Drop your photos here or click to browse
-                     </h3>
-                     <p className="text-muted-foreground mb-4">
-                        Add up to 10 photos. First photo will be your cover
-                        image.
-                     </p>
-                     <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                     />
-                     <Button type="button" variant="outline">
-                        <Plus className="h-4 w-4 mr-2" />
-                        Choose Photos
-                     </Button>
+                     {isUploadingImages ? (
+                        <div className="flex flex-col items-center">
+                           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+                           <h3 className="text-lg font-medium mb-2">
+                              Uploading images...
+                           </h3>
+                           <p className="text-muted-foreground">
+                              Please wait while we upload your images to the
+                              cloud
+                           </p>
+                        </div>
+                     ) : (
+                        <>
+                           <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                           <h3 className="text-lg font-medium mb-2">
+                              Drop your photos here or click to browse
+                           </h3>
+                           <p className="text-muted-foreground mb-4">
+                              Add up to 10 photos. First photo will be your
+                              cover image.
+                           </p>
+                           <input
+                              type="file"
+                              multiple
+                              accept="image/*"
+                              onChange={handleImageUpload}
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                              disabled={isUploadingImages}
+                           />
+                           <Button
+                              type="button"
+                              variant="outline"
+                              disabled={isUploadingImages}
+                           >
+                              <Plus className="h-4 w-4 mr-2" />
+                              Choose Photos
+                           </Button>
+                        </>
+                     )}
                   </div>
-
+                  {errors.images && (
+                     <p className="text-destructive text-xs mt-2">
+                        {errors.images}
+                     </p>
+                  )}
                   {/* Image Preview Grid */}
                   {images.length > 0 && (
                      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
@@ -711,7 +824,6 @@ export default function SellItemPage() {
                            </ul>
                         </div>
                      </div>
-
                      <label className="flex items-start gap-3 cursor-pointer">
                         <input
                            type="checkbox"
@@ -730,30 +842,50 @@ export default function SellItemPage() {
                            . I confirm that this listing is accurate and that I
                            have the right to sell this item.
                         </div>
-                     </label>
-
+                     </label>{" "}
                      {/* Submit Buttons */}
                      <div className="flex flex-col sm:flex-row gap-3 pt-4">
                         <Button
                            type="submit"
                            className="flex-1 h-12 text-base"
-                           disabled={isSubmitting}
+                           disabled={isSubmitting || isUploadingImages}
                         >
-                           {isSubmitting ? "Listing..." : "List Item for Sale"}
+                           {isSubmitting ? (
+                              <div className="flex items-center gap-2">
+                                 <Loader2 className="h-4 w-4 animate-spin" />
+                                 {isUploadingImages
+                                    ? "Uploading Images..."
+                                    : "Creating Listing..."}
+                              </div>
+                           ) : (
+                              "List Item for Sale"
+                           )}
                         </Button>
                         <Button
                            type="button"
                            variant="outline"
                            className="flex-1 h-12 text-base"
+                           disabled={isSubmitting}
                         >
                            Save as Draft
                         </Button>
                      </div>
-
+                     {/* Error Display */}
+                     {errors.submit && (
+                        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+                           {errors.submit}
+                        </div>
+                     )}
                      {/* Submission Feedback */}
                      {isSubmitted && (
                         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
-                           Your item has been listed successfully! 🎉
+                           Your item has been listed successfully and is now
+                           pending approval! 🎉
+                           <br />
+                           <span className="text-xs">
+                              You'll be notified once it's reviewed and goes
+                              live.
+                           </span>
                         </div>
                      )}
                   </div>
