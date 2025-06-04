@@ -3,6 +3,7 @@ import connectDB from "@/lib/db";
 import { Product } from "@/models/Product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import mongoose from "mongoose";
 
 export async function GET(request: NextRequest) {
    try {
@@ -54,15 +55,32 @@ export async function GET(request: NextRequest) {
          .skip(skip)
          .limit(limit)
          .select("-reviews") // Exclude reviews array to reduce response size
-         .lean();
-
-      // Get total count for pagination
+         .lean(); // Get total count for pagination
       const total = await Product.countDocuments(query);
-      const totalPages = Math.ceil(total / limit);
+      const totalPages = Math.ceil(total / limit); // Debug: Check what's in session.user.id and what sellers exist
+      console.log("Session user ID:", session.user.id);
+      console.log("Session user ID type:", typeof session.user.id);
+
+      // Check all products and their sellers for debugging
+      const allProducts = await Product.find({}).select("seller name").lean();
+      console.log(
+         "All products with sellers:",
+         allProducts.map((p) => ({
+            name: p.name,
+            seller: p.seller,
+            sellerType: typeof p.seller,
+         }))
+      );
+
+      // Try to find products with the current user as seller
+      const userProducts = await Product.find({ seller: session.user.id })
+         .select("name seller")
+         .lean();
+      console.log("User products found:", userProducts.length);
 
       // Calculate stats
       const stats = await Product.aggregate([
-         { $match: { seller: session.user.id } },
+         { $match: { seller: new mongoose.Types.ObjectId(session.user.id) } },
          {
             $group: {
                _id: null,
@@ -72,6 +90,9 @@ export async function GET(request: NextRequest) {
                },
                pendingListings: {
                   $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] },
+               },
+               rejectedListings: {
+                  $sum: { $cond: [{ $eq: ["$status", "rejected"] }, 1, 0] },
                },
                totalValue: { $sum: "$price" },
                avgPrice: { $avg: "$price" },
@@ -83,6 +104,7 @@ export async function GET(request: NextRequest) {
          totalListings: 0,
          activeListings: 0,
          pendingListings: 0,
+         rejectedListings: 0,
          totalValue: 0,
          avgPrice: 0,
       };

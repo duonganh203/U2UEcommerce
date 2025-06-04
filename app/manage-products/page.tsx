@@ -177,11 +177,33 @@ export default function ManageProductsPage() {
       return matchesSearch && matchesFilter;
    });
 
+   // Sort the filtered listings
+   const sortedListings = [...filteredListings].sort((a, b) => {
+      switch (sortBy) {
+         case "newest":
+            return (
+               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+         case "oldest":
+            return (
+               new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            );
+         case "price-high":
+            return b.price - a.price;
+         case "price-low":
+            return a.price - b.price;
+         default:
+            return (
+               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+      }
+   });
+
    // Pagination calculations
-   const totalPages = Math.ceil(filteredListings.length / PRODUCTS_PER_PAGE);
+   const totalPages = Math.ceil(sortedListings.length / PRODUCTS_PER_PAGE);
    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
    const endIndex = startIndex + PRODUCTS_PER_PAGE;
-   const currentListings = filteredListings.slice(startIndex, endIndex);
+   const currentListings = sortedListings.slice(startIndex, endIndex);
 
    const handlePageChange = (page: number) => {
       setCurrentPage(page);
@@ -212,6 +234,30 @@ export default function ManageProductsPage() {
       return pages;
    };
 
+   // Calculate filtered stats for contextual information
+   const filteredStats = {
+      totalListings: sortedListings.length,
+      activeListings: sortedListings.filter(
+         (item) => item.status === "approved"
+      ).length,
+      pendingListings: sortedListings.filter(
+         (item) => item.status === "pending"
+      ).length,
+      rejectedListings: sortedListings.filter(
+         (item) => item.status === "rejected"
+      ).length,
+      totalValue: sortedListings.reduce((sum, item) => sum + item.price, 0),
+      avgPrice:
+         sortedListings.length > 0
+            ? sortedListings.reduce((sum, item) => sum + item.price, 0) /
+              sortedListings.length
+            : 0,
+   };
+
+   // Use filtered stats when search or filter is applied, otherwise use global stats
+   const displayStats =
+      searchTerm || filterStatus !== "all" ? filteredStats : stats;
+
    return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
          <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -231,10 +277,9 @@ export default function ManageProductsPage() {
                      List New Item
                   </Button>
                </Link>
-            </div>
-
+            </div>{" "}
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
                <div className="bg-card rounded-2xl p-6 shadow-lg border">
                   <div className="flex items-center justify-between">
                      <div>
@@ -242,7 +287,7 @@ export default function ManageProductsPage() {
                            Total Listings
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                           {stats.totalListings}
+                           {displayStats.totalListings}
                         </p>
                      </div>
                      <Package className="h-8 w-8 text-primary" />
@@ -256,7 +301,7 @@ export default function ManageProductsPage() {
                            Approved
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                           {stats.activeListings}
+                           {displayStats.activeListings}
                         </p>
                      </div>
                      <CheckCircle2 className="h-8 w-8 text-green-500" />
@@ -270,7 +315,7 @@ export default function ManageProductsPage() {
                            Pending
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                           {stats.pendingListings}
+                           {displayStats.pendingListings}
                         </p>
                      </div>
                      <Clock className="h-8 w-8 text-yellow-500" />
@@ -281,17 +326,30 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
+                           Rejected
+                        </p>
+                        <p className="text-2xl font-bold text-foreground">
+                           {displayStats.rejectedListings}
+                        </p>
+                     </div>
+                     <AlertCircle className="h-8 w-8 text-red-500" />
+                  </div>
+               </div>
+
+               <div className="bg-card rounded-2xl p-6 shadow-lg border">
+                  <div className="flex items-center justify-between">
+                     <div>
+                        <p className="text-sm font-medium text-muted-foreground">
                            Total Value
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                           ${stats.totalValue.toLocaleString()}
+                           ${displayStats.totalValue.toLocaleString()}
                         </p>
                      </div>
                      <DollarSign className="h-8 w-8 text-blue-500" />
                   </div>
                </div>
             </div>
-
             {/* Filters and Search */}
             <div className="bg-card rounded-2xl p-6 shadow-lg border mb-8">
                <div className="flex flex-col md:flex-row gap-4">
@@ -330,15 +388,14 @@ export default function ManageProductsPage() {
                      <option value="price-low">Price: Low to High</option>
                   </select>
                </div>{" "}
-            </div>
-
+            </div>{" "}
             {/* Results Count */}
-            {filteredListings.length > 0 && (
+            {sortedListings.length > 0 && (
                <div className="mb-6 flex justify-between items-center">
                   <p className="text-muted-foreground">
                      Showing {startIndex + 1}-
-                     {Math.min(endIndex, filteredListings.length)} of{" "}
-                     {filteredListings.length} listings
+                     {Math.min(endIndex, sortedListings.length)} of{" "}
+                     {sortedListings.length} listings
                   </p>
                   {totalPages > 1 && (
                      <p className="text-muted-foreground text-sm">
@@ -346,10 +403,9 @@ export default function ManageProductsPage() {
                      </p>
                   )}
                </div>
-            )}
-
+            )}{" "}
             {/* Listings Grid */}
-            {filteredListings.length === 0 ? (
+            {sortedListings.length === 0 ? (
                <div className="bg-card rounded-2xl p-12 shadow-lg border text-center">
                   <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-foreground mb-2">
@@ -462,10 +518,9 @@ export default function ManageProductsPage() {
                      </div>
                   ))}{" "}
                </div>
-            )}
-
+            )}{" "}
             {/* Pagination */}
-            {filteredListings.length > 0 && totalPages > 1 && (
+            {sortedListings.length > 0 && totalPages > 1 && (
                <div className="flex justify-center items-center mt-8 space-x-2">
                   <Button
                      variant="outline"
@@ -506,7 +561,6 @@ export default function ManageProductsPage() {
                   </Button>
                </div>
             )}
-
             {/* Quick Actions */}
             <div className="mt-8 bg-card rounded-2xl p-6 shadow-lg border">
                <h3 className="text-lg font-semibold text-foreground mb-4">
