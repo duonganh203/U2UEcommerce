@@ -3,7 +3,16 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Heart, Filter, Grid, List, ShoppingCart } from "lucide-react";
+import {
+   Star,
+   Heart,
+   Filter,
+   Grid,
+   List,
+   ShoppingCart,
+   ChevronLeft,
+   ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fetchProducts, transformProductForUI, type Product } from "@/lib/api";
 import { useCart } from "@/contexts/CartContext";
@@ -43,6 +52,8 @@ const sortOptions: SortOption[] = [
    { value: "newest", label: "Newest" },
 ];
 
+const PRODUCTS_PER_PAGE = 8;
+
 export default function ProductsPage() {
    const [products, setProducts] = useState<TransformedProduct[]>([]);
    const [loading, setLoading] = useState(true);
@@ -51,6 +62,7 @@ export default function ProductsPage() {
    const [sortBy, setSortBy] = useState("featured");
    const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
    const [wishlistedItems, setWishlistedItems] = useState<string[]>([]);
+   const [currentPage, setCurrentPage] = useState(1);
    const { addToCart } = useCart();
 
    // Fetch products on component mount and when filters change
@@ -94,8 +106,12 @@ export default function ProductsPage() {
             setLoading(false);
          }
       };
-
       loadProducts();
+   }, [selectedCategory, sortBy]);
+
+   // Reset to first page when filters change
+   useEffect(() => {
+      setCurrentPage(1);
    }, [selectedCategory, sortBy]);
 
    const filteredProducts = products.filter(
@@ -104,6 +120,42 @@ export default function ProductsPage() {
    );
 
    const sortedProducts = [...filteredProducts];
+
+   // Pagination calculations
+   const totalPages = Math.ceil(sortedProducts.length / PRODUCTS_PER_PAGE);
+   const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+   const endIndex = startIndex + PRODUCTS_PER_PAGE;
+   const currentProducts = sortedProducts.slice(startIndex, endIndex);
+
+   const handlePageChange = (page: number) => {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+   };
+
+   const generatePageNumbers = () => {
+      const pages = [];
+      const maxVisiblePages = 5;
+
+      if (totalPages <= maxVisiblePages) {
+         for (let i = 1; i <= totalPages; i++) {
+            pages.push(i);
+         }
+      } else {
+         const half = Math.floor(maxVisiblePages / 2);
+         let start = Math.max(1, currentPage - half);
+         let end = Math.min(totalPages, start + maxVisiblePages - 1);
+
+         if (end - start + 1 < maxVisiblePages) {
+            start = Math.max(1, end - maxVisiblePages + 1);
+         }
+
+         for (let i = start; i <= end; i++) {
+            pages.push(i);
+         }
+      }
+
+      return pages;
+   };
 
    const toggleWishlist = (productId: string) => {
       setWishlistedItems((prev) =>
@@ -317,7 +369,6 @@ export default function ProductsPage() {
                   Discover our amazing collection of products
                </p>
             </div>
-
             {/* Filters and Controls */}
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 space-y-4 lg:space-y-0">
                {/* Categories */}
@@ -374,15 +425,20 @@ export default function ProductsPage() {
                      </button>
                   </div>
                </div>
-            </div>
-
+            </div>{" "}
             {/* Results Count */}
-            <div className="mb-6">
+            <div className="mb-6 flex justify-between items-center">
                <p className="text-muted-foreground">
-                  Showing {sortedProducts.length} products
+                  Showing {startIndex + 1}-
+                  {Math.min(endIndex, sortedProducts.length)} of{" "}
+                  {sortedProducts.length} products
                </p>
+               {totalPages > 1 && (
+                  <p className="text-muted-foreground text-sm">
+                     Page {currentPage} of {totalPages}
+                  </p>
+               )}
             </div>
-
             {/* Loading State */}
             {loading && (
                <div className="flex justify-center items-center py-12">
@@ -392,7 +448,6 @@ export default function ProductsPage() {
                   </span>
                </div>
             )}
-
             {/* Error State */}
             {error && (
                <div className="bg-destructive/10 border border-destructive/20 rounded-md p-4 mb-6">
@@ -406,8 +461,7 @@ export default function ProductsPage() {
                      Try Again
                   </Button>
                </div>
-            )}
-
+            )}{" "}
             {/* Products Grid/List */}
             {!loading && !error && (
                <div
@@ -417,8 +471,8 @@ export default function ProductsPage() {
                         : "space-y-4"
                   }
                >
-                  {sortedProducts.length > 0 ? (
-                     sortedProducts.map((product) => (
+                  {currentProducts.length > 0 ? (
+                     currentProducts.map((product) => (
                         <ProductCard key={product.id} product={product} />
                      ))
                   ) : (
@@ -433,12 +487,45 @@ export default function ProductsPage() {
                   )}
                </div>
             )}
+            {/* Pagination */}
+            {!loading && !error && totalPages > 1 && (
+               <div className="flex justify-center items-center mt-12 space-x-2">
+                  <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={() => handlePageChange(currentPage - 1)}
+                     disabled={currentPage === 1}
+                     className="flex items-center space-x-1"
+                  >
+                     <ChevronLeft className="w-4 h-4" />
+                     <span>Previous</span>
+                  </Button>
 
-            {/* Load More Button */}
-            {!loading && !error && sortedProducts.length > 0 && (
-               <div className="text-center mt-12">
-                  <Button variant="outline" size="lg">
-                     Load More Products
+                  <div className="flex space-x-1">
+                     {generatePageNumbers().map((page) => (
+                        <Button
+                           key={page}
+                           variant={
+                              currentPage === page ? "default" : "outline"
+                           }
+                           size="sm"
+                           onClick={() => handlePageChange(page)}
+                           className="w-10 h-10"
+                        >
+                           {page}
+                        </Button>
+                     ))}
+                  </div>
+
+                  <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={() => handlePageChange(currentPage + 1)}
+                     disabled={currentPage === totalPages}
+                     className="flex items-center space-x-1"
+                  >
+                     <span>Next</span>
+                     <ChevronRight className="w-4 h-4" />
                   </Button>
                </div>
             )}

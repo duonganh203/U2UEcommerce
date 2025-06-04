@@ -17,6 +17,8 @@ import {
    AlertCircle,
    CheckCircle2,
    Loader2,
+   ChevronLeft,
+   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +48,8 @@ interface Stats {
    avgPrice: number;
 }
 
+const PRODUCTS_PER_PAGE = 6;
+
 export default function ManageProductsPage() {
    const { data: session, status } = useSession();
    const router = useRouter();
@@ -62,6 +66,7 @@ export default function ManageProductsPage() {
    const [searchTerm, setSearchTerm] = useState("");
    const [filterStatus, setFilterStatus] = useState("all");
    const [sortBy, setSortBy] = useState("newest");
+   const [currentPage, setCurrentPage] = useState(1);
 
    // Fetch listings data
    const fetchListings = async () => {
@@ -112,7 +117,6 @@ export default function ManageProductsPage() {
          alert("Error deleting listing");
       }
    };
-
    useEffect(() => {
       if (status === "loading") return;
       if (!session) {
@@ -121,6 +125,11 @@ export default function ManageProductsPage() {
       }
       fetchListings();
    }, [session, status, router]);
+
+   // Reset to first page when filters change
+   useEffect(() => {
+      setCurrentPage(1);
+   }, [searchTerm, filterStatus, sortBy]);
 
    if (status === "loading" || loading) {
       return (
@@ -159,7 +168,6 @@ export default function ManageProductsPage() {
             return "bg-gray-100 text-gray-800 border-gray-200";
       }
    };
-
    const filteredListings = listings.filter((listing: Product) => {
       const matchesSearch =
          listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -168,6 +176,41 @@ export default function ManageProductsPage() {
          filterStatus === "all" || listing.status === filterStatus;
       return matchesSearch && matchesFilter;
    });
+
+   // Pagination calculations
+   const totalPages = Math.ceil(filteredListings.length / PRODUCTS_PER_PAGE);
+   const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+   const endIndex = startIndex + PRODUCTS_PER_PAGE;
+   const currentListings = filteredListings.slice(startIndex, endIndex);
+
+   const handlePageChange = (page: number) => {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+   };
+
+   const generatePageNumbers = () => {
+      const pages = [];
+      const maxVisiblePages = 5;
+
+      if (totalPages <= maxVisiblePages) {
+         for (let i = 1; i <= totalPages; i++) {
+            pages.push(i);
+         }
+      } else {
+         const half = Math.floor(maxVisiblePages / 2);
+         let start = Math.max(1, currentPage - half);
+         let end = Math.min(totalPages, start + maxVisiblePages - 1);
+
+         if (end - start + 1 < maxVisiblePages) {
+            start = Math.max(1, end - maxVisiblePages + 1);
+         }
+
+         for (let i = start; i <= end; i++) {
+            pages.push(i);
+         }
+      }
+      return pages;
+   };
 
    return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -286,8 +329,24 @@ export default function ManageProductsPage() {
                      <option value="price-high">Price: High to Low</option>
                      <option value="price-low">Price: Low to High</option>
                   </select>
-               </div>
+               </div>{" "}
             </div>
+
+            {/* Results Count */}
+            {filteredListings.length > 0 && (
+               <div className="mb-6 flex justify-between items-center">
+                  <p className="text-muted-foreground">
+                     Showing {startIndex + 1}-
+                     {Math.min(endIndex, filteredListings.length)} of{" "}
+                     {filteredListings.length} listings
+                  </p>
+                  {totalPages > 1 && (
+                     <p className="text-muted-foreground text-sm">
+                        Page {currentPage} of {totalPages}
+                     </p>
+                  )}
+               </div>
+            )}
 
             {/* Listings Grid */}
             {filteredListings.length === 0 ? (
@@ -314,7 +373,7 @@ export default function ManageProductsPage() {
                </div>
             ) : (
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredListings.map((listing: Product) => (
+                  {currentListings.map((listing: Product) => (
                      <div
                         key={listing._id}
                         className="bg-card rounded-2xl shadow-lg border overflow-hidden hover:shadow-xl transition-shadow"
@@ -401,7 +460,50 @@ export default function ManageProductsPage() {
                            </div>
                         </div>
                      </div>
-                  ))}
+                  ))}{" "}
+               </div>
+            )}
+
+            {/* Pagination */}
+            {filteredListings.length > 0 && totalPages > 1 && (
+               <div className="flex justify-center items-center mt-8 space-x-2">
+                  <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={() => handlePageChange(currentPage - 1)}
+                     disabled={currentPage === 1}
+                     className="flex items-center space-x-1"
+                  >
+                     <ChevronLeft className="w-4 h-4" />
+                     <span>Previous</span>
+                  </Button>
+
+                  <div className="flex space-x-1">
+                     {generatePageNumbers().map((page) => (
+                        <Button
+                           key={page}
+                           variant={
+                              currentPage === page ? "default" : "outline"
+                           }
+                           size="sm"
+                           onClick={() => handlePageChange(page)}
+                           className="w-10 h-10"
+                        >
+                           {page}
+                        </Button>
+                     ))}
+                  </div>
+
+                  <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={() => handlePageChange(currentPage + 1)}
+                     disabled={currentPage === totalPages}
+                     className="flex items-center space-x-1"
+                  >
+                     <span>Next</span>
+                     <ChevronRight className="w-4 h-4" />
+                  </Button>
                </div>
             )}
 
