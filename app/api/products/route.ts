@@ -104,6 +104,7 @@ export async function POST(request: NextRequest) {
          tags,
          shipping,
          location,
+         discountPercentage,
       } = body;
 
       // Validation
@@ -140,7 +141,7 @@ export async function POST(request: NextRequest) {
          rating: 0,
          numReviews: 0,
          reviews: [],
-         discountPercentage: 0,
+         discountPercentage,
       });
 
       const savedProduct = await newProduct.save();

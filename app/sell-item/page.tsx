@@ -48,6 +48,7 @@ export default function SellItemPage() {
       freeShipping: false,
       localPickup: false,
       calculatedShipping: false,
+      discountPercentage: "0",
    });
 
    const categories = [
@@ -153,9 +154,7 @@ export default function SellItemPage() {
          const uploadedImages = await uploadMultipleImages(images);
          const imageUrls = uploadedImages.map((img) => img.secure_url);
          setUploadedImageUrls(imageUrls);
-         setIsUploadingImages(false);
-
-         // Create product data
+         setIsUploadingImages(false); // Create product data
          const productData = {
             name: formData.title,
             description: formData.description,
@@ -166,6 +165,7 @@ export default function SellItemPage() {
             countInStock: formData.quantity,
             condition: selectedCondition,
             tags: formData.tags,
+            discountPercentage: parseFloat(formData.discountPercentage) || 0,
             shipping: {
                freeShipping: formData.freeShipping,
                localPickup: formData.localPickup,
@@ -189,8 +189,7 @@ export default function SellItemPage() {
          const result = await response.json();
 
          if (result.success) {
-            setIsSubmitted(true);
-            // Reset form
+            setIsSubmitted(true); // Reset form
             setFormData({
                title: "",
                description: "",
@@ -203,6 +202,7 @@ export default function SellItemPage() {
                freeShipping: false,
                localPickup: false,
                calculatedShipping: false,
+               discountPercentage: "0",
             });
             setImages([]);
             setSelectedCategory("");
@@ -595,6 +595,40 @@ export default function SellItemPage() {
                               }
                            />
                         </div>
+                     </div>
+
+                     {/* Discount Percentage */}
+                     <div>
+                        <Label
+                           htmlFor="discountPercentage"
+                           className="text-sm font-medium mb-2 block"
+                        >
+                           Discount Percentage
+                        </Label>
+                        <div className="relative">
+                           <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground">
+                              %
+                           </span>
+                           <Input
+                              id="discountPercentage"
+                              type="number"
+                              placeholder="0"
+                              className="pl-10 text-base"
+                              min="0"
+                              max="100"
+                              step="1"
+                              value={formData.discountPercentage}
+                              onChange={(e) =>
+                                 handleInputChange(
+                                    "discountPercentage",
+                                    e.target.value
+                                 )
+                              }
+                           />
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                           Optional: Set a discount percentage (0-100%)
+                        </p>
                      </div>
 
                      {/* Tags */}
