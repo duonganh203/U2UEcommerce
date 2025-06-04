@@ -75,7 +75,6 @@ export default function ManageProductsPage() {
          const response = await fetch("/api/products/my-listings");
          if (response.ok) {
             const data = await response.json();
-            console.log("Fetched listings:", data);
             setListings(data.data || []);
             setStats(
                data.stats || {

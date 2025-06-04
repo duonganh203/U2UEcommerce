@@ -58,25 +58,14 @@ export async function GET(request: NextRequest) {
          .lean(); // Get total count for pagination
       const total = await Product.countDocuments(query);
       const totalPages = Math.ceil(total / limit); // Debug: Check what's in session.user.id and what sellers exist
-      console.log("Session user ID:", session.user.id);
-      console.log("Session user ID type:", typeof session.user.id);
 
       // Check all products and their sellers for debugging
       const allProducts = await Product.find({}).select("seller name").lean();
-      console.log(
-         "All products with sellers:",
-         allProducts.map((p) => ({
-            name: p.name,
-            seller: p.seller,
-            sellerType: typeof p.seller,
-         }))
-      );
 
       // Try to find products with the current user as seller
       const userProducts = await Product.find({ seller: session.user.id })
          .select("name seller")
          .lean();
-      console.log("User products found:", userProducts.length);
 
       // Calculate stats
       const stats = await Product.aggregate([
