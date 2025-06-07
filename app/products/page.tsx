@@ -43,7 +43,19 @@ type TransformedProduct = {
    discountPercentage: number;
 };
 
-const categories: Category[] = ["All", "Electronics", "Photography", "Gaming"];
+const categories: Category[] = [
+   "All",
+   "Electronics",
+   "Clothing & Fashion",
+   "Home & Garden",
+   "Sports & Outdoors",
+   "Books & Education",
+   "Toys & Games",
+   "Beauty & Health",
+   "Automotive",
+   "Art & Collectibles",
+   "Other",
+];
 const sortOptions: SortOption[] = [
    { value: "featured", label: "Featured" },
    { value: "price-low", label: "Price: Low to High" },
