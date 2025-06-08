@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { fetchProducts, transformProductForUI, type Product } from "@/lib/api";
 import { useCart } from "@/contexts/CartContext";
+import StarRating from "@/components/StarRating";
 
 // Type definitions for UI components
 type Category = string;
@@ -176,7 +177,6 @@ export default function ProductsPage() {
             : [...prev, productId]
       );
    };
-
    const handleAddToCart = (product: TransformedProduct) => {
       if (!product.inStock) return;
 
@@ -188,18 +188,6 @@ export default function ProductsPage() {
          stockCount: product.stockCount,
          discountPercentage: product.discountPercentage,
       });
-   };
-   const renderStars = (rating: number) => {
-      return Array.from({ length: 5 }, (_, i) => (
-         <Star
-            key={i}
-            className={`w-4 h-4 ${
-               i < Math.floor(rating)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-muted-foreground"
-            }`}
-         />
-      ));
    };
 
    const ProductCard = ({ product }: { product: any }) => {
@@ -245,17 +233,13 @@ export default function ProductsPage() {
                               }`}
                            />
                         </button>
-                     </div>
-
+                     </div>{" "}
                      <div className="flex items-center space-x-2 mb-3">
-                        <div className="flex">
-                           {renderStars(product.rating)}
-                        </div>
+                        <StarRating rating={product.rating} size="sm" />
                         <span className="text-sm text-muted-foreground">
                            ({product.reviewCount})
                         </span>
                      </div>
-
                      <div className="flex items-center justify-between">
                         <div className="flex items-baseline space-x-2">
                            <span className="text-xl font-bold text-foreground">
@@ -327,15 +311,13 @@ export default function ProductsPage() {
                </p>
                <h3 className="font-semibold text-foreground mb-2 hover:text-primary">
                   <Link href={`/products/${product.id}`}>{product.name}</Link>
-               </h3>
-
+               </h3>{" "}
                <div className="flex items-center space-x-1 mb-2">
-                  <div className="flex">{renderStars(product.rating)}</div>
+                  <StarRating rating={product.rating} size="sm" />
                   <span className="text-sm text-muted-foreground">
                      ({product.reviewCount})
                   </span>
                </div>
-
                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-baseline space-x-2">
                      <span className="text-lg font-bold text-foreground">
@@ -355,7 +337,6 @@ export default function ProductsPage() {
                      {product.inStock ? "In Stock" : "Out of Stock"}
                   </span>
                </div>
-
                <Button
                   className="w-full flex items-center justify-center space-x-2"
                   size="sm"

@@ -33,6 +33,15 @@ export interface IProduct extends mongoose.Document {
    };
    createdAt: Date;
    updatedAt: Date;
+
+   // Rating methods
+   calculateAverageRating(): number;
+   addReview(
+      userId: mongoose.Types.ObjectId,
+      rating: number,
+      comment: string
+   ): Promise<IProduct>;
+   removeReview(userId: mongoose.Types.ObjectId): Promise<IProduct>;
 }
 
 const productSchema = new mongoose.Schema(
@@ -169,5 +178,81 @@ const productSchema = new mongoose.Schema(
       timestamps: true,
    }
 );
+
+// Method to calculate average rating from reviews
+productSchema.methods.calculateAverageRating = function (this: IProduct) {
+   if (this.reviews.length === 0) {
+      this.rating = 0;
+      this.numReviews = 0;
+      return 0;
+   }
+
+   const totalRating = this.reviews.reduce(
+      (sum: number, review: any) => sum + review.rating,
+      0
+   );
+   const averageRating = totalRating / this.reviews.length;
+
+   this.rating = Math.round(averageRating * 10) / 10; // Round to 1 decimal place
+   this.numReviews = this.reviews.length;
+
+   return this.rating;
+};
+
+// Method to add a review and update rating
+productSchema.methods.addReview = function (
+   this: IProduct,
+   userId: mongoose.Types.ObjectId,
+   rating: number,
+   comment: string
+) {
+   // Check if user already reviewed this product
+   const existingReviewIndex = this.reviews.findIndex(
+      (review: any) => review.user.toString() === userId.toString()
+   );
+
+   if (existingReviewIndex !== -1) {
+      // Update existing review
+      this.reviews[existingReviewIndex].rating = rating;
+      this.reviews[existingReviewIndex].comment = comment;
+      this.reviews[existingReviewIndex].createdAt = new Date();
+   } else {
+      // Add new review
+      this.reviews.push({
+         user: userId,
+         rating,
+         comment,
+         createdAt: new Date(),
+      } as any);
+   }
+
+   // Recalculate average rating
+   this.calculateAverageRating();
+
+   return this.save();
+};
+
+// Method to remove a review and update rating
+productSchema.methods.removeReview = function (
+   this: IProduct,
+   userId: mongoose.Types.ObjectId
+) {
+   this.reviews = this.reviews.filter(
+      (review: any) => review.user.toString() !== userId.toString()
+   ) as any;
+
+   // Recalculate average rating
+   this.calculateAverageRating();
+
+   return this.save();
+};
+
+// Pre-save middleware to ensure rating is always calculated
+productSchema.pre("save", function (next) {
+   if (this.isModified("reviews")) {
+      (this as any).calculateAverageRating();
+   }
+   next();
+});
 
 export const Product = mongoose.model<IProduct>("Product", productSchema);

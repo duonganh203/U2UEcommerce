@@ -16,6 +16,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { fetchProductById, transformProductForUI } from "@/lib/api";
 import { useCart } from "@/contexts/CartContext";
+import ProductRating from "@/components/ProductRating";
+import RatingDisplay from "@/components/RatingDisplay";
 
 // ProductColor type definition
 type ProductColor = {
@@ -61,6 +63,7 @@ interface ProductPageData {
    colors: ProductColor[];
    sizes: ProductSize[];
    discountPercentage: number;
+   seller?: string; // Add seller ID for rating component
 }
 
 // Dummy reviews data
@@ -280,18 +283,15 @@ export default function ProductPage({
                      </p>
                      <h1 className="text-3xl font-bold text-foreground mb-2">
                         {product.name}
-                     </h1>
-
+                     </h1>{" "}
                      {/* Rating */}
-                     <div className="flex items-center space-x-2 mb-4">
-                        <div className="flex">
-                           {renderStars(product.rating)}
-                        </div>
-                        <span className="text-sm text-muted-foreground">
-                           ({product.reviewCount} reviews)
-                        </span>
+                     <div className="mb-4">
+                        <RatingDisplay
+                           rating={product.rating}
+                           numReviews={product.reviewCount}
+                           size="md"
+                        />
                      </div>
-
                      {/* Price */}
                      <div className="flex items-baseline space-x-2 mb-6">
                         <span className="text-3xl font-bold text-foreground">
@@ -488,7 +488,6 @@ export default function ProductPage({
                         </p>
                      </div>
                   )}
-
                   {activeTab === "specifications" && (
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {Object.entries(
@@ -507,42 +506,14 @@ export default function ProductPage({
                            </div>
                         ))}
                      </div>
-                  )}
-
+                  )}{" "}
                   {activeTab === "reviews" && (
                      <div className="space-y-6">
-                        <div className="flex items-center justify-between">
-                           <h3 className="text-lg font-medium text-foreground">
-                              Customer Reviews
-                           </h3>
-                           <Button variant="outline">Write a Review</Button>
-                        </div>
-
-                        <div className="space-y-6">
-                           {dummyReviews.map((review: DummyReview) => (
-                              <div
-                                 key={review.id}
-                                 className="border-b border-border pb-6"
-                              >
-                                 <div className="flex items-center justify-between mb-2">
-                                    <div className="flex items-center space-x-2">
-                                       <span className="font-medium text-foreground">
-                                          {review.user}
-                                       </span>
-                                       <div className="flex">
-                                          {renderStars(review.rating)}
-                                       </div>
-                                    </div>
-                                    <span className="text-sm text-muted-foreground">
-                                       {review.date}
-                                    </span>
-                                 </div>
-                                 <p className="text-muted-foreground">
-                                    {review.comment}
-                                 </p>
-                              </div>
-                           ))}
-                        </div>
+                        {/* Use the comprehensive ProductRating component */}
+                        <ProductRating
+                           productId={product.id}
+                           sellerId={product.seller || ""}
+                        />
                      </div>
                   )}
                </div>
