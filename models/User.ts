@@ -8,6 +8,7 @@ export interface IUser extends mongoose.Document {
    lastName: string;
    role: "user" | "admin";
    phoneNumber?: string;
+   avatar?: string;
    address?: {
       street: string;
       city: string;
@@ -50,6 +51,10 @@ const userSchema = new mongoose.Schema(
          default: "user",
       },
       phoneNumber: {
+         type: String,
+         trim: true,
+      },
+      avatar: {
          type: String,
          trim: true,
       },

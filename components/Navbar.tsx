@@ -102,7 +102,7 @@ export default function Navbar() {
                            >
                               <Avatar className="h-8 w-8">
                                  <AvatarImage
-                                    src={session.user?.image || ""}
+                                    src={session.user?.avatar || ""}
                                     alt={session.user?.name || "User"}
                                  />
                                  <AvatarFallback>
@@ -261,7 +261,7 @@ export default function Navbar() {
                                     <DropdownMenuLabel className="font-normal">
                                        <div className="flex flex-col space-y-1">
                                           <p className="text-sm font-medium leading-none">
-                                             {session.user?.name || "User"}
+                                             {session.user?.firstName || "User"}
                                           </p>
                                           <p className="text-xs leading-none text-muted-foreground">
                                              {session.user?.email}
