@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 export interface IUser extends mongoose.Document {
+   _id: mongoose.Types.ObjectId;
    email: string;
    password: string;
    firstName: string;
    lastName: string;
    role: "user" | "admin";
+   isActive: boolean;
    phoneNumber?: string;
    avatar?: string;
    address?: {
@@ -49,6 +51,10 @@ const userSchema = new mongoose.Schema(
          type: String,
          enum: ["user", "admin"],
          default: "user",
+      },
+      isActive: {
+         type: Boolean,
+         default: true,
       },
       phoneNumber: {
          type: String,

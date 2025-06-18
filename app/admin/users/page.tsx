@@ -1,92 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useUsers } from "@/hooks/useUsers";
 
 const UsersPage = () => {
-   // Mock data for demonstration
-   const initialUsers = [
-      {
-         id: "1",
-         name: "John Smith",
-         email: "john@example.com",
-         role: "user",
-         status: "active",
-         joined: "June 1, 2025",
-         orders: 12,
-      },
-      {
-         id: "2",
-         name: "Sarah Johnson",
-         email: "sarah@example.com",
-         role: "user",
-         status: "active",
-         joined: "May 28, 2025",
-         orders: 5,
-      },
-      {
-         id: "3",
-         name: "Michael Brown",
-         email: "michael@example.com",
-         role: "user",
-         status: "inactive",
-         joined: "May 25, 2025",
-         orders: 0,
-      },
-      {
-         id: "4",
-         name: "Emily Davis",
-         email: "emily@example.com",
-         role: "user",
-         status: "active",
-         joined: "May 22, 2025",
-         orders: 8,
-      },
-      {
-         id: "5",
-         name: "Robert Wilson",
-         email: "robert@example.com",
-         role: "admin",
-         status: "active",
-         joined: "April 15, 2025",
-         orders: 3,
-      },
-      {
-         id: "6",
-         name: "Jennifer Lee",
-         email: "jennifer@example.com",
-         role: "user",
-         status: "active",
-         joined: "May 18, 2025",
-         orders: 2,
-      },
-      {
-         id: "7",
-         name: "David Miller",
-         email: "david@example.com",
-         role: "user",
-         status: "active",
-         joined: "May 10, 2025",
-         orders: 7,
-      },
-      {
-         id: "8",
-         name: "Lisa Garcia",
-         email: "lisa@example.com",
-         role: "user",
-         status: "inactive",
-         joined: "April 29, 2025",
-         orders: 1,
-      },
-   ];
+   const {
+      users,
+      loading,
+      error,
+      pagination,
+      fetchUsers,
+      createUser,
+      updateUser,
+      changeUserStatus,
+   } = useUsers();
 
-   const [users, setUsers] = useState(initialUsers);
    const [searchTerm, setSearchTerm] = useState("");
    const [roleFilter, setRoleFilter] = useState("all");
    const [statusFilter, setStatusFilter] = useState("all");
    const [selectedUser, setSelectedUser] = useState<any>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
-   // Filter users based on search term and filters
+   // Fetch users on component mount and when filters change
+   useEffect(() => {
+      fetchUsers({
+         search: searchTerm,
+         role: roleFilter,
+         status: statusFilter,
+         page: 1,
+         limit: 50, // Get more users for better demo
+      });
+   }, [searchTerm, roleFilter, statusFilter]);
+
+   // Filter users locally for immediate feedback (the API also filters)
    const filteredUsers = users.filter((user) => {
       const matchesSearch =
          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -104,24 +50,51 @@ const UsersPage = () => {
       setIsModalOpen(true);
    };
 
-   const handleSaveUser = (e: React.FormEvent) => {
+   const handleSaveUser = async (e: React.FormEvent) => {
       e.preventDefault();
-      // In a real app, this would save to backend
-      // For the UI demo, we'll just update the local state
-      setUsers(
-         users.map((user) =>
-            user.id === selectedUser.id ? selectedUser : user
-         )
-      );
-      setIsModalOpen(false);
+      try {
+         if (selectedUser.id) {
+            // Update existing user
+            await updateUser(selectedUser.id, {
+               email: selectedUser.email,
+               firstName:
+                  selectedUser.firstName || selectedUser.name.split(" ")[0],
+               lastName:
+                  selectedUser.lastName ||
+                  selectedUser.name.split(" ").slice(1).join(" "),
+               role: selectedUser.role,
+               phoneNumber: selectedUser.phoneNumber,
+               status: selectedUser.status,
+            });
+         } else {
+            // Create new user
+            await createUser({
+               email: selectedUser.email,
+               password: selectedUser.password || "defaultPassword123!",
+               firstName:
+                  selectedUser.firstName || selectedUser.name.split(" ")[0],
+               lastName:
+                  selectedUser.lastName ||
+                  selectedUser.name.split(" ").slice(1).join(" "),
+               role: selectedUser.role,
+               phoneNumber: selectedUser.phoneNumber,
+            });
+         }
+         setIsModalOpen(false);
+         setSelectedUser(null);
+      } catch (error) {
+         console.error("Error saving user:", error);
+         // You might want to show a toast notification here
+      }
    };
 
-   const handleChangeStatus = (userId: string, newStatus: string) => {
-      setUsers(
-         users.map((user) =>
-            user.id === userId ? { ...user, status: newStatus } : user
-         )
-      );
+   const handleChangeStatus = async (userId: string, newStatus: string) => {
+      try {
+         await changeUserStatus(userId, newStatus as "active" | "inactive");
+      } catch (error) {
+         console.error("Error changing user status:", error);
+         // You might want to show a toast notification here
+      }
    };
 
    return (
@@ -137,10 +110,13 @@ const UsersPage = () => {
                      id: "",
                      name: "",
                      email: "",
+                     firstName: "",
+                     lastName: "",
                      role: "user",
                      status: "active",
                      joined: new Date().toLocaleDateString(),
                      orders: 0,
+                     password: "",
                   });
                   setIsModalOpen(true);
                }}
@@ -209,114 +185,134 @@ const UsersPage = () => {
 
          {/* Users Table */}
          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="overflow-x-auto">
-               <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                           User
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                           Role
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                           Status
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                           Joined
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                           Orders
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                           Actions
-                        </th>
-                     </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                     {filteredUsers.map((user) => (
-                        <tr key={user.id} className="hover:bg-gray-50">
-                           <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
-                                 <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-200 flex items-center justify-center">
-                                    <span className="text-gray-500 font-medium">
-                                       {user.name.charAt(0)}
-                                    </span>
-                                 </div>
-                                 <div className="ml-4">
-                                    <div className="text-sm font-medium text-gray-900">
-                                       {user.name}
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                       {user.email}
-                                    </div>
-                                 </div>
-                              </div>
-                           </td>
-                           <td className="px-6 py-4 whitespace-nowrap">
-                              <span
-                                 className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                    user.role === "admin"
-                                       ? "bg-purple-100 text-purple-800"
-                                       : "bg-blue-100 text-blue-800"
-                                 }`}
-                              >
-                                 {user.role}
-                              </span>
-                           </td>
-                           <td className="px-6 py-4 whitespace-nowrap">
-                              <span
-                                 className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                    user.status === "active"
-                                       ? "bg-green-100 text-green-800"
-                                       : "bg-red-100 text-red-800"
-                                 }`}
-                              >
-                                 {user.status}
-                              </span>
-                           </td>
-                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {user.joined}
-                           </td>
-                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {user.orders}
-                           </td>
-                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <button
-                                 onClick={() => handleEditUser(user)}
-                                 className="text-indigo-600 hover:text-indigo-900 mr-3"
-                              >
-                                 Edit
-                              </button>
-                              {user.status === "active" ? (
-                                 <button
-                                    onClick={() =>
-                                       handleChangeStatus(user.id, "inactive")
-                                    }
-                                    className="text-red-600 hover:text-red-900"
-                                 >
-                                    Deactivate
-                                 </button>
-                              ) : (
-                                 <button
-                                    onClick={() =>
-                                       handleChangeStatus(user.id, "active")
-                                    }
-                                    className="text-green-600 hover:text-green-900"
-                                 >
-                                    Activate
-                                 </button>
-                              )}
-                           </td>
-                        </tr>
-                     ))}
-                  </tbody>
-               </table>
-            </div>
-            {filteredUsers.length === 0 && (
+            {loading && (
                <div className="py-6 text-center text-gray-500">
-                  No users found matching your filters.
+                  Loading users...
                </div>
+            )}
+            {error && (
+               <div className="py-6 text-center text-red-500">
+                  Error: {error}
+               </div>
+            )}
+            {!loading && !error && (
+               <>
+                  <div className="overflow-x-auto">
+                     <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                           <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 User
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Role
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Status
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Joined
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Orders
+                              </th>
+                              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Actions
+                              </th>
+                           </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                           {filteredUsers.map((user) => (
+                              <tr key={user.id} className="hover:bg-gray-50">
+                                 <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="flex items-center">
+                                       <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-200 flex items-center justify-center">
+                                          <span className="text-gray-500 font-medium">
+                                             {user.name.charAt(0)}
+                                          </span>
+                                       </div>
+                                       <div className="ml-4">
+                                          <div className="text-sm font-medium text-gray-900">
+                                             {user.name}
+                                          </div>
+                                          <div className="text-sm text-gray-500">
+                                             {user.email}
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                          user.role === "admin"
+                                             ? "bg-purple-100 text-purple-800"
+                                             : "bg-blue-100 text-blue-800"
+                                       }`}
+                                    >
+                                       {user.role}
+                                    </span>
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                          user.status === "active"
+                                             ? "bg-green-100 text-green-800"
+                                             : "bg-red-100 text-red-800"
+                                       }`}
+                                    >
+                                       {user.status}
+                                    </span>
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {user.joined}
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {user.orders}
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button
+                                       onClick={() => handleEditUser(user)}
+                                       className="text-indigo-600 hover:text-indigo-900 mr-3"
+                                    >
+                                       Edit
+                                    </button>
+                                    {user.status === "active" ? (
+                                       <button
+                                          onClick={() =>
+                                             handleChangeStatus(
+                                                user.id,
+                                                "inactive"
+                                             )
+                                          }
+                                          className="text-red-600 hover:text-red-900"
+                                       >
+                                          Deactivate
+                                       </button>
+                                    ) : (
+                                       <button
+                                          onClick={() =>
+                                             handleChangeStatus(
+                                                user.id,
+                                                "active"
+                                             )
+                                          }
+                                          className="text-green-600 hover:text-green-900"
+                                       >
+                                          Activate
+                                       </button>
+                                    )}
+                                 </td>
+                              </tr>
+                           ))}
+                        </tbody>
+                     </table>
+                  </div>
+                  {filteredUsers.length === 0 && (
+                     <div className="py-6 text-center text-gray-500">
+                        No users found matching your filters.
+                     </div>
+                  )}
+               </>
             )}
          </div>
 
@@ -339,19 +335,64 @@ const UsersPage = () => {
                      <div className="space-y-4">
                         <div>
                            <label
-                              htmlFor="name"
+                              htmlFor="firstName"
                               className="block text-sm font-medium text-gray-700"
                            >
-                              Name
+                              First Name
                            </label>
                            <input
                               type="text"
-                              id="name"
-                              value={selectedUser.name}
+                              id="firstName"
+                              value={
+                                 selectedUser.firstName ||
+                                 selectedUser.name?.split(" ")[0] ||
+                                 ""
+                              }
                               onChange={(e) =>
                                  setSelectedUser({
                                     ...selectedUser,
-                                    name: e.target.value,
+                                    firstName: e.target.value,
+                                    name: `${e.target.value} ${
+                                       selectedUser.lastName ||
+                                       selectedUser.name
+                                          ?.split(" ")
+                                          .slice(1)
+                                          .join(" ") ||
+                                       ""
+                                    }`.trim(),
+                                 })
+                              }
+                              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                              required
+                           />
+                        </div>
+                        <div>
+                           <label
+                              htmlFor="lastName"
+                              className="block text-sm font-medium text-gray-700"
+                           >
+                              Last Name
+                           </label>
+                           <input
+                              type="text"
+                              id="lastName"
+                              value={
+                                 selectedUser.lastName ||
+                                 selectedUser.name
+                                    ?.split(" ")
+                                    .slice(1)
+                                    .join(" ") ||
+                                 ""
+                              }
+                              onChange={(e) =>
+                                 setSelectedUser({
+                                    ...selectedUser,
+                                    lastName: e.target.value,
+                                    name: `${
+                                       selectedUser.firstName ||
+                                       selectedUser.name?.split(" ")[0] ||
+                                       ""
+                                    } ${e.target.value}`.trim(),
                                  })
                               }
                               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -377,6 +418,51 @@ const UsersPage = () => {
                               }
                               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                               required
+                           />
+                        </div>
+                        {!selectedUser.id && (
+                           <div>
+                              <label
+                                 htmlFor="password"
+                                 className="block text-sm font-medium text-gray-700"
+                              >
+                                 Password
+                              </label>
+                              <input
+                                 type="password"
+                                 id="password"
+                                 value={selectedUser.password || ""}
+                                 onChange={(e) =>
+                                    setSelectedUser({
+                                       ...selectedUser,
+                                       password: e.target.value,
+                                    })
+                                 }
+                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                 required={!selectedUser.id}
+                                 minLength={8}
+                                 placeholder="Minimum 8 characters"
+                              />
+                           </div>
+                        )}
+                        <div>
+                           <label
+                              htmlFor="phoneNumber"
+                              className="block text-sm font-medium text-gray-700"
+                           >
+                              Phone Number
+                           </label>
+                           <input
+                              type="tel"
+                              id="phoneNumber"
+                              value={selectedUser.phoneNumber || ""}
+                              onChange={(e) =>
+                                 setSelectedUser({
+                                    ...selectedUser,
+                                    phoneNumber: e.target.value,
+                                 })
+                              }
+                              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                            />
                         </div>
                         <div>
