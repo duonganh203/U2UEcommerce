@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { uploadMultipleImages } from "@/lib/cloudinary";
+import AIPricingAssistant from "@/components/AIPricingAssistant";
 
 export default function SellItemPage() {
    const { data: session, status } = useSession();
@@ -221,6 +222,10 @@ export default function SellItemPage() {
 
    const handleInputChange = (field: string, value: string | boolean) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
+   };
+
+   const handleAIPriceSelect = (price: number) => {
+      setFormData((prev) => ({ ...prev, price: price.toString() }));
    };
 
    const getPriceSuggestion = (category: string) => {
@@ -507,6 +512,20 @@ export default function SellItemPage() {
                      </div>
                   </div>
                </div>
+               {/* AI Pricing Assistant */}
+               {formData.title && selectedCategory && selectedCondition && (
+                  <AIPricingAssistant
+                     productInfo={{
+                        title: formData.title,
+                        category: selectedCategory,
+                        condition: selectedCondition,
+                        brand: formData.brand,
+                        description: formData.description,
+                        tags: formData.tags,
+                     }}
+                     onPriceSelect={handleAIPriceSelect}
+                  />
+               )}
 
                {/* Pricing & Details */}
                <div className="bg-card rounded-2xl p-6 shadow-lg border">
