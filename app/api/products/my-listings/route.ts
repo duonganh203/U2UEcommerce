@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
       if (!session?.user?.id) {
          return NextResponse.json(
-            { success: false, error: "Authentication required" },
+            { success: false, error: "Bạn cần đăng nhập để thực hiện thao tác này" },
             { status: 401 }
          );
       }
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
          {
             success: false,
-            error: "Failed to fetch listings",
+            error: "Lấy danh sách sản phẩm thất bại",
          },
          { status: 500 }
       );
@@ -128,7 +128,7 @@ export async function DELETE(request: NextRequest) {
 
       if (!session?.user?.id) {
          return NextResponse.json(
-            { success: false, error: "Authentication required" },
+            { success: false, error: "Bạn cần đăng nhập để thực hiện thao tác này" },
             { status: 401 }
          );
       }
@@ -140,7 +140,7 @@ export async function DELETE(request: NextRequest) {
 
       if (!productId) {
          return NextResponse.json(
-            { success: false, error: "Product ID is required" },
+            { success: false, error:  "Thiếu mã sản phẩm" },
             { status: 400 }
          );
       }
@@ -153,19 +153,19 @@ export async function DELETE(request: NextRequest) {
 
       if (!deletedProduct) {
          return NextResponse.json(
-            { success: false, error: "Product not found or unauthorized" },
+            { success: false, error: "Không tìm thấy sản phẩm hoặc không có quyền xóa" },
             { status: 404 }
          );
       }
 
       return NextResponse.json({
          success: true,
-         message: "Product deleted successfully",
+         message:"Xóa sản phẩm thành công",
       });
    } catch (error) {
       console.error("Error deleting product:", error);
       return NextResponse.json(
-         { success: false, error: "Failed to delete product" },
+         { success: false, error: "Xóa sản phẩm thất bại" },
          { status: 500 }
       );
    }

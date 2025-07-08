@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       // Check if user is authenticated and is admin
       if (!session?.user?.id) {
          return NextResponse.json(
-            { success: false, error: "Authentication required" },
+            { success: false, error:  "Yêu cầu đăng nhập" },
             { status: 401 }
          );
       }
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       const user = await User.findById(session.user.id);
       if (!user || user.role !== "admin") {
          return NextResponse.json(
-            { success: false, error: "Admin access required" },
+            { success: false, error:  "Yêu cầu quyền quản trị" },
             { status: 403 }
          );
       }
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
          {
             success: false,
-            error: "Failed to fetch products",
+            error:"Lấy danh sách sản phẩm thất bại",
          },
          { status: 500 }
       );
@@ -119,7 +119,7 @@ export async function PATCH(request: NextRequest) {
       // Check if user is authenticated and is admin
       if (!session?.user?.id) {
          return NextResponse.json(
-            { success: false, error: "Authentication required" },
+            { success: false, error: "Yêu cầu đăng nhập" },
             { status: 401 }
          );
       }
@@ -130,7 +130,7 @@ export async function PATCH(request: NextRequest) {
       const user = await User.findById(session.user.id);
       if (!user || user.role !== "admin") {
          return NextResponse.json(
-            { success: false, error: "Admin access required" },
+            { success: false, error:"Yêu cầu quyền quản trị"  },
             { status: 403 }
          );
       }
@@ -140,14 +140,14 @@ export async function PATCH(request: NextRequest) {
 
       if (!productId || !status) {
          return NextResponse.json(
-            { success: false, error: "Product ID and status are required" },
+            { success: false, error: "Cần cung cấp mã sản phẩm và trạng thái" },
             { status: 400 }
          );
       }
 
       if (!["approved", "rejected", "pending"].includes(status)) {
          return NextResponse.json(
-            { success: false, error: "Invalid status" },
+            { success: false, error: "Trạng thái không hợp lệ"  },
             { status: 400 }
          );
       }
@@ -166,7 +166,7 @@ export async function PATCH(request: NextRequest) {
 
       if (!updatedProduct) {
          return NextResponse.json(
-            { success: false, error: "Product not found" },
+            { success: false, error: "Không tìm thấy sản phẩm" },
             { status: 404 }
          );
       }
@@ -174,14 +174,18 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({
          success: true,
          data: updatedProduct,
-         message: `Product ${status} successfully`,
+         message: status === "approved"
+         ? "Duyệt sản phẩm thành công"
+         : status === "rejected"
+         ? "Từ chối sản phẩm thành công"
+         : "Cập nhật trạng thái sản phẩm thành công",
       });
    } catch (error) {
       console.error("Error updating product status:", error);
       return NextResponse.json(
          {
             success: false,
-            error: "Failed to update product status",
+            error: "Cập nhật trạng thái sản phẩm thất bại",
          },
          { status: 500 }
       );

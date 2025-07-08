@@ -34,25 +34,24 @@ export default function Home() {
                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                   <div>
                      <h1 className="text-4xl lg:text-6xl font-bold mb-6">
-                        Discover Amazing Products for Your Lifestyle
+                        Khám phá những sản phẩm tuyệt vời cho phong cách sống của bạn
                      </h1>
                      <p className="text-xl mb-8 text-primary-foreground/80">
-                        Shop from thousands of products with fast delivery,
-                        secure payments, and unbeatable prices.
+                        Mua sắm hàng ngàn sản phẩm với giao hàng nhanh, thanh toán an toàn và giá cả cạnh tranh.
                      </p>
                      <div className="flex flex-col sm:flex-row gap-4">
                         <Link
                            href="/products"
                            className="bg-background text-primary px-8 py-3 rounded-lg font-semibold hover:bg-background/90 transition-colors inline-flex items-center justify-center shadow-lg"
                         >
-                           Shop Now
+                           Mua ngay
                            <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>{" "}
                         <Link
                            href="/deals"
                            className="border-2 border-background text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-background hover:text-primary transition-colors inline-flex items-center justify-center"
                         >
-                           View Deals
+                           Xem ưu đãi
                         </Link>
                      </div>
                   </div>
@@ -68,10 +67,10 @@ export default function Home() {
                                  className="w-12 h-12 bg-primary-foreground/30 rounded-lg mb-3"
                               />
                               <h3 className="font-semibold mb-2">
-                                 Premium Quality
+                                 Chất lượng cao cấp
                               </h3>
                               <p className="text-sm text-primary-foreground/80">
-                                 Carefully curated products
+                                 Sản phẩm được chọn lọc kỹ lưỡng
                               </p>
                            </div>
                            <div className="bg-primary-foreground/20 rounded-lg p-4 backdrop-blur-sm">
@@ -83,10 +82,10 @@ export default function Home() {
                                  className="w-12 h-12 bg-primary-foreground/30 rounded-lg mb-3"
                               />
                               <h3 className="font-semibold mb-2">
-                                 Fast Delivery
+                                 Giao hàng nhanh chóng
                               </h3>
                               <p className="text-sm text-primary-foreground/80">
-                                 Free shipping worldwide
+                                 Miễn phí vận chuyển toàn quốc
                               </p>
                            </div>
                            <div className="bg-primary-foreground/20 rounded-lg p-4 backdrop-blur-sm">
@@ -98,10 +97,10 @@ export default function Home() {
                                  className="w-12 h-12 bg-primary-foreground/30 rounded-lg mb-3"
                               />
                               <h3 className="font-semibold mb-2">
-                                 Secure Payment
+                                 Thanh toán an toàn
                               </h3>
                               <p className="text-sm text-primary-foreground/80">
-                                 100% secure transactions
+                                 Giao dịch 100% bảo mật
                               </p>
                            </div>
                            <div className="bg-primary-foreground/20 rounded-lg p-4 backdrop-blur-sm">
@@ -113,10 +112,10 @@ export default function Home() {
                                  className="w-12 h-12 bg-primary-foreground/30 rounded-lg mb-3"
                               />
                               <h3 className="font-semibold mb-2">
-                                 24/7 Support
+                                 Hỗ trợ 24/7
                               </h3>
                               <p className="text-sm text-primary-foreground/80">
-                                 Always here to help
+                                 Luôn sẵn sàng hỗ trợ bạn
                               </p>
                            </div>
                         </div>
@@ -130,11 +129,10 @@ export default function Home() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                <div className="text-center mb-16">
                   <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                     Why Choose U2U?
+                     Vì sao chọn U2U?
                   </h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                     We make online shopping easy, secure, and enjoyable with
-                     our commitment to quality and service.
+                     Chúng tôi giúp việc mua sắm trực tuyến trở nên dễ dàng, an toàn và thú vị với cam kết về chất lượng và dịch vụ.
                   </p>
                </div>
 
@@ -144,11 +142,10 @@ export default function Home() {
                         <Truck className="h-8 w-8 text-primary" />
                      </div>
                      <h3 className="text-xl font-semibold text-foreground mb-4">
-                        Free Shipping
+                        Miễn phí vận chuyển
                      </h3>
                      <p className="text-muted-foreground">
-                        Free worldwide shipping on all orders over $50. Fast and
-                        reliable delivery to your doorstep.
+                        Miễn phí vận chuyển toàn quốc cho đơn hàng từ 50.000đ. Giao hàng nhanh chóng, đáng tin cậy.
                      </p>
                   </div>
 
@@ -157,11 +154,10 @@ export default function Home() {
                         <Shield className="h-8 w-8 text-primary" />
                      </div>
                      <h3 className="text-xl font-semibold text-foreground mb-4">
-                        Secure Shopping
+                        Mua sắm an toàn
                      </h3>
                      <p className="text-muted-foreground">
-                        Your personal information and payment details are always
-                        protected with bank-level security.
+                        Thông tin cá nhân và thanh toán của bạn luôn được bảo vệ với bảo mật cấp ngân hàng.
                      </p>
                   </div>
 
@@ -170,11 +166,10 @@ export default function Home() {
                         <Star className="h-8 w-8 text-primary" />
                      </div>
                      <h3 className="text-xl font-semibold text-foreground mb-4">
-                        Quality Guarantee
+                        Đảm bảo chất lượng
                      </h3>
                      <p className="text-muted-foreground">
-                        All products come with our quality guarantee. Not
-                        satisfied? Get your money back.
+                        Tất cả sản phẩm đều được đảm bảo chất lượng. Không hài lòng? Hoàn tiền ngay.
                      </p>
                   </div>
                </div>
@@ -185,10 +180,10 @@ export default function Home() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                <div className="text-center mb-16">
                   <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                     Featured Products
+                     Sản phẩm nổi bật
                   </h2>
                   <p className="text-xl text-muted-foreground">
-                     Discover our hand-picked selection of trending products
+                     Khám phá những sản phẩm xu hướng được chọn lọc
                   </p>
                </div>
 
@@ -199,14 +194,14 @@ export default function Home() {
                            <div className="w-full h-full bg-gradient-to-br from-muted to-muted/80 group-hover:scale-105 transition-transform duration-300"></div>
                         </div>
                         <h3 className="font-semibold text-foreground mb-2">
-                           Premium Product {item}
+                           Sản phẩm cao cấp {item}
                         </h3>
                         <p className="text-muted-foreground mb-2">
-                           High-quality product description
+                           Mô tả sản phẩm chất lượng cao
                         </p>
                         <div className="flex items-center justify-between">
                            <span className="text-xl font-bold text-primary">
-                              $99.99
+                              2.400.000₫
                            </span>
                            <div className="flex items-center">
                               <Star className="h-4 w-4 text-yellow-400 fill-current" />
@@ -224,7 +219,7 @@ export default function Home() {
                      href="/products"
                      className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors inline-flex items-center shadow-lg"
                   >
-                     View All Products
+                     Xem tất cả sản phẩm
                      <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                </div>
@@ -235,31 +230,31 @@ export default function Home() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                <div className="text-center mb-16">
                   <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                     What Our Customers Say
+                     Khách hàng nói gì về chúng tôi
                   </h2>
                   <p className="text-xl text-muted-foreground">
-                     Join thousands of satisfied customers worldwide
+                     Tham gia cùng hàng ngàn khách hàng hài lòng trên toàn thế giới
                   </p>
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   {[
                      {
-                        name: "Sarah Johnson",
+                        name: "Hưng Nguyễn",
                         review:
-                           "Amazing quality and fast shipping! I've been shopping here for months and never disappointed.",
+                           "Chất lượng tuyệt vời và giao hàng nhanh! Tôi đã mua sắm ở đây nhiều lần và luôn hài lòng.",
                         rating: 5,
                      },
                      {
-                        name: "Mike Chen",
+                        name: "Đại Du",
                         review:
-                           "Great customer service and competitive prices. Highly recommend this store to everyone.",
+                           "Dịch vụ khách hàng tốt, giá cả cạnh tranh. Rất khuyến khích mọi người mua sắm tại đây.",
                         rating: 5,
                      },
                      {
-                        name: "Emma Williams",
+                        name: "Tiến Tụt",
                         review:
-                           "Love the variety of products and the user-friendly website. Shopping here is a pleasure!",
+                           "Yêu thích sự đa dạng sản phẩm và website dễ sử dụng. Mua sắm ở đây thật tuyệt vời!",
                         rating: 5,
                      },
                   ].map((testimonial, index) => (
@@ -285,7 +280,7 @@ export default function Home() {
                                  {testimonial.name}
                               </h4>
                               <p className="text-muted-foreground text-sm">
-                                 Verified Customer
+                                 Khách hàng xác thực
                               </p>
                            </div>
                         </div>
@@ -298,11 +293,10 @@ export default function Home() {
          <section className="py-20 bg-primary">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                <h2 className="text-3xl lg:text-4xl font-bold text-primary-foreground mb-4">
-                  Stay Updated with Our Latest Deals
+                  Nhận thông tin ưu đãi mới nhất
                </h2>
                <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-                  Subscribe to our newsletter and be the first to know about new
-                  products, exclusive deals, and special offers.
+                  Đăng ký nhận bản tin để không bỏ lỡ sản phẩm mới, ưu đãi độc quyền và khuyến mãi hấp dẫn.
                </p>
                <div className="max-w-md mx-auto flex gap-4">
                   <input
@@ -311,7 +305,7 @@ export default function Home() {
                      className="flex-1 px-4 py-3 rounded-lg text-foreground bg-background border border-border focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                   <button className="bg-card text-foreground px-6 py-3 rounded-lg font-semibold hover:bg-muted transition-colors border border-border">
-                     Subscribe
+                     Đăng ký
                   </button>
                </div>
             </div>
@@ -326,8 +320,7 @@ export default function Home() {
                         <span className="text-xl font-bold">ShopHub</span>
                      </div>
                      <p className="text-muted-foreground mb-6">
-                        Your trusted online shopping destination for quality
-                        products and exceptional service.
+                        Điểm đến mua sắm trực tuyến đáng tin cậy cho sản phẩm chất lượng và dịch vụ xuất sắc.
                      </p>
                      <div className="flex space-x-4">
                         <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center hover:bg-muted/80 cursor-pointer">
@@ -342,7 +335,7 @@ export default function Home() {
                      </div>
                   </div>
                   <div>
-                     <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
+                     <h3 className="text-lg font-semibold mb-6">Liên kết nhanh</h3>
                      <ul className="space-y-3">
                         {" "}
                         <li>
@@ -350,7 +343,7 @@ export default function Home() {
                               href="/products"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              All Products
+                              Tất cả sản phẩm
                            </Link>
                         </li>
                         <li>
@@ -358,7 +351,7 @@ export default function Home() {
                               href="/categories"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              Categories
+                              Danh mục
                            </Link>
                         </li>
                         <li>
@@ -366,7 +359,7 @@ export default function Home() {
                               href="/deals"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              Special Deals
+                              Ưu đãi đặc biệt
                            </Link>
                         </li>
                         <li>
@@ -374,14 +367,14 @@ export default function Home() {
                               href="/new-arrivals"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              New Arrivals
+                              Hàng mới về
                            </Link>
                         </li>
                      </ul>
                   </div>{" "}
                   <div>
                      <h3 className="text-lg font-semibold mb-6">
-                        Customer Service
+                       Dịch vụ khách hàng
                      </h3>
                      <ul className="space-y-3">
                         <li>
@@ -389,7 +382,7 @@ export default function Home() {
                               href="/contact"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              Contact Us
+                              Liên hệ
                            </Link>
                         </li>
                         <li>
@@ -397,7 +390,7 @@ export default function Home() {
                               href="/shipping"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              Shipping Info
+                              Thông tin vận chuyển
                            </Link>
                         </li>
                         <li>
@@ -405,7 +398,7 @@ export default function Home() {
                               href="/returns"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              Returns
+                              Đổi trả
                            </Link>
                         </li>
                         <li>
@@ -413,20 +406,20 @@ export default function Home() {
                               href="/faq"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              FAQ
+                              Câu hỏi thường gặp
                            </Link>
                         </li>
                      </ul>
                   </div>
                   <div>
-                     <h3 className="text-lg font-semibold mb-6">Account</h3>
+                     <h3 className="text-lg font-semibold mb-6">Tài khoản</h3>
                      <ul className="space-y-3">
                         <li>
                            <Link
                               href="/login"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              Sign In
+                              Đăng nhập
                            </Link>
                         </li>
                         <li>
@@ -434,7 +427,7 @@ export default function Home() {
                               href="/signup"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              Create Account
+                              Tạo tài khoản
                            </Link>
                         </li>
                         <li>
@@ -442,7 +435,7 @@ export default function Home() {
                               href="/profile"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              My Account
+                              Tài khoản của tôi
                            </Link>
                         </li>
                         <li>
@@ -450,7 +443,7 @@ export default function Home() {
                               href="/orders"
                               className="text-muted-foreground hover:text-primary transition-colors"
                            >
-                              Order History
+                              Lịch sử đơn hàng
                            </Link>
                         </li>
                      </ul>
@@ -458,8 +451,7 @@ export default function Home() {
                </div>{" "}
                <div className="border-t border-border mt-12 pt-8 text-center">
                   <p className="text-muted-foreground">
-                     © 2025 ShopHub. All rights reserved. | Privacy Policy |
-                     Terms of Service
+                      © 2025 ShopHub. Đã đăng ký bản quyền. | Chính sách bảo mật | Điều khoản dịch vụ
                   </p>
                </div>
             </div>

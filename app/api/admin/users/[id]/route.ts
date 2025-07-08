@@ -14,7 +14,7 @@ export async function GET(
       const session = await getServerSession(authOptions);
 
       if (!session || !session.user) {
-         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+         return NextResponse.json({ error:"Chưa xác thực"}, { status: 401 });
       }
 
       // Check if user is admin
@@ -22,14 +22,14 @@ export async function GET(
       const currentUser = await User.findOne({ email: session.user.email });
       if (!currentUser || currentUser.role !== "admin") {
          return NextResponse.json(
-            { error: "Admin access required" },
+            { error: "Bạn cần quyền quản trị để thực hiện thao tác này"},
             { status: 403 }
          );
       }
 
       const user = await User.findById(params.id).select("-password");
       if (!user) {
-         return NextResponse.json({ error: "User not found" }, { status: 404 });
+         return NextResponse.json({ error: "Không tìm thấy người dùng" }, { status: 404 });
       }
 
       // Get order count for this user
@@ -58,7 +58,7 @@ export async function GET(
    } catch (error) {
       console.error("Error fetching user:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }
@@ -73,7 +73,7 @@ export async function PUT(
       const session = await getServerSession(authOptions);
 
       if (!session || !session.user) {
-         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+         return NextResponse.json({ error: "Chưa xác thực" }, { status: 401 });
       }
 
       // Check if user is admin
@@ -81,7 +81,7 @@ export async function PUT(
       const currentUser = await User.findOne({ email: session.user.email });
       if (!currentUser || currentUser.role !== "admin") {
          return NextResponse.json(
-            { error: "Admin access required" },
+            { error: "Bạn cần quyền quản trị để thực hiện thao tác này" },
             { status: 403 }
          );
       }
@@ -92,7 +92,7 @@ export async function PUT(
       // Find the user to update
       const user = await User.findById(params.id);
       if (!user) {
-         return NextResponse.json({ error: "User not found" }, { status: 404 });
+         return NextResponse.json({ error: "Không tìm thấy người dùng" }, { status: 404 });
       }
 
       // Check if email is being changed and if it's already taken
@@ -100,7 +100,7 @@ export async function PUT(
          const existingUser = await User.findOne({ email });
          if (existingUser) {
             return NextResponse.json(
-               { error: "Email already in use" },
+               { error:  "Email này đã được đăng ký" },
                { status: 400 }
             );
          }
@@ -145,7 +145,7 @@ export async function PUT(
    } catch (error) {
       console.error("Error updating user:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }
@@ -160,7 +160,7 @@ export async function DELETE(
       const session = await getServerSession(authOptions);
 
       if (!session || !session.user) {
-         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+         return NextResponse.json({ error: "Chưa xác thực" }, { status: 401 });
       }
 
       // Check if user is admin
@@ -168,7 +168,7 @@ export async function DELETE(
       const currentUser = await User.findOne({ email: session.user.email });
       if (!currentUser || currentUser.role !== "admin") {
          return NextResponse.json(
-            { error: "Admin access required" },
+            { error: "Bạn cần quyền quản trị để thực hiện thao tác này" },
             { status: 403 }
          );
       }
@@ -176,25 +176,25 @@ export async function DELETE(
       // Don't allow deleting self
       if (currentUser._id.toString() === params.id) {
          return NextResponse.json(
-            { error: "Cannot delete your own account" },
+            { error: "Không thể xóa tài khoản của chính bạn"},
             { status: 400 }
          );
       }
 
       const user = await User.findById(params.id);
       if (!user) {
-         return NextResponse.json({ error: "User not found" }, { status: 404 });
+         return NextResponse.json({ error: "Không tìm thấy người dùng" }, { status: 404 });
       }
 
       // Soft delete by setting isActive to false
       (user as any).isActive = false;
       await user.save();
 
-      return NextResponse.json({ message: "User deactivated successfully" });
+      return NextResponse.json({ message: "Vô hiệu hóa người dùng thành công"  });
    } catch (error) {
       console.error("Error deleting user:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }

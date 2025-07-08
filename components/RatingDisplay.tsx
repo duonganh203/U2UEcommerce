@@ -80,7 +80,7 @@ export default function RatingDisplay({
          {showBreakdown && numReviews > 0 && (
             <div className="space-y-2">
                <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                  Rating Breakdown
+                  Phân tích đánh giá
                </h4>
                {[5, 4, 3, 2, 1].map((stars) => (
                   <div key={stars} className="flex items-center space-x-3">
@@ -112,8 +112,8 @@ export default function RatingDisplay({
          {/* No Reviews State */}
          {numReviews === 0 && (
             <div className="text-center py-4 text-gray-500 dark:text-gray-400">
-               <p>No reviews yet</p>
-               <p className="text-sm">Be the first to review this product!</p>
+               <p>Chưa có đánh giá nào</p>
+               <p className="text-sm">Hãy là người đầu tiên đánh giá sản phẩm này!</p>
             </div>
          )}
       </div>

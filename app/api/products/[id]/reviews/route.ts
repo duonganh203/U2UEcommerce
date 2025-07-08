@@ -15,7 +15,7 @@ export async function POST(
 
       if (!session?.user?.id) {
          return NextResponse.json(
-            { error: "Authentication required" },
+            { error: "Bạn cần đăng nhập để thực hiện thao tác này" },
             { status: 401 }
          );
       }
@@ -27,7 +27,7 @@ export async function POST(
       // Validate rating
       if (!rating || rating < 1 || rating > 5) {
          return NextResponse.json(
-            { error: "Rating must be between 1 and 5" },
+            { error: "Điểm đánh giá phải từ 1 đến 5" },
             { status: 400 }
          );
       }
@@ -35,7 +35,7 @@ export async function POST(
       // Validate comment
       if (!comment || comment.trim().length === 0) {
          return NextResponse.json(
-            { error: "Comment is required" },
+            { error: "Vui lòng nhập nội dung đánh giá" },
             { status: 400 }
          );
       }
@@ -44,7 +44,7 @@ export async function POST(
 
       if (!product) {
          return NextResponse.json(
-            { error: "Product not found" },
+            { error: "Không tìm thấy sản phẩm" },
             { status: 404 }
          );
       }
@@ -52,7 +52,7 @@ export async function POST(
       // Check if user is trying to review their own product
       if (product.seller.toString() === session.user.id) {
          return NextResponse.json(
-            { error: "You cannot review your own product" },
+            { error: "Bạn không thể đánh giá sản phẩm của chính mình" },
             { status: 400 }
          );
       } // Add the review using the model method
@@ -63,14 +63,14 @@ export async function POST(
       );
 
       return NextResponse.json({
-         message: "Review added successfully",
+         message: "Đã thêm đánh giá thành công",
          rating: product.rating,
          numReviews: product.numReviews,
       });
    } catch (error) {
       console.error("Error adding review:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }
@@ -86,7 +86,7 @@ export async function DELETE(
 
       if (!session?.user?.id) {
          return NextResponse.json(
-            { error: "Authentication required" },
+            { error: "Bạn cần đăng nhập để thực hiện thao tác này" },
             { status: 401 }
          );
       }
@@ -97,7 +97,7 @@ export async function DELETE(
 
       if (!product) {
          return NextResponse.json(
-            { error: "Product not found" },
+            { error: "Không tìm thấy sản phẩm" },
             { status: 404 }
          );
       }
@@ -109,21 +109,21 @@ export async function DELETE(
 
       if (!hasReview) {
          return NextResponse.json(
-            { error: "No review found to delete" },
+            { error: "Không tìm thấy đánh giá để xóa" },
             { status: 404 }
          );
       } // Remove the review using the model method
       await product.removeReview(new mongoose.Types.ObjectId(session.user.id));
 
       return NextResponse.json({
-         message: "Review deleted successfully",
+         message: "Xóa đánh giá thành công",
          rating: product.rating,
          numReviews: product.numReviews,
       });
    } catch (error) {
       console.error("Error deleting review:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }
@@ -143,7 +143,7 @@ export async function GET(
 
       if (!product) {
          return NextResponse.json(
-            { error: "Product not found" },
+            { error: "Không tìm thấy sản phẩm" },
             { status: 404 }
          );
       }
@@ -156,7 +156,7 @@ export async function GET(
    } catch (error) {
       console.error("Error fetching reviews:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error:"Lỗi máy chủ nội bộ"},
          { status: 500 }
       );
    }

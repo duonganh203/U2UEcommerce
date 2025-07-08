@@ -121,7 +121,7 @@ const UsersPage = () => {
                   setIsModalOpen(true);
                }}
             >
-               Add New User
+               Thêm người dùng mới
             </button>
          </div>
 
@@ -133,7 +133,7 @@ const UsersPage = () => {
                      htmlFor="search"
                      className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                     Search Users
+                     Tìm kiếm người dùng
                   </label>
                   <input
                      type="text"
@@ -149,7 +149,7 @@ const UsersPage = () => {
                      htmlFor="role"
                      className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                     Filter by Role
+                     Lọc theo vai trò
                   </label>
                   <select
                      id="role"
@@ -157,7 +157,7 @@ const UsersPage = () => {
                      onChange={(e) => setRoleFilter(e.target.value)}
                      className="w-full border border-gray-300 rounded-md p-2"
                   >
-                     <option value="all">All Roles</option>
+                     <option value="all">Tất cả vai trò</option>
                      <option value="user">Users</option>
                      <option value="admin">Admins</option>
                   </select>
@@ -167,7 +167,7 @@ const UsersPage = () => {
                      htmlFor="status"
                      className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                     Filter by Status
+                     Lọc theo trạng thái
                   </label>
                   <select
                      id="status"
@@ -175,7 +175,7 @@ const UsersPage = () => {
                      onChange={(e) => setStatusFilter(e.target.value)}
                      className="w-full border border-gray-300 rounded-md p-2"
                   >
-                     <option value="all">All Statuses</option>
+                     <option value="all">Tất cả trạng thái</option>
                      <option value="active">Active</option>
                      <option value="inactive">Inactive</option>
                   </select>
@@ -202,22 +202,22 @@ const UsersPage = () => {
                         <thead className="bg-gray-50">
                            <tr>
                               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 User
+                                 Người dùng
                               </th>
                               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 Role
+                                 Vai trò
                               </th>
                               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 Status
+                                 Trạng thái
                               </th>
                               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 Joined
+                                 Ngày tạo
                               </th>
                               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 Orders
+                                 Đơn hàng
                               </th>
                               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                 Actions
+                                 Hành động
                               </th>
                            </tr>
                         </thead>
@@ -274,7 +274,7 @@ const UsersPage = () => {
                                        onClick={() => handleEditUser(user)}
                                        className="text-indigo-600 hover:text-indigo-900 mr-3"
                                     >
-                                       Edit
+                                       Sửa
                                     </button>
                                     {user.status === "active" ? (
                                        <button
@@ -286,7 +286,7 @@ const UsersPage = () => {
                                           }
                                           className="text-red-600 hover:text-red-900"
                                        >
-                                          Deactivate
+                                          Vô hiệu hóa
                                        </button>
                                     ) : (
                                        <button
@@ -298,7 +298,7 @@ const UsersPage = () => {
                                           }
                                           className="text-green-600 hover:text-green-900"
                                        >
-                                          Activate
+                                          Kích hoạt
                                        </button>
                                     )}
                                  </td>
@@ -309,7 +309,7 @@ const UsersPage = () => {
                   </div>
                   {filteredUsers.length === 0 && (
                      <div className="py-6 text-center text-gray-500">
-                        No users found matching your filters.
+                        Không tìm thấy người dùng nào phù hợp với bộ lọc của bạn.
                      </div>
                   )}
                </>
@@ -338,7 +338,7 @@ const UsersPage = () => {
                               htmlFor="firstName"
                               className="block text-sm font-medium text-gray-700"
                            >
-                              First Name
+                              Tên
                            </label>
                            <input
                               type="text"
@@ -371,7 +371,7 @@ const UsersPage = () => {
                               htmlFor="lastName"
                               className="block text-sm font-medium text-gray-700"
                            >
-                              Last Name
+                              Họ
                            </label>
                            <input
                               type="text"
@@ -426,7 +426,7 @@ const UsersPage = () => {
                                  htmlFor="password"
                                  className="block text-sm font-medium text-gray-700"
                               >
-                                 Password
+                                 Mật khẩu
                               </label>
                               <input
                                  type="password"
@@ -450,7 +450,7 @@ const UsersPage = () => {
                               htmlFor="phoneNumber"
                               className="block text-sm font-medium text-gray-700"
                            >
-                              Phone Number
+                              Số điện thoại
                            </label>
                            <input
                               type="tel"
@@ -470,7 +470,7 @@ const UsersPage = () => {
                               htmlFor="role"
                               className="block text-sm font-medium text-gray-700"
                            >
-                              Role
+                              Vai trò
                            </label>
                            <select
                               id="role"
@@ -492,7 +492,7 @@ const UsersPage = () => {
                               htmlFor="status"
                               className="block text-sm font-medium text-gray-700"
                            >
-                              Status
+                              Trạng thái
                            </label>
                            <select
                               id="status"
@@ -516,13 +516,13 @@ const UsersPage = () => {
                            onClick={() => setIsModalOpen(false)}
                            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                         >
-                           Cancel
+                           Hủy
                         </button>
                         <button
                            type="submit"
                            className="px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700"
                         >
-                           Save
+                           Lưu
                         </button>
                      </div>
                   </form>

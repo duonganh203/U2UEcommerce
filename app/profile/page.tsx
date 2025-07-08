@@ -232,17 +232,17 @@ export default function ProfilePage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <h1 className="text-4xl font-bold text-foreground mb-2">
-                           Profile Settings
+                           Cài đặt hồ sơ
                         </h1>
                         <p className="text-muted-foreground">
-                           Manage your account information and preferences
+                           Quản lý thông tin tài khoản và tuỳ chọn của bạn
                         </p>
                      </div>
                      <Link
                         href="/dashboard"
                         className="inline-flex items-center px-6 py-3 border border-border rounded-xl shadow-sm text-sm font-medium text-foreground bg-card hover:bg-muted transition-all duration-200 hover:shadow-md"
                      >
-                        ← Back to Dashboard
+                        ← Quay lại Bảng điều khiển
                      </Link>
                   </div>
                </div>
@@ -257,7 +257,7 @@ export default function ProfilePage() {
                            </div>
                            <div className="ml-3">
                               <h3 className="text-sm font-medium">
-                                 There were errors with your submission:
+                                 Có lỗi xảy ra khi gửi thông tin:
                               </h3>
                               <ul className="mt-2 text-sm list-disc list-inside space-y-1">
                                  {errors.map((error, index) => (
@@ -311,7 +311,7 @@ export default function ProfilePage() {
                                  />
                               </svg>
                            </div>
-                           Personal Information
+                           Thông tin cá nhân
                         </h2>
 
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -320,7 +320,7 @@ export default function ProfilePage() {
                                  htmlFor="firstName"
                                  className="text-sm font-medium text-foreground"
                               >
-                                 First Name *
+                                 Tên *
                               </Label>
                               <Input
                                  type="text"
@@ -329,7 +329,7 @@ export default function ProfilePage() {
                                  value={formData.firstName}
                                  onChange={handleChange}
                                  className="h-12 rounded-lg border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
-                                 placeholder="Enter your first name"
+                                 placeholder="Nhập tên của bạn"
                               />
                            </div>
 
@@ -338,7 +338,7 @@ export default function ProfilePage() {
                                  htmlFor="lastName"
                                  className="text-sm font-medium text-foreground"
                               >
-                                 Last Name *
+                                Họ *
                               </Label>
                               <Input
                                  type="text"
@@ -347,7 +347,7 @@ export default function ProfilePage() {
                                  value={formData.lastName}
                                  onChange={handleChange}
                                  className="h-12 rounded-lg border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
-                                 placeholder="Enter your last name"
+                                 placeholder="Nhập họ của bạn"
                               />
                            </div>
                         </div>
@@ -357,7 +357,7 @@ export default function ProfilePage() {
                               htmlFor="email"
                               className="text-sm font-medium text-foreground"
                            >
-                              Email Address
+                              Địa chỉ email
                            </Label>
                            <Input
                               type="email"
@@ -382,7 +382,7 @@ export default function ProfilePage() {
                                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                                  />
                               </svg>
-                              Email cannot be changed for security reasons
+                              Email không thể thay đổi vì lý do bảo mật
                            </p>
                         </div>
 
@@ -391,7 +391,7 @@ export default function ProfilePage() {
                               htmlFor="phoneNumber"
                               className="text-sm font-medium text-foreground"
                            >
-                              Phone Number
+                              Số điện thoại
                            </Label>
                            <Input
                               type="tel"
@@ -411,7 +411,7 @@ export default function ProfilePage() {
                            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center mr-3">
                               <Camera className="w-4 h-4 text-primary" />
                            </div>
-                           Profile Avatar
+                           Ảnh đại diện
                         </h2>
 
                         <div className="flex items-start space-x-6">
@@ -484,7 +484,7 @@ export default function ProfilePage() {
                                        onClick={handleRemoveAvatar}
                                        className="h-12 px-6 rounded-lg text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20 hover:border-destructive/50 transition-all duration-200"
                                     >
-                                       Remove
+                                       Xoá
                                     </Button>
                                  )}
                               </div>
@@ -503,8 +503,7 @@ export default function ProfilePage() {
                                           d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                        />
                                     </svg>
-                                    Upload a JPG, PNG, or GIF image. Maximum
-                                    file size: 5MB.
+                                    Tải lên ảnh JPG, PNG hoặc GIF. Dung lượng tối đa: 5MB.
                                  </p>
                               </div>
                               {avatarFile && (
@@ -523,7 +522,7 @@ export default function ProfilePage() {
                                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                           />
                                        </svg>
-                                       Selected: {avatarFile.name}
+                                       Đã chọn: {avatarFile.name}
                                     </p>
                                  </div>
                               )}
@@ -555,7 +554,7 @@ export default function ProfilePage() {
                                  />
                               </svg>
                            </div>
-                           Address Information
+                           Thông tin địa chỉ
                         </h2>
 
                         <div className="space-y-6">
@@ -564,7 +563,7 @@ export default function ProfilePage() {
                                  htmlFor="address.street"
                                  className="text-sm font-medium text-foreground"
                               >
-                                 Street Address
+                                 Địa chỉ
                               </Label>
                               <Input
                                  type="text"
@@ -583,7 +582,7 @@ export default function ProfilePage() {
                                     htmlFor="address.city"
                                     className="text-sm font-medium text-foreground"
                                  >
-                                    City
+                                    Thành phố
                                  </Label>
                                  <Input
                                     type="text"
@@ -592,7 +591,7 @@ export default function ProfilePage() {
                                     value={formData.address.city}
                                     onChange={handleChange}
                                     className="h-12 rounded-lg border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
-                                    placeholder="New York"
+                                    placeholder="Hà Nội"
                                  />
                               </div>
 
@@ -601,7 +600,7 @@ export default function ProfilePage() {
                                     htmlFor="address.state"
                                     className="text-sm font-medium text-foreground"
                                  >
-                                    State/Province
+                                    Tỉnh/Thành phố
                                  </Label>
                                  <Input
                                     type="text"
@@ -610,7 +609,7 @@ export default function ProfilePage() {
                                     value={formData.address.state}
                                     onChange={handleChange}
                                     className="h-12 rounded-lg border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
-                                    placeholder="NY"
+                                    placeholder="Hà Nội"
                                  />
                               </div>
 
@@ -619,7 +618,7 @@ export default function ProfilePage() {
                                     htmlFor="address.zipCode"
                                     className="text-sm font-medium text-foreground"
                                  >
-                                    ZIP/Postal Code
+                                    Mã bưu điện
                                  </Label>
                                  <Input
                                     type="text"
@@ -637,7 +636,7 @@ export default function ProfilePage() {
                                     htmlFor="address.country"
                                     className="text-sm font-medium text-foreground"
                                  >
-                                    Country
+                                    Quốc gia
                                  </Label>
                                  <Input
                                     type="text"
@@ -663,7 +662,7 @@ export default function ProfilePage() {
                            {isLoading ? (
                               <>
                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                 <span>Saving Changes...</span>
+                                 <span>Đang lưu thay đổi...</span>
                               </>
                            ) : (
                               <>
@@ -680,7 +679,7 @@ export default function ProfilePage() {
                                        d="M5 13l4 4L19 7"
                                     />
                                  </svg>
-                                 <span>Save Changes</span>
+                                 <span>Lưu thay đổi</span>
                               </>
                            )}
                         </Button>

@@ -188,23 +188,23 @@ export default function ProductRating({
          {canReview && (
             <div className="border rounded-lg p-4">
                <h3 className="text-lg font-semibold mb-4">
-                  {userReview ? "Update Your Review" : "Write a Review"}
+                  {userReview ? "Cập nhật đánh giá" : "Viết đánh giá"}
                </h3>
                <form onSubmit={handleSubmitReview} className="space-y-4">
                   <div>
-                     <Label htmlFor="rating">Rating</Label>
+                     <Label htmlFor="rating">Đánh giá</Label>
                      <div className="flex items-center space-x-1">
                         {renderStars(rating, true)}
                      </div>
                   </div>
                   <div>
-                     <Label htmlFor="comment">Comment</Label>
+                     <Label htmlFor="comment">Bình luận</Label>
                      <textarea
                         id="comment"
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         className="w-full p-2 border rounded-md resize-none h-24"
-                        placeholder="Share your experience with this product..."
+                        placeholder="Chia sẻ về sản phẩm này"
                         required
                      />
                   </div>
@@ -223,7 +223,7 @@ export default function ProductRating({
                            onClick={handleDeleteReview}
                            disabled={loading}
                         >
-                           Delete Review
+                           Xóa đánh giá
                         </Button>
                      )}
                   </div>
@@ -233,22 +233,22 @@ export default function ProductRating({
 
          {!session && (
             <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-               <p>Please log in to write a review</p>
+               <p>Vui lòng đăng nhập để viết đánh giá</p>
             </div>
          )}
 
          {session?.user?.id === sellerId && (
             <div className="text-center p-4 bg-blue-100 dark:bg-blue-900 rounded-lg">
-               <p>You cannot review your own product</p>
+               <p>Bạn không thể đánh giá sản phẩm của chính mình</p>
             </div>
          )}
 
          {/* Reviews List */}
          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Reviews ({numReviews})</h3>
+            <h3 className="text-lg font-semibold">Đánh giá({numReviews})</h3>
             {reviews.length === 0 ? (
                <p className="text-gray-600 dark:text-gray-400">
-                  No reviews yet. Be the first to review!
+                 Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá!
                </p>
             ) : (
                reviews.map((review) => (

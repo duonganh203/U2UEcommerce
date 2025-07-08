@@ -56,11 +56,10 @@ export default function CategoriesPage() {
             {/* Header */}
             <div className="text-center mb-12">
                <h1 className="text-4xl font-bold text-foreground mb-4">
-                  Shop by Category
+                  Mua sắm theo danh mục
                </h1>
                <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  Discover products organized by category to find exactly what
-                  you're looking for
+                  Khám phá sản phẩm được phân loại theo danh mục để dễ dàng tìm đúng thứ bạn cần
                </p>
             </div>
             {/* Categories Grid */}
@@ -86,7 +85,7 @@ export default function CategoriesPage() {
                                     {category.name}
                                  </h3>
                                  <p className="text-sm opacity-90">
-                                    {category.productCount} products
+                                    {category.productCount} sản phẩm
                                  </p>
                               </div>
                            </div>
@@ -98,7 +97,7 @@ export default function CategoriesPage() {
                            </p>
                            <div className="flex items-center justify-between">
                               <span className="text-primary font-semibold group-hover:text-primary/80">
-                                 Browse Category
+                                 Xem danh mục
                               </span>
                               <ArrowRight className="h-5 w-5 text-primary group-hover:text-primary/80 group-hover:translate-x-1 transition-all" />
                            </div>
@@ -113,18 +112,16 @@ export default function CategoriesPage() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                      <div>
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                           New Electronics Collection
+                           Bộ sưu tập điện tử mới
                         </h2>
                         <p className="text-primary-foreground/80 mb-6 text-lg">
-                           Discover the latest in technology with our curated
-                           collection of premium electronics. From smartphones
-                           to smart home devices, find everything you need.
+                           Khám phá công nghệ mới nhất với bộ sưu tập điện tử cao cấp của chúng tôi. Từ điện thoại thông minh đến thiết bị nhà thông minh, bạn sẽ tìm thấy mọi thứ mình cần.
                         </p>
                         <Link
                            href="/products?category=electronics"
                            className="inline-flex items-center bg-background text-foreground px-6 py-3 rounded-lg font-semibold hover:bg-muted transition-colors"
                         >
-                           Shop Electronics
+                           Mua điện tử
                            <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                      </div>
@@ -139,7 +136,7 @@ export default function CategoriesPage() {
             {/* Popular Categories */}
             <div className="mt-16">
                <h2 className="text-2xl font-bold text-foreground mb-8 text-center">
-                  Most Popular Categories
+                  Danh mục phổ biến nhất
                </h2>
                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {categories.slice(0, 4).map((category) => (
@@ -155,7 +152,7 @@ export default function CategoriesPage() {
                            {category.name}
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                           {category.productCount} items
+                           {category.productCount} sản phẩm
                         </p>
                      </Link>
                   ))}

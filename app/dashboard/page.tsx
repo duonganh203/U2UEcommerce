@@ -34,18 +34,18 @@ export default function Dashboard() {
             <div className="bg-card overflow-hidden shadow rounded-lg border border-border">
                <div className="px-4 py-5 sm:p-6">
                   <h1 className="text-3xl font-bold text-foreground mb-6">
-                     Dashboard
+                     Bảng điều khiển
                   </h1>
                   <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 mb-6">
                      <h2 className="text-lg font-semibold text-foreground mb-2">
-                        Welcome, {session.user.firstName}{" "}
+                        Xin chào, {session.user.firstName}{" "}
                         {session.user.lastName}!
                      </h2>
                      <p className="text-muted-foreground">
                         Email: {session.user.email}
                      </p>
                      <p className="text-muted-foreground">
-                        Role: {session.user.role}
+                        Vai trò: {session.user.role}
                      </p>
                   </div>{" "}
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -62,7 +62,7 @@ export default function Dashboard() {
                               <div className="ml-5 w-0 flex-1">
                                  <dl>
                                     <dt className="text-sm font-medium text-muted-foreground truncate">
-                                       Total Orders
+                                       Tổng đơn hàng
                                     </dt>
                                     <dd className="text-lg font-medium text-foreground">
                                        0
@@ -77,7 +77,7 @@ export default function Dashboard() {
                                  href="/orders"
                                  className="font-medium text-primary hover:text-primary/80"
                               >
-                                 View all orders
+                                 Xem tất cả đơn hàng
                               </Link>
                            </div>
                         </div>
@@ -96,7 +96,7 @@ export default function Dashboard() {
                               <div className="ml-5 w-0 flex-1">
                                  <dl>
                                     <dt className="text-sm font-medium text-muted-foreground truncate">
-                                       Products
+                                       Sản phẩm
                                     </dt>
                                     <dd className="text-lg font-medium text-foreground">
                                        0
@@ -111,7 +111,7 @@ export default function Dashboard() {
                                  href="/products"
                                  className="font-medium text-primary hover:text-primary/80"
                               >
-                                 Browse products
+                                 Xem sản phẩm
                               </Link>
                            </div>
                         </div>
@@ -130,10 +130,10 @@ export default function Dashboard() {
                               <div className="ml-5 w-0 flex-1">
                                  <dl>
                                     <dt className="text-sm font-medium text-muted-foreground truncate">
-                                       My Listings
+                                       Tin đăng của tôi
                                     </dt>
                                     <dd className="text-lg font-medium text-foreground">
-                                       0 Active
+                                       0 Đang hoạt động
                                     </dd>
                                  </dl>
                               </div>
@@ -145,14 +145,14 @@ export default function Dashboard() {
                                  href="/sell-item"
                                  className="font-medium text-primary hover:text-primary/80"
                               >
-                                 Sell Item
+                                 Đăng bán sản phẩm
                               </Link>
                               <span className="text-muted-foreground">•</span>
                               <Link
                                  href="/manage-products"
                                  className="font-medium text-primary hover:text-primary/80"
                               >
-                                 Manage
+                                 Quản lý
                               </Link>
                            </div>
                         </div>
@@ -171,10 +171,10 @@ export default function Dashboard() {
                               <div className="ml-5 w-0 flex-1">
                                  <dl>
                                     <dt className="text-sm font-medium text-muted-foreground truncate">
-                                       Profile
+                                       Hồ sơ cá nhân
                                     </dt>
                                     <dd className="text-lg font-medium text-foreground">
-                                       Manage
+                                       Quản lý
                                     </dd>
                                  </dl>
                               </div>
@@ -186,7 +186,7 @@ export default function Dashboard() {
                                  href="/profile"
                                  className="font-medium text-primary hover:text-primary/80"
                               >
-                                 Update profile
+                                 Cập nhật hồ sơ
                               </Link>
                            </div>
                         </div>
@@ -197,7 +197,7 @@ export default function Dashboard() {
                         href="/"
                         className="inline-flex items-center px-4 py-2 border border-border rounded-md shadow-sm text-sm font-medium text-foreground bg-card hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
                      >
-                        ← Back to Home
+                        ← Quay lại trang chủ
                      </Link>
                   </div>
                </div>

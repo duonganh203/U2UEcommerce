@@ -263,10 +263,10 @@ export default function SellItemPage() {
             {/* Header */}
             <div className="text-center mb-8">
                <h1 className="text-4xl font-bold text-foreground mb-2">
-                  Sell Your Item
+                  Đăng bán sản phẩm của bạn
                </h1>
                <p className="text-muted-foreground text-lg">
-                  Create a listing and reach thousands of potential buyers
+                  Tạo bài đăng và tiếp cận hàng ngàn người mua tiềm năng
                </p>
             </div>
 
@@ -275,9 +275,9 @@ export default function SellItemPage() {
                <div className="bg-card rounded-2xl p-6 shadow-lg border">
                   <div className="flex items-center gap-2 mb-4">
                      <Camera className="h-5 w-5 text-primary" />
-                     <h2 className="text-xl font-semibold">Photos</h2>
+                     <h2 className="text-xl font-semibold">Hình ảnh</h2>
                      <span className="text-sm text-muted-foreground ml-auto">
-                        {images.length}/10 photos
+                        {images.length}/10 ảnh
                      </span>
                   </div>{" "}
                   <div
@@ -295,22 +295,20 @@ export default function SellItemPage() {
                         <div className="flex flex-col items-center">
                            <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
                            <h3 className="text-lg font-medium mb-2">
-                              Uploading images...
+                              Đang tải ảnh lên...
                            </h3>
                            <p className="text-muted-foreground">
-                              Please wait while we upload your images to the
-                              cloud
+                              Vui lòng chờ trong khi chúng tôi tải ảnh của bạn lên đám mây
                            </p>
                         </div>
                      ) : (
                         <>
                            <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                            <h3 className="text-lg font-medium mb-2">
-                              Drop your photos here or click to browse
+                              Kéo thả ảnh vào đây hoặc bấm để chọn ảnh
                            </h3>
                            <p className="text-muted-foreground mb-4">
-                              Add up to 10 photos. First photo will be your
-                              cover image.
+                              Thêm tối đa 10 ảnh. Ảnh đầu tiên sẽ là ảnh bìa.
                            </p>
                            <input
                               type="file"
@@ -326,7 +324,7 @@ export default function SellItemPage() {
                               disabled={isUploadingImages}
                            >
                               <Plus className="h-4 w-4 mr-2" />
-                              Choose Photos
+                              Chọn ảnh
                            </Button>
                         </>
                      )}
@@ -352,7 +350,7 @@ export default function SellItemPage() {
                               </div>
                               {index === 0 && (
                                  <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
-                                    Cover
+                                    Ảnh bìa
                                  </div>
                               )}
                               <button
@@ -373,7 +371,7 @@ export default function SellItemPage() {
                   <div className="flex items-center gap-2 mb-6">
                      <FileText className="h-5 w-5 text-primary" />
                      <h2 className="text-xl font-semibold">
-                        Basic Information
+                        Thông tin cơ bản
                      </h2>
                   </div>
 
@@ -384,7 +382,7 @@ export default function SellItemPage() {
                            htmlFor="title"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Title <span className="text-destructive">*</span>
+                           Tiêu đề  <span className="text-destructive">*</span>
                         </Label>
                         <Input
                            id="title"
@@ -397,8 +395,7 @@ export default function SellItemPage() {
                            required
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                           Be specific and include important details like brand,
-                           model, size, etc.
+                           Hãy cụ thể và bao gồm các chi tiết quan trọng như thương hiệu, mẫu mã, kích thước, v.v.
                         </p>
                         {errors.title && (
                            <p className="text-destructive text-xs mt-1">
@@ -413,7 +410,7 @@ export default function SellItemPage() {
                            htmlFor="category"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Category <span className="text-destructive">*</span>
+                           Danh mục <span className="text-destructive">*</span>
                         </Label>
                         <select
                            id="category"
@@ -422,7 +419,7 @@ export default function SellItemPage() {
                            className="w-full h-10 px-3 py-2 text-sm bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                            required
                         >
-                           <option value="">Select a category</option>
+                           <option value="">Chọn danh mục</option>
                            {categories.map((category) => (
                               <option key={category} value={category}>
                                  {category}
@@ -439,7 +436,7 @@ export default function SellItemPage() {
                      {/* Condition */}
                      <div>
                         <Label className="text-sm font-medium mb-3 block">
-                           Condition <span className="text-destructive">*</span>
+                           Tình trạng <span className="text-destructive">*</span>
                         </Label>
                         <div className="space-y-3">
                            {conditions.map((condition) => (
@@ -493,7 +490,7 @@ export default function SellItemPage() {
                            htmlFor="description"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Description
+                           Mô tả
                         </Label>
                         <textarea
                            id="description"
@@ -506,8 +503,7 @@ export default function SellItemPage() {
                            className="w-full px-3 py-2 text-sm bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-none"
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                           Include details about features, defects, included
-                           accessories, etc.
+                           Bao gồm thông tin về tính năng, khuyết điểm, phụ kiện đi kèm, v.v.
                         </p>
                      </div>
                   </div>
@@ -532,7 +528,7 @@ export default function SellItemPage() {
                   <div className="flex items-center gap-2 mb-6">
                      <DollarSign className="h-5 w-5 text-primary" />
                      <h2 className="text-xl font-semibold">
-                        Pricing & Details
+                        Giá & Chi tiết
                      </h2>
                   </div>
 
@@ -543,7 +539,7 @@ export default function SellItemPage() {
                            htmlFor="price"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Price <span className="text-destructive">*</span>
+                           Giá <span className="text-destructive">*</span>
                         </Label>
                         <div className="relative">
                            <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -579,7 +575,7 @@ export default function SellItemPage() {
                            htmlFor="brand"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Brand
+                           Thương hiệu
                         </Label>
                         <Input
                            id="brand"
@@ -598,7 +594,7 @@ export default function SellItemPage() {
                            htmlFor="quantity"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Quantity Available
+                           Số lượng còn lại
                         </Label>
                         <div className="relative">
                            <Package className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -622,7 +618,7 @@ export default function SellItemPage() {
                            htmlFor="discountPercentage"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Discount Percentage
+                           Phần trăm giảm giá
                         </Label>
                         <div className="relative">
                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground">
@@ -646,7 +642,7 @@ export default function SellItemPage() {
                            />
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
-                           Optional: Set a discount percentage (0-100%)
+                           Không bắt buộc: Đặt phần trăm giảm giá (0-100%)
                         </p>
                      </div>
 
@@ -656,7 +652,7 @@ export default function SellItemPage() {
                            htmlFor="tags"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Tags
+                           Từ khóa
                         </Label>
                         <div className="relative">
                            <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -671,8 +667,7 @@ export default function SellItemPage() {
                            />
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
-                           Separate tags with commas to help buyers find your
-                           item
+                           Ngăn cách từ khóa bằng dấu phẩy để giúp người mua dễ tìm thấy sản phẩm
                         </p>
                      </div>
                   </div>
@@ -683,7 +678,7 @@ export default function SellItemPage() {
                   <div className="flex items-center gap-2 mb-6">
                      <Package className="h-5 w-5 text-primary" />
                      <h2 className="text-xl font-semibold">
-                        Shipping & Location
+                        Vận chuyển & Địa chỉ
                      </h2>
                   </div>
 
@@ -691,7 +686,7 @@ export default function SellItemPage() {
                      {/* Shipping Options */}
                      <div>
                         <Label className="text-sm font-medium mb-3 block">
-                           Shipping Options
+                           Tuỳ chọn vận chuyển
                         </Label>
                         <div className="space-y-3">
                            <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
@@ -708,10 +703,10 @@ export default function SellItemPage() {
                               />
                               <div>
                                  <div className="font-medium text-sm">
-                                    Free shipping
+                                    Miễn phí vận chuyển
                                  </div>
                                  <div className="text-xs text-muted-foreground">
-                                    I'll cover the shipping cost
+                                    Tôi sẽ chịu phí vận chuyển
                                  </div>
                               </div>
                            </label>
@@ -729,10 +724,10 @@ export default function SellItemPage() {
                               />
                               <div>
                                  <div className="font-medium text-sm">
-                                    Local pickup
+                                    Nhận tại chỗ
                                  </div>
                                  <div className="text-xs text-muted-foreground">
-                                    Buyer can pick up in person
+                                    Người mua có thể đến lấy trực tiếp
                                  </div>
                               </div>
                            </label>
@@ -750,10 +745,10 @@ export default function SellItemPage() {
                               />
                               <div>
                                  <div className="font-medium text-sm">
-                                    Calculated shipping
+                                    Tính phí vận chuyển
                                  </div>
                                  <div className="text-xs text-muted-foreground">
-                                    Shipping cost calculated at checkout
+                                    Phí vận chuyển sẽ được tính khi thanh toán
                                  </div>
                               </div>
                            </label>
@@ -767,7 +762,7 @@ export default function SellItemPage() {
                               htmlFor="city"
                               className="text-sm font-medium mb-2 block"
                            >
-                              City
+                              Thành phố
                            </Label>
                            <Input
                               id="city"
@@ -784,7 +779,7 @@ export default function SellItemPage() {
                               htmlFor="state"
                               className="text-sm font-medium mb-2 block"
                            >
-                              State/Province
+                              Tỉnh/Thành phố
                            </Label>
                            <Input
                               id="state"
@@ -804,7 +799,7 @@ export default function SellItemPage() {
                {(formData.title || images.length > 0) && (
                   <div className="bg-card rounded-2xl p-6 shadow-lg border">
                      <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-semibold">Preview</h2>
+                        <h2 className="text-xl font-semibold">Xem trước</h2>
                         <Button
                            type="button"
                            variant="outline"
@@ -812,7 +807,7 @@ export default function SellItemPage() {
                            onClick={() => setShowPreview(!showPreview)}
                         >
                            <Eye className="h-4 w-4 mr-1" />
-                           {showPreview ? "Hide" : "Show"} Preview
+                           {showPreview ? "Hide" : "Show"} xem trước
                         </Button>
                      </div>
 
@@ -861,19 +856,19 @@ export default function SellItemPage() {
                         <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                         <div className="text-sm">
                            <p className="font-medium mb-1">
-                              Before you list your item:
+                              Trước khi đăng bán sản phẩm:
                            </p>
                            <ul className="text-muted-foreground space-y-1 text-xs">
                               <li>
-                                 • Make sure your photos clearly show the item
+                                 • Đảm bảo ảnh chụp rõ ràng sản phẩm
                               </li>
                               <li>
-                                 • Be honest about the condition and any defects
+                                  • Trung thực về tình trạng và khuyết điểm (nếu có)
                               </li>
                               <li>
-                                 • Research similar items to price competitively
+                                 • Tham khảo giá các sản phẩm tương tự để định giá hợp lý
                               </li>
-                              <li>• Respond promptly to buyer inquiries</li>
+                              <li>• Phản hồi nhanh chóng các câu hỏi từ người mua</li>
                            </ul>
                         </div>
                      </div>
@@ -884,16 +879,15 @@ export default function SellItemPage() {
                            required
                         />
                         <div className="text-sm">
-                           I agree to the{" "}
+                           Tôi đồng ý với{" "}
                            <a href="#" className="text-primary hover:underline">
-                              Terms of Service
+                              Điều khoản dịch vụ
                            </a>{" "}
                            and{" "}
                            <a href="#" className="text-primary hover:underline">
-                              Community Guidelines
+                              Quy tắc cộng đồng
                            </a>
-                           . I confirm that this listing is accurate and that I
-                           have the right to sell this item.
+                           . Tôi xác nhận thông tin đăng bán là chính xác và tôi có quyền bán sản phẩm này.
                         </div>
                      </label>{" "}
                      {/* Submit Buttons */}
@@ -907,11 +901,11 @@ export default function SellItemPage() {
                               <div className="flex items-center gap-2">
                                  <Loader2 className="h-4 w-4 animate-spin" />
                                  {isUploadingImages
-                                    ? "Uploading Images..."
-                                    : "Creating Listing..."}
+                                    ? "Đang tải ảnh lên..."
+                                    : "Đang đăng bán..."}
                               </div>
                            ) : (
-                              "List Item for Sale"
+                              "Đăng bán sản phẩm"
                            )}
                         </Button>
                         <Button
@@ -920,7 +914,7 @@ export default function SellItemPage() {
                            className="flex-1 h-12 text-base"
                            disabled={isSubmitting}
                         >
-                           Save as Draft
+                           Lưu nháp
                         </Button>
                      </div>
                      {/* Error Display */}
@@ -932,12 +926,10 @@ export default function SellItemPage() {
                      {/* Submission Feedback */}
                      {isSubmitted && (
                         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
-                           Your item has been listed successfully and is now
-                           pending approval! 🎉
+                           Sản phẩm của bạn đã được đăng thành công và đang chờ duyệt! 🎉
                            <br />
                            <span className="text-xs">
-                              You'll be notified once it's reviewed and goes
-                              live.
+                              Bạn sẽ được thông báo khi sản phẩm được duyệt và hiển thị.
                            </span>
                         </div>
                      )}

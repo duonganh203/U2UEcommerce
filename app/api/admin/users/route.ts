@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
       const session = await getServerSession(authOptions);
 
       if (!session || !session.user) {
-         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+         return NextResponse.json({ error: "Chưa xác thực" }, { status: 401 });
       }
 
       // Check if user is admin
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       const currentUser = await User.findOne({ email: session.user.email });
       if (!currentUser || currentUser.role !== "admin") {
          return NextResponse.json(
-            { error: "Admin access required" },
+            { error: "Bạn cần quyền quản trị để thực hiện thao tác này" },
             { status: 403 }
          );
       }
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
    } catch (error) {
       console.error("Error fetching users:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
       const session = await getServerSession(authOptions);
 
       if (!session || !session.user) {
-         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+         return NextResponse.json({ error: "Chưa xác thực" }, { status: 401 });
       }
 
       // Check if user is admin
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
       const currentUser = await User.findOne({ email: session.user.email });
       if (!currentUser || currentUser.role !== "admin") {
          return NextResponse.json(
-            { error: "Admin access required" },
+            { error:  "Bạn cần quyền quản trị để thực hiện thao tác này" },
             { status: 403 }
          );
       }
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
       if (!email || !password || !firstName || !lastName) {
          return NextResponse.json(
             {
-               error: "Email, password, first name, and last name are required",
+               error: "Vui lòng nhập đầy đủ email, mật khẩu, họ và tên",
             },
             { status: 400 }
          );
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
          return NextResponse.json(
-            { error: "User with this email already exists" },
+            { error: "Email này đã được đăng ký" },
             { status: 400 }
          );
       }
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
    } catch (error) {
       console.error("Error creating user:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }

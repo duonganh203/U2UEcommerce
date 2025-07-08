@@ -166,16 +166,17 @@ const ProductsPage = () => {
 
    return (
       <div className="space-y-6">
+         {/* Tiêu đề và tổng số sản phẩm */}
          <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-800">
-               Product Management
+               Quản lý sản phẩm
             </h1>
             <div className="text-sm text-gray-600">
-               <span className="font-medium">{filteredProducts.length}</span>{" "}
-               products found
+               <span className="font-medium">{filteredProducts.length}</span> sản phẩm được tìm thấy
             </div>
          </div>
-         {/* Filters and Search */}
+
+         {/* Bộ lọc và tìm kiếm */}
          <div className="bg-white p-4 rounded-lg shadow">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                <div>
@@ -183,14 +184,14 @@ const ProductsPage = () => {
                      htmlFor="search"
                      className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                     Search Products
+                     Tìm kiếm sản phẩm
                   </label>
                   <input
                      type="text"
                      id="search"
                      value={searchTerm}
                      onChange={(e) => setSearchTerm(e.target.value)}
-                     placeholder="Search by name or seller..."
+                     placeholder="Tìm theo tên hoặc người bán..."
                      className="w-full border border-gray-300 rounded-md p-2"
                   />
                </div>
@@ -199,7 +200,7 @@ const ProductsPage = () => {
                      htmlFor="category"
                      className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                     Filter by Category
+                     Lọc theo danh mục
                   </label>
                   <select
                      id="category"
@@ -207,7 +208,7 @@ const ProductsPage = () => {
                      onChange={(e) => setCategoryFilter(e.target.value)}
                      className="w-full border border-gray-300 rounded-md p-2"
                   >
-                     <option value="all">All Categories</option>
+                     <option value="all">Tất cả danh mục</option>
                      {categories.map((category) => (
                         <option key={category} value={category}>
                            {category}
@@ -220,7 +221,7 @@ const ProductsPage = () => {
                      htmlFor="status"
                      className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                     Filter by Status
+                     Lọc theo trạng thái
                   </label>
                   <select
                      id="status"
@@ -228,21 +229,22 @@ const ProductsPage = () => {
                      onChange={(e) => setStatusFilter(e.target.value)}
                      className="w-full border border-gray-300 rounded-md p-2"
                   >
-                     <option value="all">All Statuses</option>
-                     <option value="pending">Pending</option>
-                     <option value="approved">Approved</option>
-                     <option value="rejected">Rejected</option>
+                     <option value="all">Tất cả trạng thái</option>
+                     <option value="pending">Đang chờ duyệt</option>
+                     <option value="approved">Đã duyệt</option>
+                     <option value="rejected">Đã từ chối</option>
                   </select>
                </div>
             </div>
-         </div>{" "}
-         {/* Status Summary */}
+         </div>
+
+         {/* Thống kê trạng thái */}
          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                <div className="flex items-center justify-between">
                   <div>
                      <h3 className="font-medium text-yellow-800">
-                        Pending Approval
+                        Đang chờ duyệt
                      </h3>
                      <p className="text-2xl font-bold mt-1">
                         {statusCounts.pending}
@@ -255,7 +257,7 @@ const ProductsPage = () => {
                <div className="flex items-center justify-between">
                   <div>
                      <h3 className="font-medium text-green-800">
-                        Approved Products
+                        Sản phẩm đã duyệt
                      </h3>
                      <p className="text-2xl font-bold mt-1">
                         {statusCounts.approved}
@@ -268,7 +270,7 @@ const ProductsPage = () => {
                <div className="flex items-center justify-between">
                   <div>
                      <h3 className="font-medium text-red-800">
-                        Rejected Products
+                        Sản phẩm bị từ chối
                      </h3>
                      <p className="text-2xl font-bold mt-1">
                         {statusCounts.rejected}
@@ -278,10 +280,10 @@ const ProductsPage = () => {
                </div>
             </div>
          </div>{" "}
-         {/* Products Table */}
+         {/* Bảng sản phẩm */}
          {loading ? (
             <div className="bg-white rounded-lg shadow p-8 text-center">
-               <div className="text-gray-500">Loading products...</div>
+               <div className="text-gray-500">Đang tải danh sách sản phẩm...</div>
             </div>
          ) : error ? (
             <div className="bg-white rounded-lg shadow p-8 text-center">
@@ -290,7 +292,7 @@ const ProductsPage = () => {
                   onClick={fetchProducts}
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                >
-                  Retry
+                  Thử lại
                </button>
             </div>
          ) : (
@@ -300,25 +302,25 @@ const ProductsPage = () => {
                      <thead className="bg-gray-50">
                         <tr>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Product
+                              Sản phẩm
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Seller
+                              Người bán
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Category
+                              Danh mục
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Price
+                              Giá
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Status
+                              Trạng thái
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Submitted
+                              Ngày gửi
                            </th>
                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Actions
+                              Hành động
                            </th>
                         </tr>
                      </thead>
@@ -355,29 +357,26 @@ const ProductsPage = () => {
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                  <span
-                                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                       product.status === "approved"
+                                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${product.status === "approved"
                                           ? "bg-green-100 text-green-800"
                                           : product.status === "pending"
-                                          ? "bg-yellow-100 text-yellow-800"
-                                          : "bg-red-100 text-red-800"
-                                    }`}
+                                             ? "bg-yellow-100 text-yellow-800"
+                                             : "bg-red-100 text-red-800"
+                                       }`}
                                  >
                                     {product.status.charAt(0).toUpperCase() +
                                        product.status.slice(1)}
                                  </span>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                 {new Date(
-                                    product.createdAt
-                                 ).toLocaleDateString()}
+                                 {new Date(product.createdAt).toLocaleDateString()}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                  <button
                                     onClick={() => handleViewProduct(product)}
                                     className="text-indigo-600 hover:text-indigo-900 mr-3"
                                  >
-                                    View
+                                    Xem
                                  </button>
                                  {product.status === "pending" && (
                                     <>
@@ -387,7 +386,7 @@ const ProductsPage = () => {
                                           }
                                           className="text-green-600 hover:text-green-900 mr-3"
                                        >
-                                          Approve
+                                          Duyệt
                                        </button>
                                        <button
                                           onClick={() =>
@@ -395,7 +394,7 @@ const ProductsPage = () => {
                                           }
                                           className="text-red-600 hover:text-red-900"
                                        >
-                                          Reject
+                                          Từ chối
                                        </button>
                                     </>
                                  )}
@@ -407,19 +406,18 @@ const ProductsPage = () => {
                </div>
                {filteredProducts.length === 0 && (
                   <div className="py-6 text-center text-gray-500">
-                     No products found matching your filters.
+                     Không tìm thấy sản phẩm nào khớp với bộ lọc.
                   </div>
                )}
             </div>
-         )}{" "}
-         {/* View Product Modal */}
+         )}
+         {" "}
+         {/* Modal xem chi tiết sản phẩm */}
          {isModalOpen && selectedProduct && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6">
                   <div className="flex justify-between items-center mb-4">
-                     <h3 className="text-lg font-medium text-gray-900">
-                        Product Details
-                     </h3>
+                     <h3 className="text-lg font-medium text-gray-900">Chi tiết sản phẩm</h3>
                      <button
                         onClick={() => setIsModalOpen(false)}
                         className="text-gray-400 hover:text-gray-500"
@@ -439,91 +437,56 @@ const ProductsPage = () => {
                         />
                         <div className="mt-4 space-y-2">
                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-500">
-                                 Seller:
-                              </span>
-                              <span className="text-sm font-medium">
-                                 {selectedProduct.seller.name}
-                              </span>
+                              <span className="text-sm text-gray-500">Người bán:</span>
+                              <span className="text-sm font-medium">{selectedProduct.seller.name}</span>
                            </div>
                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-500">
-                                 Category:
-                              </span>
-                              <span className="text-sm font-medium">
-                                 {selectedProduct.category}
-                              </span>
+                              <span className="text-sm text-gray-500">Danh mục:</span>
+                              <span className="text-sm font-medium">{selectedProduct.category}</span>
                            </div>
                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-500">
-                                 Brand:
-                              </span>
-                              <span className="text-sm font-medium">
-                                 {selectedProduct.brand}
-                              </span>
+                              <span className="text-sm text-gray-500">Thương hiệu:</span>
+                              <span className="text-sm font-medium">{selectedProduct.brand}</span>
                            </div>
                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-500">
-                                 Price:
-                              </span>
+                              <span className="text-sm text-gray-500">Giá:</span>
                               <span className="text-sm font-medium">
                                  ${selectedProduct.price.toFixed(2)}
                               </span>
                            </div>
                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-500">
-                                 Stock:
-                              </span>
+                              <span className="text-sm text-gray-500">Tồn kho:</span>
+                              <span className="text-sm font-medium">{selectedProduct.countInStock}</span>
+                           </div>
+                           <div className="flex justify-between">
+                              <span className="text-sm text-gray-500">Tình trạng:</span>
+                              <span className="text-sm font-medium">{selectedProduct.condition}</span>
+                           </div>
+                           <div className="flex justify-between">
+                              <span className="text-sm text-gray-500">Ngày gửi:</span>
                               <span className="text-sm font-medium">
-                                 {selectedProduct.countInStock}
+                                 {new Date(selectedProduct.createdAt).toLocaleDateString()}
                               </span>
                            </div>
                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-500">
-                                 Condition:
-                              </span>
-                              <span className="text-sm font-medium">
-                                 {selectedProduct.condition}
-                              </span>
-                           </div>
-                           <div className="flex justify-between">
-                              <span className="text-sm text-gray-500">
-                                 Submitted:
-                              </span>
-                              <span className="text-sm font-medium">
-                                 {new Date(
-                                    selectedProduct.createdAt
-                                 ).toLocaleDateString()}
-                              </span>
-                           </div>
-                           <div className="flex justify-between">
-                              <span className="text-sm text-gray-500">
-                                 Status:
-                              </span>
+                              <span className="text-sm text-gray-500">Trạng thái:</span>
                               <span
-                                 className={`text-sm font-medium ${
-                                    selectedProduct.status === "approved"
+                                 className={`text-sm font-medium ${selectedProduct.status === "approved"
                                        ? "text-green-600"
                                        : selectedProduct.status === "pending"
-                                       ? "text-yellow-600"
-                                       : "text-red-600"
-                                 }`}
+                                          ? "text-yellow-600"
+                                          : "text-red-600"
+                                    }`}
                               >
-                                 {selectedProduct.status
-                                    .charAt(0)
-                                    .toUpperCase() +
+                                 {selectedProduct.status.charAt(0).toUpperCase() +
                                     selectedProduct.status.slice(1)}
                               </span>
                            </div>
                         </div>
                      </div>
                      <div>
-                        <h4 className="text-xl font-medium text-gray-900 mb-2">
-                           {selectedProduct.name}
-                        </h4>
-                        <p className="text-gray-600 mb-4">
-                           {selectedProduct.description}
-                        </p>
+                        <h4 className="text-xl font-medium text-gray-900 mb-2">{selectedProduct.name}</h4>
+                        <p className="text-gray-600 mb-4">{selectedProduct.description}</p>
 
                         {selectedProduct.status === "pending" && (
                            <div className="mt-6 flex space-x-3">
@@ -534,7 +497,7 @@ const ProductsPage = () => {
                                  }}
                                  className="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md"
                               >
-                                 Approve
+                                 Duyệt
                               </button>
                               <button
                                  onClick={() => {
@@ -543,7 +506,7 @@ const ProductsPage = () => {
                                  }}
                                  className="flex-1 py-2 px-4 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md"
                               >
-                                 Reject
+                                 Từ chối
                               </button>
                            </div>
                         )}
@@ -552,15 +515,15 @@ const ProductsPage = () => {
                </div>
             </div>
          )}
-         {/* Confirmation Modal */}
+         {/* Modal xác nhận duyệt hoặc từ chối */}
          {isConfirmModalOpen && confirmAction && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
                   <div className="flex justify-between items-center mb-4">
                      <h3 className="text-lg font-medium text-gray-900">
                         {confirmAction.type === "approve"
-                           ? "Approve Product"
-                           : "Reject Product"}
+                           ? "Xác nhận duyệt sản phẩm"
+                           : "Xác nhận từ chối sản phẩm"}
                      </h3>
                      <button
                         onClick={() => setIsConfirmModalOpen(false)}
@@ -572,22 +535,18 @@ const ProductsPage = () => {
                   <div>
                      {confirmAction.type === "approve" ? (
                         <p className="text-gray-600">
-                           Are you sure you want to approve this product? It
-                           will be visible to customers after approval.
+                           Bạn có chắc muốn duyệt sản phẩm này không? Sản phẩm sẽ hiển thị cho khách hàng sau khi được duyệt.
                         </p>
                      ) : (
                         <div>
                            <p className="text-gray-600 mb-3">
-                              Please provide a reason for rejecting this
-                              product:
+                              Vui lòng nhập lý do từ chối sản phẩm này:
                            </p>
                            <textarea
                               value={rejectionReason}
-                              onChange={(e) =>
-                                 setRejectionReason(e.target.value)
-                              }
+                              onChange={(e) => setRejectionReason(e.target.value)}
                               className="w-full h-24 border border-gray-300 rounded-md p-2"
-                              placeholder="Enter rejection reason..."
+                              placeholder="Nhập lý do từ chối..."
                            ></textarea>
                         </div>
                      )}
@@ -598,24 +557,18 @@ const ProductsPage = () => {
                         onClick={() => setIsConfirmModalOpen(false)}
                         className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                      >
-                        Cancel
+                        Huỷ
                      </button>
                      <button
                         type="button"
                         onClick={confirmStatusChange}
-                        className={`px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white ${
-                           confirmAction.type === "approve"
+                        className={`px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white ${confirmAction.type === "approve"
                               ? "bg-green-600 hover:bg-green-700"
                               : "bg-red-600 hover:bg-red-700"
-                        }`}
-                        disabled={
-                           confirmAction.type === "reject" &&
-                           !rejectionReason.trim()
-                        }
+                           }`}
+                        disabled={confirmAction.type === "reject" && !rejectionReason.trim()}
                      >
-                        {confirmAction.type === "approve"
-                           ? "Approve"
-                           : "Reject"}
+                        {confirmAction.type === "approve" ? "Duyệt" : "Từ chối"}
                      </button>
                   </div>
                </div>

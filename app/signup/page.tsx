@@ -86,15 +86,15 @@ const SignupPage = () => {
         <div className='min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
             <div className='sm:mx-auto sm:w-full sm:max-w-md'>
                 <h2 className='mt-6 text-center text-3xl font-extrabold text-foreground'>
-                    Create your account
+                    Tạo tài khoản của bạn
                 </h2>
                 <p className='mt-2 text-center text-sm text-muted-foreground'>
-                    Already have an account?{" "}
+                    Đã có tài khoản?{" "}
                     <Link
                         href='/login'
                         className='font-medium text-primary hover:text-primary/80'
                     >
-                        Sign in
+                        Đăng nhập
                     </Link>
                 </p>
             </div>
@@ -122,12 +122,12 @@ const SignupPage = () => {
                                     name='firstName'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>First name</FormLabel>
+                                            <FormLabel>Tên</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type='text'
                                                     autoComplete='given-name'
-                                                    placeholder='Enter your first name'
+                                                    placeholder='Nhập tên của bạn'
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -141,12 +141,12 @@ const SignupPage = () => {
                                     name='lastName'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Last name</FormLabel>
+                                            <FormLabel>Họ</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type='text'
                                                     autoComplete='family-name'
-                                                    placeholder='Enter your last name'
+                                                    placeholder='Nhập họ của bạn'
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -160,7 +160,7 @@ const SignupPage = () => {
                                 name='email'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Email address</FormLabel>
+                                        <FormLabel>Địa chỉ email</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type='email'
@@ -178,12 +178,12 @@ const SignupPage = () => {
                                 name='password'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Password</FormLabel>
+                                        <FormLabel>Mật khẩu</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type='password'
                                                 autoComplete='new-password'
-                                                placeholder='Enter your password'
+                                                placeholder='Nhập mật khẩu của bạn'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -196,12 +196,12 @@ const SignupPage = () => {
                                 name='confirmPassword'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Confirm password</FormLabel>
+                                        <FormLabel>Xác nhận mật khẩu</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type='password'
                                                 autoComplete='new-password'
-                                                placeholder='Confirm your password'
+                                                placeholder='Xác nhận mật khẩu của bạn'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -222,19 +222,19 @@ const SignupPage = () => {
                                     htmlFor='accept-terms'
                                     className='ml-2 block text-sm text-foreground'
                                 >
-                                    I agree to the{" "}
+                                    Tôi đồng ý với{" "}
                                     <Link
                                         href='/terms'
                                         className='text-primary hover:text-primary/80'
                                     >
-                                        Terms and Conditions
+                                        Điều khoản dịch vụ
                                     </Link>{" "}
-                                    and{" "}
+                                    và{" "}
                                     <Link
                                         href='/privacy'
                                         className='text-primary hover:text-primary/80'
                                     >
-                                        Privacy Policy
+                                        Chính sách bảo mật
                                     </Link>
                                 </label>
                             </div>
@@ -256,7 +256,7 @@ const SignupPage = () => {
                                     </div>
                                     <div className='relative flex justify-center text-sm'>
                                         <span className='px-2 bg-card text-muted-foreground'>
-                                            Or continue with
+                                            Hoặc tiếp tục với
                                         </span>
                                     </div>
                                 </div>
@@ -267,7 +267,7 @@ const SignupPage = () => {
                                         className='w-full inline-flex justify-center py-2 px-4 border border-input rounded-md shadow-sm bg-background text-sm font-medium text-muted-foreground hover:bg-muted'
                                     >
                                         <span className='sr-only'>
-                                            Sign up with Google
+                                            Đăng ký với Google
                                         </span>
                                         Google
                                     </button>
@@ -276,7 +276,7 @@ const SignupPage = () => {
                                         className='w-full inline-flex justify-center py-2 px-4 border border-input rounded-md shadow-sm bg-background text-sm font-medium text-muted-foreground hover:bg-muted'
                                     >
                                         <span className='sr-only'>
-                                            Sign up with Facebook
+                                            Đăng ký với Facebook
                                         </span>
                                         Facebook
                                     </button>

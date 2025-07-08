@@ -2,28 +2,23 @@ export default function AboutPage() {
    return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
          <div className="container mx-auto px-4 py-16 max-w-4xl">
-            {/* Hero Section */}
+            {/* Phần giới thiệu chính */}
             <div className="text-center mb-16">
                <h1 className="text-5xl font-bold text-foreground mb-6">
-                  About Our Marketplace
+                  Về Chúng Tôi
                </h1>
                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  Connecting buyers and sellers in a trusted, easy-to-use
-                  platform where great deals meet great experiences.
+                  Kết nối người mua và người bán trong một nền tảng đáng tin cậy, dễ sử dụng – nơi giao dịch tốt đi cùng trải nghiệm tuyệt vời.
                </p>
             </div>
 
-            {/* Mission Section */}
+            {/* Sứ mệnh */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border mb-12">
                <h2 className="text-3xl font-bold text-foreground mb-6">
-                  Our Mission
+                  Sứ Mệnh Của Chúng Tôi
                </h2>
                <p className="text-lg text-muted-foreground mb-6">
-                  We believe everyone should have access to a simple, secure,
-                  and efficient way to buy and sell items online. Our platform
-                  empowers individuals and small businesses to reach customers,
-                  discover unique products, and build meaningful connections
-                  through commerce.
+                  Chúng tôi tin rằng ai cũng xứng đáng có một cách đơn giản, an toàn và hiệu quả để mua bán trực tuyến. Nền tảng của chúng tôi giúp cá nhân và doanh nghiệp nhỏ tiếp cận khách hàng, khám phá sản phẩm độc đáo và xây dựng kết nối ý nghĩa qua thương mại.
                </p>
                <div className="grid md:grid-cols-3 gap-6">
                   <div className="text-center p-4">
@@ -31,10 +26,10 @@ export default function AboutPage() {
                         <span className="text-2xl">🛡️</span>
                      </div>
                      <h3 className="font-semibold text-foreground mb-2">
-                        Secure & Safe
+                        An Toàn & Bảo Mật
                      </h3>
                      <p className="text-sm text-muted-foreground">
-                        Advanced security measures to protect your transactions
+                        Bảo vệ giao dịch với các biện pháp bảo mật tiên tiến
                      </p>
                   </div>
                   <div className="text-center p-4">
@@ -42,10 +37,10 @@ export default function AboutPage() {
                         <span className="text-2xl">🌟</span>
                      </div>
                      <h3 className="font-semibold text-foreground mb-2">
-                        Quality First
+                        Ưu Tiên Chất Lượng
                      </h3>
                      <p className="text-sm text-muted-foreground">
-                        Curated listings with detailed descriptions and reviews
+                        Danh sách sản phẩm được chọn lọc với mô tả và đánh giá chi tiết
                      </p>
                   </div>
                   <div className="text-center p-4">
@@ -53,74 +48,74 @@ export default function AboutPage() {
                         <span className="text-2xl">🤝</span>
                      </div>
                      <h3 className="font-semibold text-foreground mb-2">
-                        Community
+                        Cộng Đồng
                      </h3>
                      <p className="text-sm text-muted-foreground">
-                        Building trust through genuine connections and feedback
+                        Xây dựng niềm tin thông qua kết nối chân thật và phản hồi tích cực
                      </p>
                   </div>
                </div>
             </div>
 
-            {/* Features Section */}
+            {/* Tính năng nổi bật */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border mb-12">
                <h2 className="text-3xl font-bold text-foreground mb-6">
-                  Why Choose Us?
+                  Vì Sao Chọn Chúng Tôi?
                </h2>
                <div className="grid md:grid-cols-2 gap-8">
                   <div>
                      <h3 className="text-xl font-semibold text-foreground mb-3">
-                        For Sellers
+                        Dành Cho Người Bán
                      </h3>
                      <ul className="space-y-2 text-muted-foreground">
                         <li className="flex items-center gap-2">
                            <span className="w-2 h-2 bg-primary rounded-full"></span>
-                           Easy listing creation with drag-and-drop photos
+                           Tạo danh sách sản phẩm dễ dàng với tính năng kéo-thả ảnh
                         </li>
                         <li className="flex items-center gap-2">
                            <span className="w-2 h-2 bg-primary rounded-full"></span>
-                           Real-time analytics and performance tracking
+                           Phân tích và theo dõi hiệu suất theo thời gian thực
                         </li>
                         <li className="flex items-center gap-2">
                            <span className="w-2 h-2 bg-primary rounded-full"></span>
-                           Multiple shipping and payment options
+                           Nhiều tuỳ chọn thanh toán và vận chuyển
                         </li>
                         <li className="flex items-center gap-2">
                            <span className="w-2 h-2 bg-primary rounded-full"></span>
-                           Direct messaging with potential buyers
+                           Nhắn tin trực tiếp với khách hàng tiềm năng
                         </li>
                      </ul>
                   </div>
                   <div>
                      <h3 className="text-xl font-semibold text-foreground mb-3">
-                        For Buyers
+                        Dành Cho Người Mua
                      </h3>
                      <ul className="space-y-2 text-muted-foreground">
                         <li className="flex items-center gap-2">
                            <span className="w-2 h-2 bg-primary rounded-full"></span>
-                           Advanced search and filtering options
+                           Tìm kiếm và lọc sản phẩm nâng cao
                         </li>
                         <li className="flex items-center gap-2">
                            <span className="w-2 h-2 bg-primary rounded-full"></span>
-                           Detailed product descriptions and photos
+                           Mô tả và hình ảnh sản phẩm chi tiết
                         </li>
                         <li className="flex items-center gap-2">
                            <span className="w-2 h-2 bg-primary rounded-full"></span>
-                           Secure payment processing and buyer protection
+                           Thanh toán an toàn và bảo vệ người mua
                         </li>
                         <li className="flex items-center gap-2">
                            <span className="w-2 h-2 bg-primary rounded-full"></span>
-                           User reviews and seller ratings
+                           Đánh giá người bán và phản hồi từ người dùng
                         </li>
                      </ul>
                   </div>
                </div>
             </div>
 
-            {/* Stats Section */}
+            {/* Thống kê cộng đồng */}
             <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-8 border mb-12">
                <h2 className="text-3xl font-bold text-foreground text-center mb-8">
-                  Our Growing Community
+                  Cộng Đồng Ngày Càng Lớn Mạnh
                </h2>
                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                   <div>
@@ -128,7 +123,7 @@ export default function AboutPage() {
                         10K+
                      </div>
                      <div className="text-sm text-muted-foreground">
-                        Active Users
+                        Người Dùng Hoạt Động
                      </div>
                   </div>
                   <div>
@@ -136,7 +131,7 @@ export default function AboutPage() {
                         50K+
                      </div>
                      <div className="text-sm text-muted-foreground">
-                        Items Sold
+                        Sản Phẩm Đã Bán
                      </div>
                   </div>
                   <div>
@@ -144,7 +139,7 @@ export default function AboutPage() {
                         98%
                      </div>
                      <div className="text-sm text-muted-foreground">
-                        Satisfaction Rate
+                        Mức Độ Hài Lòng
                      </div>
                   </div>
                   <div>
@@ -152,25 +147,24 @@ export default function AboutPage() {
                         24/7
                      </div>
                      <div className="text-sm text-muted-foreground">
-                        Support Available
+                        Hỗ Trợ Liên Tục
                      </div>
                   </div>
                </div>
             </div>
 
-            {/* Contact Section */}
+            {/* Hỗ trợ liên hệ */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border text-center">
                <h2 className="text-3xl font-bold text-foreground mb-4">
-                  Questions? We're Here to Help
+                  Có Thắc Mắc? Chúng Tôi Luôn Sẵn Sàng
                </h2>
                <p className="text-muted-foreground mb-6">
-                  Our dedicated support team is ready to assist you with any
-                  questions or concerns you might have.
+                  Đội ngũ hỗ trợ tận tâm của chúng tôi luôn sẵn sàng giải đáp mọi câu hỏi và mối quan tâm của bạn.
                </p>
                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <div className="bg-muted/50 rounded-lg p-4">
                      <h3 className="font-semibold text-foreground mb-1">
-                        Email Support
+                        Hỗ Trợ Qua Email
                      </h3>
                      <p className="text-sm text-muted-foreground">
                         support@marketplace.com
@@ -178,7 +172,7 @@ export default function AboutPage() {
                   </div>
                   <div className="bg-muted/50 rounded-lg p-4">
                      <h3 className="font-semibold text-foreground mb-1">
-                        Phone Support
+                        Hỗ Trợ Qua Điện Thoại
                      </h3>
                      <p className="text-sm text-muted-foreground">
                         1-800-MARKETPLACE
@@ -186,10 +180,10 @@ export default function AboutPage() {
                   </div>
                   <div className="bg-muted/50 rounded-lg p-4">
                      <h3 className="font-semibold text-foreground mb-1">
-                        Live Chat
+                        Trò Chuyện Trực Tiếp
                      </h3>
                      <p className="text-sm text-muted-foreground">
-                        Available 24/7
+                        Hỗ trợ 24/7
                      </p>
                   </div>
                </div>

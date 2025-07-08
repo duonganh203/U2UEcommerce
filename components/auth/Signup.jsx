@@ -43,7 +43,7 @@ const Signup = () => {
                      htmlFor="firstName"
                      className="block text-sm font-medium text-gray-700"
                   >
-                     First name
+                     Tên
                   </label>
                   <div className="mt-1">
                      <input
@@ -64,7 +64,7 @@ const Signup = () => {
                      htmlFor="lastName"
                      className="block text-sm font-medium text-gray-700"
                   >
-                     Last name
+                     Họ
                   </label>
                   <div className="mt-1">
                      <input
@@ -86,7 +86,7 @@ const Signup = () => {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                >
-                  Email address
+                  Địa chỉ email
                </label>
                <div className="mt-1">
                   <input
@@ -107,7 +107,7 @@ const Signup = () => {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                >
-                  Password
+                  Mật khẩu
                </label>
                <div className="mt-1">
                   <input
@@ -128,7 +128,7 @@ const Signup = () => {
                   htmlFor="confirmPassword"
                   className="block text-sm font-medium text-gray-700"
                >
-                  Confirm password
+                  Xác nhận mật khẩu
                </label>
                <div className="mt-1">
                   <input
@@ -158,19 +158,19 @@ const Signup = () => {
                   htmlFor="acceptTerms"
                   className="ml-2 block text-sm text-gray-900"
                >
-                  I agree to the{" "}
+                  Tôi đồng ý với{" "}
                   <a
                      href="#"
                      className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
-                     Terms and Conditions
+                     Điều khoản và điều kiện
                   </a>{" "}
                   and{" "}
                   <a
                      href="#"
                      className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
-                     Privacy Policy
+                     Chính sách bảo mật
                   </a>
                </label>
             </div>
@@ -180,7 +180,7 @@ const Signup = () => {
                   type="submit"
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                >
-                  Create account
+                  Tạo tài khoản
                </button>
             </div>
 
@@ -191,7 +191,7 @@ const Signup = () => {
                   </div>
                   <div className="relative flex justify-center text-sm">
                      <span className="px-2 bg-white text-gray-500">
-                        Or continue with
+                        Hoặc tiếp tục với
                      </span>
                   </div>
                </div>
@@ -201,14 +201,14 @@ const Signup = () => {
                      type="button"
                      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                   >
-                     <span className="sr-only">Sign up with Google</span>
+                     <span className="sr-only">Đăng kí với Google</span>
                      Google
                   </button>
                   <button
                      type="button"
                      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                   >
-                     <span className="sr-only">Sign up with Facebook</span>
+                     <span className="sr-only">Đăng kí với Facebook</span>
                      Facebook
                   </button>
                </div>

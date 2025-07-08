@@ -47,22 +47,22 @@ type TransformedProduct = {
 const categories: Category[] = [
    "All",
    "Electronics",
-   "Clothing & Fashion",
-   "Home & Garden",
+   "Fashion",
+   "Home & Living",
    "Sports & Outdoors",
    "Books & Education",
    "Toys & Games",
    "Beauty & Health",
-   "Automotive",
+   "Automotive & Motorcycles",
    "Art & Collectibles",
    "Other",
 ];
 const sortOptions: SortOption[] = [
-   { value: "featured", label: "Featured" },
-   { value: "price-low", label: "Price: Low to High" },
-   { value: "price-high", label: "Price: High to Low" },
-   { value: "rating", label: "Highest Rated" },
-   { value: "newest", label: "Newest" },
+   { value: "featured", label: "Nổi bật" },
+   { value: "price-low", label: "Giá: Thấp đến Cao" },
+   { value: "price-high", label: "Giá: Cao đến Thấp" },
+   { value: "rating", label: "Đánh giá cao nhất" },
+   { value: "newest", label: "Mới nhất" },
 ];
 
 const PRODUCTS_PER_PAGE = 8;
@@ -268,7 +268,7 @@ export default function ProductsPage() {
                               className="flex items-center space-x-2"
                            >
                               <ShoppingCart className="w-4 h-4" />
-                              <span>Add to Cart</span>
+                              <span>Thêm vào giỏ</span>
                            </Button>
                         </div>
                      </div>
@@ -344,7 +344,7 @@ export default function ProductsPage() {
                   onClick={() => handleAddToCart(product)}
                >
                   <ShoppingCart className="w-4 h-4" />
-                  <span>Add to Cart</span>
+                  <span>Thêm vào giỏ hàng</span>
                </Button>
             </div>
          </div>
@@ -356,10 +356,10 @@ export default function ProductsPage() {
             {/* Header */}
             <div className="mb-8">
                <h1 className="text-3xl font-bold text-foreground mb-2">
-                  Products
+                 Sản phẩm
                </h1>
                <p className="text-muted-foreground">
-                  Discover our amazing collection of products
+                  Khám phá bộ sưu tập sản phẩm tuyệt vời của chúng tôi
                </p>
             </div>
             {/* Filters and Controls */}
@@ -422,13 +422,13 @@ export default function ProductsPage() {
             {/* Results Count */}
             <div className="mb-6 flex justify-between items-center">
                <p className="text-muted-foreground">
-                  Showing {startIndex + 1}-
+                  Hiển thị {startIndex + 1}-
                   {Math.min(endIndex, sortedProducts.length)} of{" "}
-                  {sortedProducts.length} products
+                  {sortedProducts.length} sản phẩm
                </p>
                {totalPages > 1 && (
                   <p className="text-muted-foreground text-sm">
-                     Page {currentPage} of {totalPages}
+                     Trang {currentPage} / {totalPages}
                   </p>
                )}
             </div>
@@ -437,7 +437,7 @@ export default function ProductsPage() {
                <div className="flex justify-center items-center py-12">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                   <span className="ml-2 text-muted-foreground">
-                     Loading products...
+                     Đang tải sản phẩm...
                   </span>
                </div>
             )}
@@ -451,7 +451,7 @@ export default function ProductsPage() {
                      className="mt-2"
                      onClick={() => window.location.reload()}
                   >
-                     Try Again
+                     Thử lại
                   </Button>
                </div>
             )}{" "}
@@ -471,10 +471,10 @@ export default function ProductsPage() {
                   ) : (
                      <div className="col-span-full text-center py-12">
                         <p className="text-muted-foreground text-lg">
-                           No products found
+                           Không tìm thấy sản phẩm nào
                         </p>
                         <p className="text-muted-foreground/60 text-sm mt-2">
-                           Try adjusting your filters or search terms
+                           Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm
                         </p>
                      </div>
                   )}
@@ -491,7 +491,7 @@ export default function ProductsPage() {
                      className="flex items-center space-x-1"
                   >
                      <ChevronLeft className="w-4 h-4" />
-                     <span>Previous</span>
+                     <span>Trước</span>
                   </Button>
 
                   <div className="flex space-x-1">
@@ -517,7 +517,7 @@ export default function ProductsPage() {
                      disabled={currentPage === totalPages}
                      className="flex items-center space-x-1"
                   >
-                     <span>Next</span>
+                     <span>Tiếp</span>
                      <ChevronRight className="w-4 h-4" />
                   </Button>
                </div>
