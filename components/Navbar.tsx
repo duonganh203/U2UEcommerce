@@ -33,6 +33,7 @@ export default function Navbar() {
    const navigation = [
       { name: "Home", href: "/" },
       { name: "Products", href: "/products" },
+      { name: "Auctions", href: "/auctions" },
       { name: "Categories", href: "/categories" },
       //   { name: "Sell Item", href: "/sell-item" },
       { name: "About", href: "/about" },
