@@ -37,7 +37,7 @@ export async function getAIPriceSuggestion(
          const model = genAI.getGenerativeModel({ model: modelName });
 
          const prompt = `
-Bạn là một chuyên gia định giá sản phẩm thương mại điện tử. Hãy phân tích thông tin sản phẩm sau và đưa ra gợi ý giá phù hợp.
+Bạn là một chuyên gia định giá sản phẩm thương mại điện tử tại Việt Nam. Hãy phân tích thông tin sản phẩm sau và đưa ra gợi ý giá phù hợp bằng tiền Việt Nam (VND).
 
 Thông tin sản phẩm:
 - Tên sản phẩm: ${productInfo.title}
@@ -51,21 +51,22 @@ QUAN TRỌNG: Chỉ trả về JSON thuần túy, không có markdown, không c�
 
 Trả về JSON theo format này:
 {
-  "suggestedPrice": số tiền đề xuất (USD),
+  "suggestedPrice": số tiền đề xuất (VND, không có dấu phẩy hoặc dấu chấm),
   "priceRange": {
-    "min": giá thấp nhất hợp lý,
-    "max": giá cao nhất hợp lý
+    "min": giá thấp nhất hợp lý (VND, không có dấu phẩy hoặc dấu chấm),
+    "max": giá cao nhất hợp lý (VND, không có dấu phẩy hoặc dấu chấm)
   },
-  "reasoning": "lý do đề xuất giá này",
-  "marketTrend": "xu hướng thị trường hiện tại",
+  "reasoning": "lý do đề xuất giá này bằng tiếng Việt",
+  "marketTrend": "xu hướng thị trường hiện tại bằng tiếng Việt",
   "confidence": độ tin cậy từ 0-100
 }
 
 Lưu ý:
-- Giá phải thực tế và cạnh tranh
+- Giá phải thực tế và cạnh tranh cho thị trường Việt Nam
 - Cân nhắc tình trạng sản phẩm
-- Tham khảo thị trường hiện tại
+- Tham khảo thị trường Việt Nam hiện tại
 - Chỉ trả về JSON, không có text khác
+- Giá VND phải là số nguyên, không có dấu phẩy hoặc dấu chấm
 `;
 
          const result = await model.generateContent(prompt);

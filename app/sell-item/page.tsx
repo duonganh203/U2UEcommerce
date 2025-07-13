@@ -66,26 +66,26 @@ export default function SellItemPage() {
    ];
 
    const conditions = [
-      { value: "new", label: "New", description: "Brand new, unused item" },
+      { value: "new", label: "Mới", description: "Sản phẩm mới, chưa sử dụng" },
       {
          value: "like-new",
-         label: "Like New",
-         description: "Used once or twice, excellent condition",
+         label: "Như mới",
+         description: "Đã sử dụng một hoặc hai lần, tình trạng xuất sắc",
       },
       {
          value: "good",
-         label: "Good",
-         description: "Used with minor signs of wear",
+         label: "Tốt",
+         description: "Đã sử dụng với dấu hiệu hao mòn nhẹ",
       },
       {
          value: "fair",
-         label: "Fair",
-         description: "Used with noticeable signs of wear",
+         label: "Khá",
+         description: "Đã sử dụng với dấu hiệu hao mòn rõ ràng",
       },
       {
          value: "poor",
-         label: "Poor",
-         description: "Heavily used, functional but worn",
+         label: "Kém",
+         description: "Đã sử dụng nhiều, vẫn hoạt động nhưng đã mòn",
       },
    ];
 
@@ -230,17 +230,19 @@ export default function SellItemPage() {
 
    const getPriceSuggestion = (category: string) => {
       const suggestions: Record<string, string> = {
-         Electronics: "Check similar items: $50-500",
-         "Clothing & Fashion": "Typical range: $10-200",
-         "Home & Garden": "Common prices: $20-300",
-         "Sports & Outdoors": "Average range: $25-400",
-         "Books & Education": "Usually: $5-50",
-         "Toys & Games": "Typical: $10-100",
-         "Beauty & Health": "Range: $15-150",
-         Automotive: "Varies widely: $20-2000",
-         "Art & Collectibles": "Research required: $10-1000+",
+         Electronics: "Tham khảo sản phẩm tương tự: 1.000.000đ - 10.000.000đ",
+         "Clothing & Fashion": "Khoảng giá thông thường: 200.000đ - 4.000.000đ",
+         "Home & Garden": "Giá phổ biến: 400.000đ - 6.000.000đ",
+         "Sports & Outdoors": "Khoảng giá trung bình: 500.000đ - 8.000.000đ",
+         "Books & Education": "Thường: 100.000đ - 1.000.000đ",
+         "Toys & Games": "Thông thường: 200.000đ - 2.000.000đ",
+         "Beauty & Health": "Khoảng: 300.000đ - 3.000.000đ",
+         Automotive: "Thay đổi nhiều: 400.000đ - 40.000.000đ",
+         "Art & Collectibles": "Cần nghiên cứu: 200.000đ - 20.000.000đ+",
       };
-      return suggestions[category] || "Research similar items for pricing";
+      return (
+         suggestions[category] || "Nghiên cứu sản phẩm tương tự để định giá"
+      );
    };
 
    // Redirect if not authenticated
@@ -298,7 +300,8 @@ export default function SellItemPage() {
                               Đang tải ảnh lên...
                            </h3>
                            <p className="text-muted-foreground">
-                              Vui lòng chờ trong khi chúng tôi tải ảnh của bạn lên đám mây
+                              Vui lòng chờ trong khi chúng tôi tải ảnh của bạn
+                              lên đám mây
                            </p>
                         </div>
                      ) : (
@@ -370,9 +373,7 @@ export default function SellItemPage() {
                <div className="bg-card rounded-2xl p-6 shadow-lg border">
                   <div className="flex items-center gap-2 mb-6">
                      <FileText className="h-5 w-5 text-primary" />
-                     <h2 className="text-xl font-semibold">
-                        Thông tin cơ bản
-                     </h2>
+                     <h2 className="text-xl font-semibold">Thông tin cơ bản</h2>
                   </div>
 
                   <div className="space-y-6">
@@ -382,11 +383,11 @@ export default function SellItemPage() {
                            htmlFor="title"
                            className="text-sm font-medium mb-2 block"
                         >
-                           Tiêu đề  <span className="text-destructive">*</span>
+                           Tiêu đề <span className="text-destructive">*</span>
                         </Label>
                         <Input
                            id="title"
-                           placeholder="What are you selling?"
+                           placeholder="Nhập sản phẩm của bạn..."
                            className="text-base"
                            value={formData.title}
                            onChange={(e) =>
@@ -395,7 +396,8 @@ export default function SellItemPage() {
                            required
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                           Hãy cụ thể và bao gồm các chi tiết quan trọng như thương hiệu, mẫu mã, kích thước, v.v.
+                           Hãy cụ thể và bao gồm các chi tiết quan trọng như
+                           thương hiệu, mẫu mã, kích thước, v.v.
                         </p>
                         {errors.title && (
                            <p className="text-destructive text-xs mt-1">
@@ -436,7 +438,8 @@ export default function SellItemPage() {
                      {/* Condition */}
                      <div>
                         <Label className="text-sm font-medium mb-3 block">
-                           Tình trạng <span className="text-destructive">*</span>
+                           Tình trạng{" "}
+                           <span className="text-destructive">*</span>
                         </Label>
                         <div className="space-y-3">
                            {conditions.map((condition) => (
@@ -495,7 +498,7 @@ export default function SellItemPage() {
                         <textarea
                            id="description"
                            rows={5}
-                           placeholder="Describe your item in detail..."
+                           placeholder="Mô tả chi tiết sản phẩm..."
                            value={formData.description}
                            onChange={(e) =>
                               handleInputChange("description", e.target.value)
@@ -503,7 +506,8 @@ export default function SellItemPage() {
                            className="w-full px-3 py-2 text-sm bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-none"
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                           Bao gồm thông tin về tính năng, khuyết điểm, phụ kiện đi kèm, v.v.
+                           Bao gồm thông tin về tính năng, khuyết điểm, phụ kiện
+                           đi kèm, v.v.
                         </p>
                      </div>
                   </div>
@@ -527,9 +531,7 @@ export default function SellItemPage() {
                <div className="bg-card rounded-2xl p-6 shadow-lg border">
                   <div className="flex items-center gap-2 mb-6">
                      <DollarSign className="h-5 w-5 text-primary" />
-                     <h2 className="text-xl font-semibold">
-                        Giá & Chi tiết
-                     </h2>
+                     <h2 className="text-xl font-semibold">Giá & Chi tiết</h2>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
@@ -542,13 +544,15 @@ export default function SellItemPage() {
                            Giá <span className="text-destructive">*</span>
                         </Label>
                         <div className="relative">
-                           <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                           <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground">
+                              đ
+                           </span>
                            <Input
                               id="price"
                               type="number"
-                              placeholder="0.00"
-                              className="pl-10 text-base"
-                              step="0.01"
+                              placeholder="0"
+                              className="pl-8 text-base"
+                              step="1000"
                               min="0"
                               value={formData.price}
                               onChange={(e) =>
@@ -667,7 +671,8 @@ export default function SellItemPage() {
                            />
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
-                           Ngăn cách từ khóa bằng dấu phẩy để giúp người mua dễ tìm thấy sản phẩm
+                           Ngăn cách từ khóa bằng dấu phẩy để giúp người mua dễ
+                           tìm thấy sản phẩm
                         </p>
                      </div>
                   </div>
@@ -766,7 +771,7 @@ export default function SellItemPage() {
                            </Label>
                            <Input
                               id="city"
-                              placeholder="Your city"
+                              placeholder="Nhập tên thành phố"
                               className="text-base"
                               value={formData.city}
                               onChange={(e) =>
@@ -779,11 +784,11 @@ export default function SellItemPage() {
                               htmlFor="state"
                               className="text-sm font-medium mb-2 block"
                            >
-                              Tỉnh/Thành phố
+                              Đường/Quận
                            </Label>
                            <Input
                               id="state"
-                              placeholder="Your state or province"
+                              placeholder="Nhập đường/Quận"
                               className="text-base"
                               value={formData.state}
                               onChange={(e) =>
@@ -834,7 +839,11 @@ export default function SellItemPage() {
                                     {selectedCategory || "Category"}
                                  </p>
                                  <p className="text-lg font-bold text-primary mt-1">
-                                    ${formData.price || "0.00"}
+                                    {formData.price
+                                       ? `${parseInt(
+                                            formData.price
+                                         ).toLocaleString("vi-VN")}đ`
+                                       : "0đ"}
                                  </p>
                                  {formData.description && (
                                     <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
@@ -859,16 +868,18 @@ export default function SellItemPage() {
                               Trước khi đăng bán sản phẩm:
                            </p>
                            <ul className="text-muted-foreground space-y-1 text-xs">
+                              <li>• Đảm bảo ảnh chụp rõ ràng sản phẩm</li>
                               <li>
-                                 • Đảm bảo ảnh chụp rõ ràng sản phẩm
+                                 • Trung thực về tình trạng và khuyết điểm (nếu
+                                 có)
                               </li>
                               <li>
-                                  • Trung thực về tình trạng và khuyết điểm (nếu có)
+                                 • Tham khảo giá các sản phẩm tương tự để định
+                                 giá hợp lý
                               </li>
                               <li>
-                                 • Tham khảo giá các sản phẩm tương tự để định giá hợp lý
+                                 • Phản hồi nhanh chóng các câu hỏi từ người mua
                               </li>
-                              <li>• Phản hồi nhanh chóng các câu hỏi từ người mua</li>
                            </ul>
                         </div>
                      </div>
@@ -887,7 +898,8 @@ export default function SellItemPage() {
                            <a href="#" className="text-primary hover:underline">
                               Quy tắc cộng đồng
                            </a>
-                           . Tôi xác nhận thông tin đăng bán là chính xác và tôi có quyền bán sản phẩm này.
+                           . Tôi xác nhận thông tin đăng bán là chính xác và tôi
+                           có quyền bán sản phẩm này.
                         </div>
                      </label>{" "}
                      {/* Submit Buttons */}
@@ -926,10 +938,12 @@ export default function SellItemPage() {
                      {/* Submission Feedback */}
                      {isSubmitted && (
                         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
-                           Sản phẩm của bạn đã được đăng thành công và đang chờ duyệt! 🎉
+                           Sản phẩm của bạn đã được đăng thành công và đang chờ
+                           duyệt! 🎉
                            <br />
                            <span className="text-xs">
-                              Bạn sẽ được thông báo khi sản phẩm được duyệt và hiển thị.
+                              Bạn sẽ được thông báo khi sản phẩm được duyệt và
+                              hiển thị.
                            </span>
                         </div>
                      )}

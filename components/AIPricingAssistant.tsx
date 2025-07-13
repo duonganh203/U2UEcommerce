@@ -211,7 +211,10 @@ export default function AIPricingAssistant({
                         {/* Suggested Price */}
                         <div className="text-center p-3 bg-green-50 rounded-lg">
                            <div className="text-2xl font-bold text-green-600">
-                              ${priceSuggestion.suggestedPrice.toFixed(2)}
+                              {priceSuggestion.suggestedPrice.toLocaleString(
+                                 "vi-VN"
+                              )}
+                              đ
                            </div>
                            <div className="text-sm text-green-700">
                               Giá đề xuất
@@ -221,8 +224,14 @@ export default function AIPricingAssistant({
                         {/* Price Range */}
                         <div className="text-center p-3 bg-blue-50 rounded-lg">
                            <div className="text-lg font-semibold text-blue-600">
-                              ${priceSuggestion.priceRange.min.toFixed(2)} - $
-                              {priceSuggestion.priceRange.max.toFixed(2)}
+                              {priceSuggestion.priceRange.min.toLocaleString(
+                                 "vi-VN"
+                              )}
+                              đ -{" "}
+                              {priceSuggestion.priceRange.max.toLocaleString(
+                                 "vi-VN"
+                              )}
+                              đ
                            </div>
                            <div className="text-sm text-blue-700">
                               Khoảng giá hợp lý
@@ -267,8 +276,9 @@ export default function AIPricingAssistant({
                         variant="default"
                      >
                         <DollarSign className="h-4 w-4 mr-2" />
-                        Sử dụng giá đề xuất: $
-                        {priceSuggestion.suggestedPrice.toFixed(2)}
+                        Sử dụng giá đề xuất:{" "}
+                        {priceSuggestion.suggestedPrice.toLocaleString("vi-VN")}
+                        đ
                      </Button>
                   </div>
                )}
