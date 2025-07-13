@@ -31,6 +31,7 @@ export default function Navbar() {
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
    const navigation = [
+      { name: "Đấu giá", href: "/auctions" },
       { name: "Trang chủ", href: "/" },
       { name: "Sản phẩm", href: "/products" },
       { name: "Danh mục", href: "/categories" },

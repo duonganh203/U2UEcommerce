@@ -11,6 +11,7 @@ import {
    Home,
    ChevronLeft,
    ChevronRight,
+   Gavel,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -33,6 +34,7 @@ export default function AdminSidebar({
       { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
       { name: "Users", href: "/admin/users", icon: Users },
       { name: "Products", href: "/admin/products", icon: Package },
+      { name: "Auctions", href: "/admin/auctions", icon: Gavel },
       { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
       { name: "Settings", href: "/admin/settings", icon: Settings },
    ];
