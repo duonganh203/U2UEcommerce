@@ -412,7 +412,7 @@ export default function AuctionDetailPage() {
                            <p className="text-sm text-green-700">
                               Người thắng:{" "}
                               <span className="font-semibold">
-                                 {auction.winner.name}
+                                 {auction.winner.email}
                               </span>
                            </p>
                            <p className="text-sm text-green-700">

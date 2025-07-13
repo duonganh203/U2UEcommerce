@@ -13,7 +13,6 @@ import {
    FileText,
    Camera,
    Plus,
-   AlertCircle,
    Info,
    Eye,
    Loader2,

@@ -19,6 +19,7 @@ import {
    Loader2,
    Eye,
    AlertCircle,
+   RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -46,6 +47,7 @@ export default function AdminAuctionsPage() {
    const [loading, setLoading] = useState(true);
    const [statusFilter, setStatusFilter] = useState("pending");
    const [processingId, setProcessingId] = useState<string | null>(null);
+   const [processingAuctions, setProcessingAuctions] = useState(false);
 
    const statuses = [
       { value: "pending", label: "Chờ duyệt" },
@@ -126,6 +128,31 @@ export default function AdminAuctionsPage() {
          alert("Có lỗi xảy ra");
       } finally {
          setProcessingId(null);
+      }
+   };
+
+   const handleProcessAuctions = async () => {
+      try {
+         setProcessingAuctions(true);
+         const response = await fetch("/api/cron/process-auctions", {
+            method: "POST",
+         });
+
+         const data = await response.json();
+
+         if (response.ok) {
+            alert(
+               `Xử lý hoàn tất!\n- Chuyển sang active: ${data.stats.approvedToActive}\n- Chuyển sang ended: ${data.stats.activeToEnded}\n- Xác định người thắng: ${data.stats.winnersDetermined}`
+            );
+            fetchAuctions();
+         } else {
+            alert(data.error || "Có lỗi xảy ra");
+         }
+      } catch (error) {
+         console.error("Error processing auctions:", error);
+         alert("Có lỗi xảy ra");
+      } finally {
+         setProcessingAuctions(false);
       }
    };
 
@@ -213,6 +240,23 @@ export default function AdminAuctionsPage() {
                   Duyệt và quản lý các phiên đấu giá
                </p>
             </div>
+            <Button
+               onClick={handleProcessAuctions}
+               disabled={processingAuctions}
+               variant="outline"
+            >
+               {processingAuctions ? (
+                  <>
+                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                     Đang xử lý...
+                  </>
+               ) : (
+                  <>
+                     <RefreshCw className="h-4 w-4 mr-2" />
+                     Xử lý trạng thái
+                  </>
+               )}
+            </Button>
          </div>
 
          {/* Filter */}
