@@ -34,7 +34,7 @@ type ProductSpecifications = Record<string, string>;
 
 type ProductImage = string;
 
-type ProductTab = "description" | "specifications" | "reviews";
+type ProductTab = "Mô tả" | "Thông số kỹ thuật" | "Đánh giá";
 
 type DummyReview = {
    id: number;
@@ -107,7 +107,7 @@ export default function ProductPage({
    const [selectedSize, setSelectedSize] = useState(0);
    const [quantity, setQuantity] = useState(1);
    const [isWishlisted, setIsWishlisted] = useState(false);
-   const [activeTab, setActiveTab] = useState<ProductTab>("description");
+   const [activeTab, setActiveTab] = useState<ProductTab>("Mô tả");
    const { addToCart } = useCart();
 
    // Fetch product data
@@ -123,28 +123,28 @@ export default function ProductPage({
                ...transformedProduct,
                originalPrice:
                   transformedProduct.originalPrice !== undefined &&
-                  transformedProduct.originalPrice !== null &&
-                  transformedProduct.originalPrice !== ""
+                     transformedProduct.originalPrice !== null &&
+                     transformedProduct.originalPrice !== ""
                      ? Number(transformedProduct.originalPrice)
                      : undefined,
                features: [
-                  "High quality materials",
-                  "Premium build",
-                  "Excellent performance",
-                  "Great value for money",
+                  "Chất liệu cao cấp",
+                  "Gia công tỉ mỉ",
+                  "Hiệu năng tuyệt vời",
+                  "Giá trị vượt trội",
                ],
                specifications: {
-                  Brand: transformedProduct.brand,
-                  Category: transformedProduct.category,
-                  "In Stock": transformedProduct.stockCount.toString(),
+                  "Thương hiệu": transformedProduct.brand,
+                  "Danh mục": transformedProduct.category,
+                  "Tồn kho": transformedProduct.stockCount.toString(),
                },
-               colors: [{ name: "Default", value: "#000000" }],
-               sizes: ["One Size"],
+               colors: [{ name: "Mặc định", value: "#000000" }],
+               sizes: ["Một size"],
             };
 
             setProduct(productWithDefaults);
          } catch (err) {
-            setError("Failed to load product");
+            setError("Không thể tải sản phẩm");
             console.error("Error loading product:", err);
          } finally {
             setLoading(false);
@@ -158,7 +158,7 @@ export default function ProductPage({
          <div className="min-h-screen bg-background flex justify-center items-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             <span className="ml-2 text-muted-foreground">
-               Loading product...
+               Đang tải sản phẩm...
             </span>
          </div>
       );
@@ -198,11 +198,10 @@ export default function ProductPage({
       return Array.from({ length: 5 }, (_, i) => (
          <Star
             key={i}
-            className={`w-4 h-4 ${
-               i < Math.floor(rating)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-muted-foreground"
-            }`}
+            className={`w-4 h-4 ${i < Math.floor(rating)
+               ? "fill-yellow-400 text-yellow-400"
+               : "text-muted-foreground"
+               }`}
          />
       ));
    };
@@ -212,11 +211,11 @@ export default function ProductPage({
             {/* Breadcrumb */}
             <nav className="flex text-sm text-muted-foreground mb-8">
                <a href="/" className="hover:text-primary">
-                  Home
+                  Trang chủ
                </a>
                <span className="mx-2">/</span>
                <a href="/products" className="hover:text-primary">
-                  Products
+                  Sản phẩm
                </a>
                <span className="mx-2">/</span>
                <span className="text-foreground">{product.name}</span>
@@ -242,11 +241,10 @@ export default function ProductPage({
                         className="absolute top-4 right-4 p-2 bg-card rounded-full shadow-md hover:shadow-lg transition-shadow"
                      >
                         <Heart
-                           className={`w-5 h-5 ${
-                              isWishlisted
-                                 ? "fill-destructive text-destructive"
-                                 : "text-muted-foreground"
-                           }`}
+                           className={`w-5 h-5 ${isWishlisted
+                              ? "fill-destructive text-destructive"
+                              : "text-muted-foreground"
+                              }`}
                         />
                      </button>
                   </div>
@@ -258,11 +256,10 @@ export default function ProductPage({
                            <button
                               key={index}
                               onClick={() => setSelectedImage(index)}
-                              className={`aspect-square relative bg-card rounded overflow-hidden border-2 ${
-                                 selectedImage === index
-                                    ? "border-primary"
-                                    : "border-border"
-                              }`}
+                              className={`aspect-square relative bg-card rounded overflow-hidden border-2 ${selectedImage === index
+                                 ? "border-primary"
+                                 : "border-border"
+                                 }`}
                            >
                               <Image
                                  src={image}
@@ -295,12 +292,12 @@ export default function ProductPage({
                      {/* Price */}
                      <div className="flex items-baseline space-x-2 mb-6">
                         <span className="text-3xl font-bold text-foreground">
-                           ${product.price}
+                           {product.price}₫
                         </span>
                         {product.originalPrice &&
                            product.originalPrice > product.price && (
                               <span className="text-lg text-muted-foreground line-through">
-                                 ${product.originalPrice}
+                                 {product.originalPrice}₫
                               </span>
                            )}
                      </div>
@@ -308,24 +305,22 @@ export default function ProductPage({
                   {/* Stock Status */}
                   <div className="flex items-center space-x-2">
                      <div
-                        className={`w-3 h-3 rounded-full ${
-                           product.inStock ? "bg-primary" : "bg-destructive"
-                        }`}
+                        className={`w-3 h-3 rounded-full ${product.inStock ? "bg-primary" : "bg-destructive"
+                           }`}
                      ></div>
                      <span
-                        className={`text-sm font-medium ${
-                           product.inStock ? "text-primary" : "text-destructive"
-                        }`}
+                        className={`text-sm font-medium ${product.inStock ? "text-primary" : "text-destructive"
+                           }`}
                      >
                         {product.inStock
-                           ? `In Stock (${product.stockCount} left)`
-                           : "Out of Stock"}
+                           ? `Còn hàng (${product.stockCount} sản phẩm)`
+                           : "Hết hàng"}
                      </span>
                   </div>{" "}
                   {/* Color Selection */}
                   <div>
                      <h3 className="text-sm font-medium text-foreground mb-3">
-                        Color
+                        Màu sắc
                      </h3>
                      <div className="flex space-x-3">
                         {product.colors.map(
@@ -333,11 +328,10 @@ export default function ProductPage({
                               <button
                                  key={index}
                                  onClick={() => setSelectedColor(index)}
-                                 className={`w-8 h-8 rounded-full border-2 ${
-                                    selectedColor === index
-                                       ? "border-foreground"
-                                       : "border-border"
-                                 }`}
+                                 className={`w-8 h-8 rounded-full border-2 ${selectedColor === index
+                                    ? "border-foreground"
+                                    : "border-border"
+                                    }`}
                                  style={{
                                     backgroundColor: color.value,
                                  }}
@@ -350,18 +344,17 @@ export default function ProductPage({
                   {/* Size Selection */}
                   <div>
                      <h3 className="text-sm font-medium text-foreground mb-3">
-                        Size
+                        Kích thước
                      </h3>
                      <div className="flex space-x-2">
                         {product.sizes.map((size: string, index: number) => (
                            <button
                               key={index}
                               onClick={() => setSelectedSize(index)}
-                              className={`px-4 py-2 border rounded-md text-sm font-medium ${
-                                 selectedSize === index
-                                    ? "border-primary bg-primary/10 text-primary"
-                                    : "border-border text-foreground hover:border-border/80"
-                              }`}
+                              className={`px-4 py-2 border rounded-md text-sm font-medium ${selectedSize === index
+                                 ? "border-primary bg-primary/10 text-primary"
+                                 : "border-border text-foreground hover:border-border/80"
+                                 }`}
                            >
                               {size}
                            </button>
@@ -372,7 +365,7 @@ export default function ProductPage({
                   <div className="space-y-4">
                      <div>
                         <h3 className="text-sm font-medium text-foreground mb-3">
-                           Quantity
+                           Số lượng
                         </h3>
                         <div className="flex items-center space-x-3">
                            <button
@@ -403,7 +396,7 @@ export default function ProductPage({
                            onClick={handleAddToCart}
                         >
                            <ShoppingCart className="w-5 h-5 mr-2" />
-                           Add to Cart
+                           Thêm vào giỏ hàng
                         </Button>
                         <Button variant="outline" size="lg">
                            <Share2 className="w-5 h-5" />
@@ -413,7 +406,7 @@ export default function ProductPage({
                   {/* Features */}
                   <div className="border-t border-border pt-6">
                      <h3 className="text-lg font-medium text-foreground mb-4">
-                        Key Features
+                        Tính năng nổi bật
                      </h3>
                      <ul className="space-y-2">
                         {product.features.map(
@@ -435,19 +428,19 @@ export default function ProductPage({
                         <div className="flex flex-col items-center">
                            <Shield className="w-8 h-8 text-primary mb-2" />
                            <span className="text-xs text-muted-foreground">
-                              2 Year Warranty
+                              Bảo hành 2 năm
                            </span>
                         </div>
                         <div className="flex flex-col items-center">
                            <Truck className="w-8 h-8 text-primary mb-2" />
                            <span className="text-xs text-muted-foreground">
-                              Free Shipping
+                              Miễn phí vận chuyển
                            </span>
                         </div>
                         <div className="flex flex-col items-center">
                            <RotateCcw className="w-8 h-8 text-purple-500 mb-2" />
                            <span className="text-xs text-muted-foreground">
-                              30-Day Returns
+                              Đổi trả trong 30 ngày
                            </span>
                         </div>
                      </div>
@@ -460,19 +453,18 @@ export default function ProductPage({
                   <nav className="flex space-x-8">
                      {(
                         [
-                           "description",
-                           "specifications",
-                           "reviews",
+                           "Mô tả",
+                           "Thông số kỹ thuật",
+                           "Đánh giá",
                         ] as ProductTab[]
                      ).map((tab: ProductTab) => (
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
-                           className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
-                              activeTab === tab
-                                 ? "border-primary text-primary"
-                                 : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-                           }`}
+                           className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${activeTab === tab
+                              ? "border-primary text-primary"
+                              : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+                              }`}
                         >
                            {tab}
                         </button>
@@ -481,14 +473,14 @@ export default function ProductPage({
                </div>
 
                <div className="py-8">
-                  {activeTab === "description" && (
+                  {activeTab === "Mô tả" && (
                      <div className="prose max-w-none">
                         <p className="text-muted-foreground leading-relaxed">
                            {product.description}
                         </p>
                      </div>
                   )}
-                  {activeTab === "specifications" && (
+                  {activeTab === "Thông số kỹ thuật" && (
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {Object.entries(
                            product.specifications as ProductSpecifications
@@ -507,7 +499,7 @@ export default function ProductPage({
                         ))}
                      </div>
                   )}{" "}
-                  {activeTab === "reviews" && (
+                  {activeTab === "Đánh giá" && (
                      <div className="space-y-6">
                         {/* Use the comprehensive ProductRating component */}
                         <ProductRating

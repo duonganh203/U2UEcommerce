@@ -264,16 +264,16 @@ export default function ManageProductsPage() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                <div>
                   <h1 className="text-4xl font-bold text-foreground mb-2">
-                     My Listings
+                     Danh sách sản phẩm của tôi
                   </h1>
                   <p className="text-muted-foreground text-lg">
-                     Manage your products and track performance
+                     Quản lý sản phẩm và theo dõi hiệu suất bán hàng
                   </p>
                </div>
                <Link href="/sell-item">
                   <Button className="flex items-center gap-2">
                      <Plus className="h-4 w-4" />
-                     List New Item
+                     Đăng bán sản phẩm mới
                   </Button>
                </Link>
             </div>{" "}
@@ -283,7 +283,7 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Total Listings
+                           Tổng số sản phẩm
                         </p>
                         <p className="text-2xl font-bold text-foreground">
                            {displayStats.totalListings}
@@ -297,7 +297,7 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Approved
+                           Đã duyệt
                         </p>
                         <p className="text-2xl font-bold text-foreground">
                            {displayStats.activeListings}
@@ -311,7 +311,7 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Pending
+                           Đang chờ duyệt
                         </p>
                         <p className="text-2xl font-bold text-foreground">
                            {displayStats.pendingListings}
@@ -325,7 +325,7 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Rejected
+                           Bị từ chối
                         </p>
                         <p className="text-2xl font-bold text-foreground">
                            {displayStats.rejectedListings}
@@ -339,7 +339,7 @@ export default function ManageProductsPage() {
                   <div className="flex items-center justify-between">
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                           Total Value
+                           Tổng giá trị
                         </p>
                         <p className="text-2xl font-bold text-foreground">
                            ${displayStats.totalValue.toLocaleString()}
@@ -369,10 +369,10 @@ export default function ManageProductsPage() {
                      onChange={(e) => setFilterStatus(e.target.value)}
                      className="px-3 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                   >
-                     <option value="all">All Status</option>
-                     <option value="approved">Approved</option>
-                     <option value="pending">Pending</option>
-                     <option value="rejected">Rejected</option>
+                     <option value="all">Tất cả trạng thái</option>
+                     <option value="approved">Đã duyệt</option>
+                     <option value="pending">Đang chờ duyệt</option>
+                     <option value="rejected">Bị từ chối</option>
                   </select>
 
                   {/* Sort */}
@@ -381,10 +381,10 @@ export default function ManageProductsPage() {
                      onChange={(e) => setSortBy(e.target.value)}
                      className="px-3 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                   >
-                     <option value="newest">Newest First</option>
-                     <option value="oldest">Oldest First</option>
-                     <option value="price-high">Price: High to Low</option>
-                     <option value="price-low">Price: Low to High</option>
+                     <option value="newest">Mới nhất</option>
+                     <option value="oldest">Cũ nhất</option>
+                     <option value="price-high">Giá: Cao đến Thấp</option>
+                     <option value="price-low">Giá: Thấp đến Cao</option>
                   </select>
                </div>{" "}
             </div>{" "}
@@ -392,13 +392,13 @@ export default function ManageProductsPage() {
             {sortedListings.length > 0 && (
                <div className="mb-6 flex justify-between items-center">
                   <p className="text-muted-foreground">
-                     Showing {startIndex + 1}-
-                     {Math.min(endIndex, sortedListings.length)} of{" "}
-                     {sortedListings.length} listings
+                     Hiển thị {startIndex + 1}-
+                     {Math.min(endIndex, sortedListings.length)} trên tổng số{" "}
+                     {sortedListings.length} sản phẩm
                   </p>
                   {totalPages > 1 && (
                      <p className="text-muted-foreground text-sm">
-                        Page {currentPage} of {totalPages}
+                        Trang {currentPage} / {totalPages}
                      </p>
                   )}
                </div>
@@ -409,19 +409,19 @@ export default function ManageProductsPage() {
                   <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-foreground mb-2">
                      {searchTerm || filterStatus !== "all"
-                        ? "No listings found"
-                        : "No listings yet"}
+                        ? "Không tìm thấy sản phẩm nào"
+                        : "Chưa có sản phẩm nào"}
                   </h3>
                   <p className="text-muted-foreground mb-6">
                      {searchTerm || filterStatus !== "all"
-                        ? "Try adjusting your search or filters"
-                        : "Start selling by creating your first listing"}
+                        ? "Hãy thử thay đổi từ khoá tìm kiếm hoặc bộ lọc"
+                        : "Bắt đầu bán hàng bằng cách đăng sản phẩm đầu tiên của bạn"}
                   </p>
                   {!searchTerm && filterStatus === "all" && (
                      <Link href="/sell-item">
                         <Button>
                            <Plus className="h-4 w-4 mr-2" />
-                           Create Your First Listing
+                           Đăng sản phẩm đầu tiên
                         </Button>
                      </Link>
                   )}
@@ -485,12 +485,12 @@ export default function ManageProductsPage() {
                                  ${listing.price.toLocaleString()}
                               </span>
                               <span className="text-sm text-muted-foreground">
-                                 Stock: {listing.countInStock}
+                                 Tồn kho: {listing.countInStock}
                               </span>
                            </div>
 
                            <div className="text-xs text-muted-foreground mb-4">
-                              Listed{" "}
+                              Đăng ngày{" "}
                               {new Date(listing.createdAt).toLocaleDateString()}
                            </div>
 
@@ -502,7 +502,7 @@ export default function ManageProductsPage() {
                                  className="flex-1"
                               >
                                  <Edit3 className="h-3 w-3 mr-1" />
-                                 Edit
+                                 Sửa
                               </Button>
                               <Button
                                  variant="outline"
@@ -510,7 +510,7 @@ export default function ManageProductsPage() {
                                  className="flex-1"
                               >
                                  <Eye className="h-3 w-3 mr-1" />
-                                 View
+                                Xem
                               </Button>
                            </div>
                         </div>
@@ -529,7 +529,7 @@ export default function ManageProductsPage() {
                      className="flex items-center space-x-1"
                   >
                      <ChevronLeft className="w-4 h-4" />
-                     <span>Previous</span>
+                     <span>Trước</span>
                   </Button>
 
                   <div className="flex space-x-1">
@@ -555,7 +555,7 @@ export default function ManageProductsPage() {
                      disabled={currentPage === totalPages}
                      className="flex items-center space-x-1"
                   >
-                     <span>Next</span>
+                     <span>Tiếp</span>
                      <ChevronRight className="w-4 h-4" />
                   </Button>
                </div>
@@ -563,7 +563,7 @@ export default function ManageProductsPage() {
             {/* Quick Actions */}
             <div className="mt-8 bg-card rounded-2xl p-6 shadow-lg border">
                <h3 className="text-lg font-semibold text-foreground mb-4">
-                  Quick Actions
+                  Hành động nhanh
                </h3>
                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Link href="/sell-item">
@@ -573,9 +573,9 @@ export default function ManageProductsPage() {
                      >
                         <Plus className="h-4 w-4" />
                         <div className="text-left">
-                           <div className="font-medium">List New Item</div>
+                           <div className="font-medium">Đăng bán sản phẩm mới</div>
                            <div className="text-xs text-muted-foreground">
-                              Create a new product listing
+                              Tạo sản phẩm mới để bán
                            </div>
                         </div>
                      </Button>
@@ -587,9 +587,9 @@ export default function ManageProductsPage() {
                   >
                      <Package className="h-4 w-4" />
                      <div className="text-left">
-                        <div className="font-medium">Bulk Edit</div>
+                        <div className="font-medium">Chỉnh sửa hàng loạt</div>
                         <div className="text-xs text-muted-foreground">
-                           Update multiple listings
+                          Cập nhật nhiều sản phẩm cùng lúc
                         </div>
                      </div>
                   </Button>
@@ -600,9 +600,9 @@ export default function ManageProductsPage() {
                   >
                      <DollarSign className="h-4 w-4" />
                      <div className="text-left">
-                        <div className="font-medium">Analytics</div>
+                        <div className="font-medium">Thống kê</div>
                         <div className="text-xs text-muted-foreground">
-                           View performance metrics
+                           Xem số liệu hiệu suất bán hàng
                         </div>
                      </div>
                   </Button>

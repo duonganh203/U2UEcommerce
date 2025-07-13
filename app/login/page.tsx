@@ -77,15 +77,15 @@ const LoginPage = () => {
       <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8">
          <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <h2 className="mt-6 text-center text-3xl font-extrabold text-foreground">
-               Sign in to your account
+               Đăng nhập vào tài khoản của bạn
             </h2>
             <p className="mt-2 text-center text-sm text-muted-foreground">
-               Don't have an account?{" "}
+               Chưa có tài khoản?{" "}
                <Link
                   href="/signup"
                   className="font-medium text-indigo-600 hover:text-indigo-500"
                >
-                  Sign up
+                 Đăng ký
                </Link>
             </p>
          </div>
@@ -107,12 +107,12 @@ const LoginPage = () => {
                         name="email"
                         render={({ field }) => (
                            <FormItem>
-                              <FormLabel>Email address</FormLabel>
+                              <FormLabel>Địa chỉ email</FormLabel>
                               <FormControl>
                                  <Input
                                     type="email"
                                     autoComplete="email"
-                                    placeholder="Enter your email"
+                                    placeholder="Nhập email của bạn"
                                     {...field}
                                  />
                               </FormControl>
@@ -125,12 +125,12 @@ const LoginPage = () => {
                         name="password"
                         render={({ field }) => (
                            <FormItem>
-                              <FormLabel>Password</FormLabel>
+                              <FormLabel>Mật khẩu</FormLabel>
                               <FormControl>
                                  <Input
                                     type="password"
                                     autoComplete="current-password"
-                                    placeholder="Enter your password"
+                                    placeholder="Nhập mật khẩu của bạn"
                                     {...field}
                                  />
                               </FormControl>
@@ -152,7 +152,7 @@ const LoginPage = () => {
                               htmlFor="remember-me"
                               className="ml-2 block text-sm text-foreground"
                            >
-                              Remember me
+                              Ghi nhớ đăng nhập
                            </label>
                         </div>
 
@@ -161,7 +161,7 @@ const LoginPage = () => {
                               href="/forgot-password"
                               className="font-medium text-primary hover:text-primary/90"
                            >
-                              Forgot your password?
+                              Quên mật khẩu?
                            </Link>
                         </div>
                      </div>
@@ -181,7 +181,7 @@ const LoginPage = () => {
                            </div>
                            <div className="relative flex justify-center text-sm">
                               <span className="px-2 bg-card text-muted-foreground">
-                                 Or continue with
+                                 Hoặc tiếp tục với
                               </span>
                            </div>
                         </div>
@@ -192,7 +192,7 @@ const LoginPage = () => {
                               className="w-full inline-flex justify-center py-2 px-4 border border-input rounded-lg shadow-sm bg-background text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
                            >
                               <span className="sr-only">
-                                 Sign in with Google
+                                 Đăng nhập với Google
                               </span>
                               Google
                            </button>
@@ -201,7 +201,7 @@ const LoginPage = () => {
                               className="w-full inline-flex justify-center py-2 px-4 border border-input rounded-lg shadow-sm bg-background text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
                            >
                               <span className="sr-only">
-                                 Sign in with Facebook
+                                 Đăng nhập với Facebook
                               </span>
                               Facebook
                            </button>

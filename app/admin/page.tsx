@@ -88,7 +88,7 @@ const AdminDashboard = () => {
                      <div className="text-3xl">{stat.icon}</div>
                   </div>
                   <div className="mt-2 text-sm text-green-600">
-                     {stat.change} from last month
+                     {stat.change} từ tháng trước
                   </div>
                </div>
             ))}
@@ -99,13 +99,13 @@ const AdminDashboard = () => {
             <div className="bg-white rounded-lg shadow">
                <div className="flex items-center justify-between p-4 border-b">
                   <h3 className="text-lg font-semibold text-gray-800">
-                     Recent Users
+                     Người dùng gần đây
                   </h3>
                   <Link
                      href="/admin/users"
                      className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
                   >
-                     View All
+                     Xem tất cả
                   </Link>
                </div>
                <div className="overflow-x-auto">
@@ -113,16 +113,16 @@ const AdminDashboard = () => {
                      <thead className="bg-gray-50">
                         <tr>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Name
+                              Tên
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Email
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Joined
+                              Ngày tạo
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Status
+                              Trạng thái
                            </th>
                         </tr>
                      </thead>
@@ -162,13 +162,13 @@ const AdminDashboard = () => {
             <div className="bg-white rounded-lg shadow">
                <div className="flex items-center justify-between p-4 border-b">
                   <h3 className="text-lg font-semibold text-gray-800">
-                     Pending Products
+                     Sản phẩm đang chờ duyệt
                   </h3>
                   <Link
                      href="/admin/products"
                      className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
                   >
-                     View All
+                     Xem tất cả
                   </Link>
                </div>
                <div className="overflow-x-auto">
@@ -176,16 +176,16 @@ const AdminDashboard = () => {
                      <thead className="bg-gray-50">
                         <tr>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Product
+                              Sản phẩm
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Seller
+                              Người bán
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Price
+                              Giá
                            </th>
                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Submitted
+                              Đã gửi
                            </th>
                         </tr>
                      </thead>
@@ -220,7 +220,7 @@ const AdminDashboard = () => {
          {/* Quick Actions */}
          <div className="bg-white rounded-lg shadow p-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-               Quick Actions
+               Hành động nhanh
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                <Link
@@ -228,9 +228,9 @@ const AdminDashboard = () => {
                   className="bg-indigo-50 hover:bg-indigo-100 p-4 rounded-lg text-center"
                >
                   <div className="text-3xl mb-2">👥</div>
-                  <h4 className="font-medium">Manage Users</h4>
+                  <h4 className="font-medium">Quản lý người dùng</h4>
                   <p className="text-sm text-gray-600 mt-1">
-                     View and edit user accounts
+                     Xem và chỉnh sửa tài khoản người dùng
                   </p>
                </Link>
                <Link
@@ -238,9 +238,9 @@ const AdminDashboard = () => {
                   className="bg-indigo-50 hover:bg-indigo-100 p-4 rounded-lg text-center"
                >
                   <div className="text-3xl mb-2">📦</div>
-                  <h4 className="font-medium">Review Products</h4>
+                  <h4 className="font-medium">Duyệt sản phẩm</h4>
                   <p className="text-sm text-gray-600 mt-1">
-                     Approve or reject product listings
+                     Phê duyệt hoặc từ chối danh sách sản phẩm
                   </p>
                </Link>
                <Link
@@ -248,9 +248,9 @@ const AdminDashboard = () => {
                   className="bg-indigo-50 hover:bg-indigo-100 p-4 rounded-lg text-center"
                >
                   <div className="text-3xl mb-2">⚙️</div>
-                  <h4 className="font-medium">System Settings</h4>
+                  <h4 className="font-medium">Cài đặt hệ thống</h4>
                   <p className="text-sm text-gray-600 mt-1">
-                     Configure store settings
+                     Cấu hình cài đặt cửa hàng
                   </p>
                </Link>
             </div>

@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
          {
             success: false,
-            error: "Failed to fetch products",
+            error: "Tạo sản phẩm thất bại",
          },
          { status: 500 }
       );
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
 
       if (!session?.user?.id) {
          return NextResponse.json(
-            { success: false, error: "Authentication required" },
+            { success: false, error: "Bạn cần đăng nhập để thực hiện thao tác này" },
             { status: 401 }
          );
       }
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
          images.length === 0
       ) {
          return NextResponse.json(
-            { success: false, error: "Missing required fields" },
+            { success: false, error: "Thiếu thông tin bắt buộc" },
             { status: 400 }
          );
       }
@@ -151,12 +151,12 @@ export async function POST(request: NextRequest) {
          success: true,
          data: savedProduct,
          message:
-            "Product listed successfully! It will be reviewed before going live.",
+            "Đăng bán sản phẩm thành công! Sản phẩm sẽ được kiểm duyệt trước khi hiển thị.",
       });
    } catch (error) {
-      console.error("Error creating product:", error);
+      console.error("Tạo sản phẩm thất bại", error);
       return NextResponse.json(
-         { success: false, error: "Failed to create product" },
+         { success: false, error: "Lấy danh sách sản phẩm thất bại" },
          { status: 500 }
       );
    }

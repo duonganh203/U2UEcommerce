@@ -9,7 +9,7 @@ export async function PATCH(request: NextRequest) {
       const session = await getServerSession(authOptions);
 
       if (!session?.user?.id) {
-         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+         return NextResponse.json({ message: "Chưa xác thực"}, { status: 401 });
       }
 
       await connectDB();
@@ -37,13 +37,13 @@ export async function PATCH(request: NextRequest) {
 
       if (!updatedUser) {
          return NextResponse.json(
-            { message: "User not found" },
+            { message: "Không tìm thấy người dùng" },
             { status: 404 }
          );
       }
 
       return NextResponse.json({
-         message: "Profile updated successfully",
+         message: "Cập nhật hồ sơ thành công",
          user: {
             id: updatedUser._id,
             email: updatedUser.email,
@@ -64,13 +64,13 @@ export async function PATCH(request: NextRequest) {
             (err: any) => err.message
          );
          return NextResponse.json(
-            { message: "Validation error", errors: validationErrors },
+            { message: "Lỗi xác thực dữ liệu", errors: validationErrors },
             { status: 400 }
          );
       }
 
       return NextResponse.json(
-         { message: "Internal server error" },
+         { message: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }

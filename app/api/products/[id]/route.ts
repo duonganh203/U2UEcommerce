@@ -19,7 +19,7 @@ export async function GET(
          return NextResponse.json(
             {
                success: false,
-               error: "Invalid product ID format",
+               error: "Định dạng mã sản phẩm không hợp lệ",
             },
             { status: 400 }
          );
@@ -37,7 +37,7 @@ export async function GET(
          return NextResponse.json(
             {
                success: false,
-               error: "Product not found",
+               error: "Không tìm thấy sản phẩm",
             },
             { status: 404 }
          );
@@ -62,7 +62,7 @@ export async function GET(
       return NextResponse.json(
          {
             success: false,
-            error: "Failed to fetch product details",
+            error: "Lấy thông tin sản phẩm thất bại",
          },
          { status: 500 }
       );
@@ -84,7 +84,7 @@ export async function PUT(
          return NextResponse.json(
             {
                success: false,
-               error: "Invalid product ID format",
+               error: "Định dạng mã sản phẩm không hợp lệ",
             },
             { status: 400 }
          );
@@ -101,7 +101,7 @@ export async function PUT(
          return NextResponse.json(
             {
                success: false,
-               error: "Product not found",
+               error: "Không tìm thấy sản phẩm",
             },
             { status: 404 }
          );
@@ -110,14 +110,14 @@ export async function PUT(
       return NextResponse.json({
          success: true,
          data: updatedProduct,
-         message: "Product updated successfully",
+         message: "Cập nhật sản phẩm thành công",
       });
    } catch (error) {
       console.error("Error updating product:", error);
       return NextResponse.json(
          {
             success: false,
-            error: "Failed to update product",
+            error: "Cập nhật sản phẩm thất bại",
          },
          { status: 500 }
       );
@@ -133,7 +133,7 @@ export async function DELETE(
 
       if (!session?.user?.id) {
          return NextResponse.json(
-            { success: false, error: "Authentication required" },
+            { success: false, error: "Bạn cần đăng nhập để thực hiện thao tác này" },
             { status: 401 }
          );
       }
@@ -147,7 +147,7 @@ export async function DELETE(
          return NextResponse.json(
             {
                success: false,
-               error: "Invalid product ID format",
+               error: "Định dạng mã sản phẩm không hợp lệ",
             },
             { status: 400 }
          );
@@ -160,7 +160,7 @@ export async function DELETE(
          return NextResponse.json(
             {
                success: false,
-               error: "Product not found",
+               error: "Không tìm thấy sản phẩm",
             },
             { status: 404 }
          );
@@ -171,7 +171,7 @@ export async function DELETE(
          return NextResponse.json(
             {
                success: false,
-               error: "You can only delete your own products",
+               error: "Bạn chỉ có thể xóa sản phẩm của chính mình",
             },
             { status: 403 }
          );
@@ -182,14 +182,14 @@ export async function DELETE(
 
       return NextResponse.json({
          success: true,
-         message: "Product deleted successfully",
+         message: "Xóa sản phẩm thành công",
       });
    } catch (error) {
       console.error("Error deleting product:", error);
       return NextResponse.json(
          {
             success: false,
-            error: "Failed to delete product",
+            error: "Xóa sản phẩm thất bại",
          },
          { status: 500 }
       );

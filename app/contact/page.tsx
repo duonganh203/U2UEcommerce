@@ -67,14 +67,14 @@ export default function ContactPage() {
    ];
 
    const categories = [
-      "General Inquiry",
-      "Technical Support",
-      "Account Issues",
-      "Billing Questions",
-      "Report a Problem",
-      "Feature Request",
-      "Partnership Inquiry",
-      "Other",
+      "Yêu cầu chung",
+   "Hỗ trợ kỹ thuật",
+   "Vấn đề tài khoản",
+   "Câu hỏi về thanh toán",
+   "Báo cáo sự cố",
+   "Đề xuất tính năng",
+   "Hợp tác",
+   "Khác",
    ];
 
    return (
@@ -83,11 +83,10 @@ export default function ContactPage() {
             {/* Header */}
             <div className="text-center mb-16">
                <h1 className="text-5xl font-bold text-foreground mb-6">
-                  Contact Us
+                  Liên hệ với chúng tôi
                </h1>
                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  Have a question or need assistance? We're here to help you
-                  succeed on our marketplace platform.
+                  Bạn có câu hỏi hoặc cần hỗ trợ? Chúng tôi luôn sẵn sàng giúp bạn thành công trên nền tảng của chúng tôi.
                </p>
             </div>
 
@@ -97,7 +96,7 @@ export default function ContactPage() {
                   <div className="flex items-center gap-2 mb-6">
                      <Send className="h-6 w-6 text-primary" />
                      <h2 className="text-2xl font-bold text-foreground">
-                        Send us a Message
+                        Gửi tin nhắn cho chúng tôi
                      </h2>
                   </div>
 
@@ -105,11 +104,10 @@ export default function ContactPage() {
                      <div className="text-center py-8">
                         <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
                         <h3 className="text-xl font-semibold text-foreground mb-2">
-                           Message Sent Successfully!
+                           Gửi thành công!
                         </h3>
                         <p className="text-muted-foreground">
-                           Thank you for contacting us. We'll get back to you
-                           within 24 hours.
+                           Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi trong vòng 24 giờ.
                         </p>
                      </div>
                   ) : (
@@ -120,7 +118,7 @@ export default function ContactPage() {
                                  htmlFor="name"
                                  className="text-sm font-medium mb-2 block"
                               >
-                                 Full Name{" "}
+                                 Họ và tên{" "}
                                  <span className="text-destructive">*</span>
                               </Label>
                               <Input
@@ -138,7 +136,7 @@ export default function ContactPage() {
                                  htmlFor="email"
                                  className="text-sm font-medium mb-2 block"
                               >
-                                 Email Address{" "}
+                                 Địa chỉ email{" "}
                                  <span className="text-destructive">*</span>
                               </Label>
                               <Input
@@ -159,7 +157,7 @@ export default function ContactPage() {
                               htmlFor="category"
                               className="text-sm font-medium mb-2 block"
                            >
-                              Category{" "}
+                              Danh mục{" "}
                               <span className="text-destructive">*</span>
                            </Label>
                            <select
@@ -171,7 +169,7 @@ export default function ContactPage() {
                               className="w-full h-10 px-3 py-2 text-sm bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                               required
                            >
-                              <option value="">Select a category</option>
+                              <option value="">Chọn danh mục</option>
                               {categories.map((category) => (
                                  <option key={category} value={category}>
                                     {category}
@@ -185,7 +183,7 @@ export default function ContactPage() {
                               htmlFor="subject"
                               className="text-sm font-medium mb-2 block"
                            >
-                              Subject{" "}
+                              Tiêu đề{" "}
                               <span className="text-destructive">*</span>
                            </Label>
                            <Input
@@ -204,7 +202,7 @@ export default function ContactPage() {
                               htmlFor="message"
                               className="text-sm font-medium mb-2 block"
                            >
-                              Message{" "}
+                              Nội dung{" "}
                               <span className="text-destructive">*</span>
                            </Label>
                            <textarea
@@ -222,7 +220,7 @@ export default function ContactPage() {
 
                         <Button type="submit" className="w-full h-12">
                            <Send className="h-4 w-4 mr-2" />
-                           Send Message
+                           Gửi tin nhắn
                         </Button>
                      </form>
                   )}
@@ -232,7 +230,7 @@ export default function ContactPage() {
                <div className="space-y-6">
                   <div>
                      <h2 className="text-2xl font-bold text-foreground mb-6">
-                        Other Ways to Reach Us
+                        Các cách liên hệ khác
                      </h2>
                      <div className="space-y-4">
                         {contactMethods.map((method, index) => (
@@ -269,39 +267,39 @@ export default function ContactPage() {
                      <div className="flex items-center gap-2 mb-4">
                         <Clock className="h-6 w-6 text-primary" />
                         <h3 className="text-xl font-semibold text-foreground">
-                           Business Hours
+                           Giờ làm việc
                         </h3>
                      </div>
                      <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                            <span className="text-muted-foreground">
-                              Monday - Friday
+                              Thứ 2 - Thứ 6
                            </span>
                            <span className="font-medium text-foreground">
-                              9:00 AM - 6:00 PM EST
+                              9:00 - 18:00
                            </span>
                         </div>
                         <div className="flex justify-between">
                            <span className="text-muted-foreground">
-                              Saturday
+                              Thứ 7
                            </span>
                            <span className="font-medium text-foreground">
-                              10:00 AM - 4:00 PM EST
+                              10:00 - 16:00
                            </span>
                         </div>
                         <div className="flex justify-between">
                            <span className="text-muted-foreground">Sunday</span>
                            <span className="font-medium text-foreground">
-                              Closed
+                              Nghỉ
                            </span>
                         </div>
                         <div className="pt-2 border-t border-border mt-3">
                            <div className="flex justify-between">
                               <span className="text-muted-foreground">
-                                 Live Chat
+                                 Chat trực tuyến
                               </span>
                               <span className="font-medium text-green-600">
-                                 24/7 Available
+                                 Có sẵn 24/7
                               </span>
                            </div>
                         </div>
@@ -311,14 +309,13 @@ export default function ContactPage() {
                   {/* FAQ Link */}
                   <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl p-6 border">
                      <h3 className="text-lg font-semibold text-foreground mb-2">
-                        Check Our FAQ
+                        Xem Câu hỏi thường gặp
                      </h3>
                      <p className="text-sm text-muted-foreground mb-4">
-                        Find quick answers to common questions about buying,
-                        selling, and using our platform.
+                        Tìm câu trả lời nhanh cho các thắc mắc về mua bán và sử dụng nền tảng của chúng tôi.
                      </p>
                      <Button variant="outline" className="w-full">
-                        Visit FAQ Section
+                        Xem mục FAQ
                      </Button>
                   </div>
                </div>

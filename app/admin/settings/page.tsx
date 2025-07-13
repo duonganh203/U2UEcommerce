@@ -83,7 +83,7 @@ const SettingsPage = () => {
       <div className="space-y-6">
          <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-800">
-               System Settings
+               Cài đặt hệ thống
             </h1>
          </div>
 
@@ -97,25 +97,25 @@ const SettingsPage = () => {
                            type="button"
                            className="border-indigo-500 text-indigo-600 whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
                         >
-                           General
+                           Chung
                         </button>
                         <button
                            type="button"
                            className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
                         >
-                           Shipping
+                           Vận chuyển
                         </button>
                         <button
                            type="button"
                            className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
                         >
-                           Tax
+                           Thuế
                         </button>
                         <button
                            type="button"
                            className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
                         >
-                           Notifications
+                           Thông báo
                         </button>
                      </nav>
                   </div>
@@ -123,7 +123,7 @@ const SettingsPage = () => {
                   {/* General Settings */}
                   <div className="space-y-6">
                      <h2 className="text-lg font-medium text-gray-900">
-                        General Information
+                        Thông tin chung
                      </h2>
 
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -132,7 +132,7 @@ const SettingsPage = () => {
                               htmlFor="storeName"
                               className="block text-sm font-medium text-gray-700 mb-1"
                            >
-                              Store Name
+                              Tên Cửa Hàng
                            </label>
                            <input
                               type="text"
@@ -150,7 +150,7 @@ const SettingsPage = () => {
                               htmlFor="storeEmail"
                               className="block text-sm font-medium text-gray-700 mb-1"
                            >
-                              Store Email
+                               Email Cửa Hàng
                            </label>
                            <input
                               type="email"
@@ -168,7 +168,7 @@ const SettingsPage = () => {
                               htmlFor="phoneNumber"
                               className="block text-sm font-medium text-gray-700 mb-1"
                            >
-                              Phone Number
+                              Số điện thoại
                            </label>
                            <input
                               type="text"
@@ -185,7 +185,7 @@ const SettingsPage = () => {
                               htmlFor="currency"
                               className="block text-sm font-medium text-gray-700 mb-1"
                            >
-                              Currency
+                              Tiền tệ
                            </label>
                            <select
                               id="currency"
@@ -207,7 +207,7 @@ const SettingsPage = () => {
                               htmlFor="language"
                               className="block text-sm font-medium text-gray-700 mb-1"
                            >
-                              Language
+                              Ngôn ngữ
                            </label>
                            <select
                               id="language"
@@ -229,7 +229,7 @@ const SettingsPage = () => {
                               htmlFor="timezone"
                               className="block text-sm font-medium text-gray-700 mb-1"
                            >
-                              Timezone
+                              Múi giờ
                            </label>
                            <select
                               id="timezone"
@@ -278,7 +278,7 @@ const SettingsPage = () => {
 
                   <div className="border-t border-gray-200 pt-6 mt-6">
                      <h2 className="text-lg font-medium text-gray-900 mb-4">
-                        Shipping Settings
+                        Cài đặt Vận chuyển
                      </h2>
 
                      <div className="space-y-4">
@@ -295,7 +295,7 @@ const SettingsPage = () => {
                               htmlFor="enableFreeShipping"
                               className="ml-2 block text-sm text-gray-900"
                            >
-                              Enable free shipping
+                             Kích hoạt giao hàng miễn phí
                            </label>
                         </div>
 
@@ -305,7 +305,7 @@ const SettingsPage = () => {
                                  htmlFor="freeShippingThreshold"
                                  className="block text-sm font-medium text-gray-700 mb-1"
                               >
-                                 Free Shipping Threshold ($)
+                                 Ngưỡng miễn phí vận chuyển ($)
                               </label>
                               <input
                                  type="number"
@@ -324,7 +324,7 @@ const SettingsPage = () => {
                                  htmlFor="standardShippingRate"
                                  className="block text-sm font-medium text-gray-700 mb-1"
                               >
-                                 Standard Shipping Rate ($)
+                                 Phí vận chuyển tiêu chuẩn ($)
                               </label>
                               <input
                                  type="number"
@@ -343,7 +343,7 @@ const SettingsPage = () => {
                                  htmlFor="expressShippingRate"
                                  className="block text-sm font-medium text-gray-700 mb-1"
                               >
-                                 Express Shipping Rate ($)
+                                 Phí vận chuyển nhanh ($)
                               </label>
                               <input
                                  type="number"
@@ -362,7 +362,7 @@ const SettingsPage = () => {
 
                   <div className="border-t border-gray-200 pt-6 mt-6">
                      <h2 className="text-lg font-medium text-gray-900 mb-4">
-                        Tax Settings
+                        Cài đặt thuế
                      </h2>
 
                      <div className="space-y-4">
@@ -379,7 +379,7 @@ const SettingsPage = () => {
                               htmlFor="enableTax"
                               className="ml-2 block text-sm text-gray-900"
                            >
-                              Enable tax calculation
+                              Kích hoạt tính thuế
                            </label>
                         </div>
 
@@ -389,7 +389,7 @@ const SettingsPage = () => {
                                  htmlFor="taxRate"
                                  className="block text-sm font-medium text-gray-700 mb-1"
                               >
-                                 Tax Rate (%)
+                                 Thuế suất (%)
                               </label>
                               <input
                                  type="number"
@@ -416,7 +416,7 @@ const SettingsPage = () => {
                                  htmlFor="applyTaxToShipping"
                                  className="ml-2 block text-sm text-gray-900"
                               >
-                                 Apply tax to shipping
+                                 Áp dụng thuế cho phí vận chuyển
                               </label>
                            </div>
                         </div>
@@ -425,7 +425,7 @@ const SettingsPage = () => {
 
                   <div className="border-t border-gray-200 pt-6 mt-6">
                      <h2 className="text-lg font-medium text-gray-900 mb-4">
-                        Notification Settings
+                        Cài đặt thông báo
                      </h2>
 
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -442,7 +442,7 @@ const SettingsPage = () => {
                               htmlFor="orderConfirmation"
                               className="ml-2 block text-sm text-gray-900"
                            >
-                              Order confirmation emails
+                              Email xác nhận đơn hàng
                            </label>
                         </div>
 
@@ -459,7 +459,7 @@ const SettingsPage = () => {
                               htmlFor="orderStatusUpdate"
                               className="ml-2 block text-sm text-gray-900"
                            >
-                              Order status update emails
+                              Email cập nhật trạng thái đơn hàng
                            </label>
                         </div>
 
@@ -476,7 +476,7 @@ const SettingsPage = () => {
                               htmlFor="orderShipped"
                               className="ml-2 block text-sm text-gray-900"
                            >
-                              Order shipped emails
+                              Email thông báo đã giao hàng
                            </label>
                         </div>
 
@@ -493,7 +493,7 @@ const SettingsPage = () => {
                               htmlFor="orderDelivered"
                               className="ml-2 block text-sm text-gray-900"
                            >
-                              Order delivered emails
+                              Email thông báo đã giao thành công
                            </label>
                         </div>
 
@@ -510,7 +510,7 @@ const SettingsPage = () => {
                               htmlFor="abandonedCart"
                               className="ml-2 block text-sm text-gray-900"
                            >
-                              Abandoned cart reminders
+                              Nhắc nhở giỏ hàng bị bỏ quên
                            </label>
                         </div>
 
@@ -527,7 +527,7 @@ const SettingsPage = () => {
                               htmlFor="productOutOfStock"
                               className="ml-2 block text-sm text-gray-900"
                            >
-                              Product out of stock alerts
+                              Cảnh báo hết hàng
                            </label>
                         </div>
                      </div>
@@ -538,7 +538,7 @@ const SettingsPage = () => {
                         type="submit"
                         className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md"
                      >
-                        Save Settings
+                        Lưu cài đặt
                      </button>
                   </div>
                </form>

@@ -39,7 +39,7 @@ const Login = () => {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                >
-                  Email address
+                  Địa chỉ email
                </label>
                <div className="mt-1">
                   <input
@@ -60,7 +60,7 @@ const Login = () => {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                >
-                  Password
+                  Mật khẩu
                </label>
                <div className="mt-1">
                   <input
@@ -90,7 +90,7 @@ const Login = () => {
                      htmlFor="remember-me"
                      className="ml-2 block text-sm text-gray-900"
                   >
-                     Remember me
+                     Ghi nhớ đăng nhập
                   </label>
                </div>
 
@@ -99,7 +99,7 @@ const Login = () => {
                      href="#"
                      className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
-                     Forgot your password?
+                     Quên mật khẩu ?
                   </a>
                </div>
             </div>
@@ -109,7 +109,7 @@ const Login = () => {
                   type="submit"
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                >
-                  Sign in
+                  Đăng nhập
                </button>
             </div>
 
@@ -120,7 +120,7 @@ const Login = () => {
                   </div>
                   <div className="relative flex justify-center text-sm">
                      <span className="px-2 bg-white text-gray-500">
-                        Or continue with
+                        Hoặc tiếp tục với
                      </span>
                   </div>
                </div>
@@ -130,14 +130,14 @@ const Login = () => {
                      type="button"
                      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                   >
-                     <span className="sr-only">Sign in with Google</span>
+                     <span className="sr-only">Đăng nhập với Google</span>
                      Google
                   </button>
                   <button
                      type="button"
                      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                   >
-                     <span className="sr-only">Sign in with Facebook</span>
+                     <span className="sr-only">Đăng nhập với Facebook</span>
                      Facebook
                   </button>
                </div>

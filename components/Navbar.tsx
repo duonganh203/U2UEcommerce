@@ -31,13 +31,13 @@ export default function Navbar() {
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
    const navigation = [
-      { name: "Home", href: "/" },
-      { name: "Products", href: "/products" },
-      { name: "Auctions", href: "/auctions" },
-      { name: "Categories", href: "/categories" },
+      { name: "Đấu giá", href: "/auctions" },
+      { name: "Trang chủ", href: "/" },
+      { name: "Sản phẩm", href: "/products" },
+      { name: "Danh mục", href: "/categories" },
       //   { name: "Sell Item", href: "/sell-item" },
-      { name: "About", href: "/about" },
-      { name: "Contact", href: "/contact" },
+      { name: "Về chúng tôi", href: "/about" },
+      { name: "Liên hệ", href: "/contact" },
    ];
    return (
       <nav className="bg-card shadow-lg border-b border-border">
@@ -71,7 +71,7 @@ export default function Navbar() {
                      </div>
                      <input
                         type="text"
-                        placeholder="Search products..."
+                        placeholder="Tìm kiếm sản phẩm..."
                         className="block w-full pl-10 pr-3 py-2 border border-input rounded-lg leading-5 bg-background placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring text-sm"
                      />
                   </div>
@@ -140,7 +140,7 @@ export default function Navbar() {
                                  className="w-full cursor-pointer"
                               >
                                  <Settings className="mr-2 h-4 w-4" />
-                                 <span>Sell Item</span>
+                                 <span>Bán sản phẩm</span>
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild>
@@ -149,7 +149,7 @@ export default function Navbar() {
                                  className="w-full cursor-pointer"
                               >
                                  <User className="mr-2 h-4 w-4" />
-                                 <span>Dashboard</span>
+                                 <span>Bảng điều khiển</span>
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuSeparator />
@@ -158,7 +158,7 @@ export default function Navbar() {
                               onClick={() => signOut()}
                            >
                               <LogOut className="mr-2 h-4 w-4" />
-                              <span>Sign Out</span>
+                              <span>Đăng xuất</span>
                            </DropdownMenuItem>
                         </DropdownMenuContent>
                      </DropdownMenu>
@@ -166,11 +166,11 @@ export default function Navbar() {
                      <div className="flex items-center space-x-2">
                         <Link href="/login">
                            <Button variant="ghost" size="sm">
-                              Sign In
+                              Đăng nhập
                            </Button>
                         </Link>
                         <Link href="/signup">
-                           <Button size="sm">Sign Up</Button>
+                           <Button size="sm">Đăng kí</Button>
                         </Link>
                      </div>
                   )}
@@ -276,7 +276,7 @@ export default function Navbar() {
                                           className="w-full cursor-pointer"
                                        >
                                           <Settings className="mr-2 h-4 w-4" />
-                                          <span>Sell Item</span>
+                                          <span>Bán sản phẩm</span>
                                        </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem asChild>
@@ -285,7 +285,7 @@ export default function Navbar() {
                                           className="w-full cursor-pointer"
                                        >
                                           <User className="mr-2 h-4 w-4" />
-                                          <span>Dashboard</span>
+                                          <span>Bảng điều khiển</span>
                                        </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
@@ -294,7 +294,7 @@ export default function Navbar() {
                                        onClick={() => signOut()}
                                     >
                                        <LogOut className="mr-2 h-4 w-4" />
-                                       <span>Sign Out</span>
+                                       <span>Đăng xuất</span>
                                     </DropdownMenuItem>
                                  </DropdownMenuContent>
                               </DropdownMenu>
@@ -307,12 +307,12 @@ export default function Navbar() {
                                     size="sm"
                                     className="w-full justify-start"
                                  >
-                                    Sign In
+                                    Đăng nhập
                                  </Button>
                               </Link>
                               <Link href="/signup" className="block">
                                  <Button size="sm" className="w-full">
-                                    Sign Up
+                                    Đăng kí
                                  </Button>
                               </Link>
                            </div>

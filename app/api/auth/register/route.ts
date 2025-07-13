@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
         // Validate required fields
         if (!firstName || !lastName || !email || !password) {
             return NextResponse.json(
-                { error: "All fields are required" },
+                { error: "Vui lòng nhập đầy đủ tất cả các trường" },
                 { status: 400 }
             );
         }
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return NextResponse.json(
-                { error: "Invalid email format" },
+                { error: "Định dạng email không hợp lệ" },
                 { status: 400 }
             );
         }
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
         // Validate password length
         if (password.length < 8) {
             return NextResponse.json(
-                { error: "Password must be at least 8 characters long" },
+                { error: "Mật khẩu phải có ít nhất 8 ký tự" },
                 { status: 400 }
             );
         }
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return NextResponse.json(
-                { error: "User already exists with this email" },
+                { error: "Email này đã được đăng ký" },
                 { status: 409 }
             );
         }
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(
             {
-                message: "User created successfully",
+                message: "Tạo tài khoản thành công",
                 user: userWithoutPassword,
             },
             { status: 201 }
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.error("Registration error:", error);
         return NextResponse.json(
-            { error: "Internal server error" },
+            { error: "Lỗi máy chủ nội bộ" },
             { status: 500 }
         );
     }

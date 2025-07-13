@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       if (!process.env.GEMINI_API_KEY) {
          return NextResponse.json(
             {
-               error: "GEMINI_API_KEY is not configured. Please add your Gemini API key to .env.local",
+               error: "Chưa cấu hình GEMINI_API_KEY. Vui lòng thêm khóa API Gemini vào .env.local",
             },
             { status: 500 }
          );
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
       if (!productInfo) {
          return NextResponse.json(
-            { error: "Product information is required" },
+            { error: "Thiếu thông tin sản phẩm" },
             { status: 400 }
          );
       }
@@ -38,13 +38,13 @@ export async function POST(request: NextRequest) {
       }
 
       return NextResponse.json(
-         { error: "Invalid request type" },
+         { error: "Loại yêu cầu không hợp lệ" },
          { status: 400 }
       );
    } catch (error) {
       console.error("AI pricing API error:", error);
       return NextResponse.json(
-         { error: "Internal server error" },
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }

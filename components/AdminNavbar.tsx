@@ -114,26 +114,26 @@ export default function AdminNavbar({
                         </Button>
                      </DropdownMenuTrigger>
                      <DropdownMenuContent align="end" className="w-80">
-                        <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                        <DropdownMenuLabel>Thông báo</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <div className="max-h-64 overflow-y-auto">
                            <DropdownMenuItem className="p-3 border-b">
                               <div className="flex flex-col space-y-1">
                                  <p className="text-sm font-medium">
-                                    New order received
+                                     Đã nhận đơn hàng mới
                                  </p>
                                  <p className="text-xs text-gray-500">
-                                    Order #12345 - $299.99
+                                    Đơn hàng #12345 - $299.99
                                  </p>
                                  <p className="text-xs text-gray-400">
-                                    2 minutes ago
+                                    2 phút trước
                                  </p>
                               </div>
                            </DropdownMenuItem>
                            <DropdownMenuItem className="p-3 border-b">
                               <div className="flex flex-col space-y-1">
                                  <p className="text-sm font-medium">
-                                    Product approval needed
+                                    Cần phê duyệt sản phẩm
                                  </p>
                                  <p className="text-xs text-gray-500">
                                     Wireless Headphones by John D.
@@ -146,20 +146,20 @@ export default function AdminNavbar({
                            <DropdownMenuItem className="p-3">
                               <div className="flex flex-col space-y-1">
                                  <p className="text-sm font-medium">
-                                    New user registered
+                                    Người dùng mới đã đăng ký
                                  </p>
                                  <p className="text-xs text-gray-500">
                                     sarah.johnson@example.com
                                  </p>
                                  <p className="text-xs text-gray-400">
-                                    3 hours ago
+                                    3h trước
                                  </p>
                               </div>
                            </DropdownMenuItem>
                         </div>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-center text-blue-600 hover:text-blue-700">
-                           View all notifications
+                           Xem tất cả thông báo
                         </DropdownMenuItem>
                      </DropdownMenuContent>
                   </DropdownMenu>
@@ -224,7 +224,7 @@ export default function AdminNavbar({
                                  className="w-full cursor-pointer"
                               >
                                  <User className="mr-2 h-4 w-4" />
-                                 <span>Profile</span>
+                                 <span>Hồ sơ cá nhân</span>
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild>
@@ -233,14 +233,14 @@ export default function AdminNavbar({
                                  className="w-full cursor-pointer"
                               >
                                  <Settings className="mr-2 h-4 w-4" />
-                                 <span>Settings</span>
+                                 <span>Cài đặt</span>
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuSeparator />
                            <DropdownMenuItem asChild>
                               <Link href="/" className="w-full cursor-pointer">
                                  <Home className="mr-2 h-4 w-4" />
-                                 <span>Back to Store</span>
+                                 <span>Trở về cửa hàng</span>
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuSeparator />
@@ -249,7 +249,7 @@ export default function AdminNavbar({
                               onClick={() => signOut({ callbackUrl: "/" })}
                            >
                               <LogOut className="mr-2 h-4 w-4" />
-                              <span>Sign Out</span>
+                              <span>Đăng xuất</span>
                            </DropdownMenuItem>
                         </DropdownMenuContent>
                      </DropdownMenu>

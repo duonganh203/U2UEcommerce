@@ -62,7 +62,7 @@ export default function AdminSidebar({
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
                {!collapsed && (
                   <h1 className="text-lg font-bold text-gray-900 dark:text-white">
-                     Admin Panel
+                     Bảng quản trị
                   </h1>
                )}
                <Button
@@ -132,11 +132,11 @@ export default function AdminSidebar({
                      } flex-shrink-0`}
                   />
                   {!collapsed && (
-                     <span className="font-medium">Back to Store</span>
+                     <span className="font-medium">Trở về cửa hàng</span>
                   )}
                   {collapsed && (
                      <div className="absolute left-full ml-6 px-2 py-1 bg-gray-900 text-white text-sm rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap">
-                        Back to Store
+                        Trở về cửa hàng
                         <div className="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 border-4 border-transparent border-r-gray-900"></div>
                      </div>
                   )}

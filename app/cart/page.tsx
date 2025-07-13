@@ -27,13 +27,13 @@ export default function CartPage() {
                <div className="text-center">
                   <ShoppingBag className="w-24 h-24 text-muted-foreground/50 mx-auto mb-6" />
                   <h1 className="text-3xl font-bold text-foreground mb-4">
-                     Your cart is empty
+                     Giỏ hàng của bạn đang trống
                   </h1>
                   <p className="text-muted-foreground mb-8">
-                     Looks like you haven't added anything to your cart yet.
+                     Có vẻ như bạn chưa thêm sản phẩm nào vào giỏ hàng.
                   </p>
                   <Link href="/products">
-                     <Button size="lg">Continue Shopping</Button>
+                     <Button size="lg">Tiếp tục mua sắm</Button>
                   </Link>
                </div>
             </div>
@@ -44,7 +44,7 @@ export default function CartPage() {
       <div className="min-h-screen bg-background">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h1 className="text-3xl font-bold text-foreground mb-8">
-               Shopping Cart
+               Giỏ hàng
             </h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -53,7 +53,7 @@ export default function CartPage() {
                   <div className="bg-card rounded-lg shadow-md">
                      <div className="p-6">
                         <h2 className="text-lg font-semibold text-foreground mb-6">
-                           Cart Items ({cartItems.length})
+                           Sản phẩm trong giỏ ({cartItems.length})
                         </h2>
 
                         <div className="space-y-6">
@@ -117,7 +117,7 @@ export default function CartPage() {
                                        onClick={() => removeFromCart(item.id)}
                                        className="text-destructive hover:text-destructive/80 text-sm mt-1"
                                     >
-                                       Remove
+                                       Xóa
                                     </button>
                                  </div>
                               </div>
@@ -128,7 +128,7 @@ export default function CartPage() {
 
                   <div className="mt-6">
                      <Link href="/products">
-                        <Button variant="outline">Continue Shopping</Button>
+                        <Button variant="outline">Tiếp tục mua sắm</Button>
                      </Link>
                   </div>
                </div>{" "}
@@ -136,13 +136,13 @@ export default function CartPage() {
                <div className="lg:col-span-1">
                   <div className="bg-card rounded-lg shadow-md p-6">
                      <h2 className="text-lg font-semibold text-foreground mb-6">
-                        Order Summary
+                        Thông tin đơn hàng
                      </h2>
 
                      <div className="space-y-4">
                         <div className="flex justify-between">
                            <span className="text-muted-foreground">
-                              Subtotal
+                              Tạm tính
                            </span>
                            <span className="font-semibold text-foreground">
                               ${subtotal.toFixed(2)}
@@ -151,7 +151,7 @@ export default function CartPage() {
 
                         <div className="flex justify-between">
                            <span className="text-muted-foreground">
-                              Shipping
+                              Phí vận chuyển
                            </span>
                            <span className="font-semibold text-foreground">
                               {shipping === 0
@@ -170,7 +170,7 @@ export default function CartPage() {
                         <div className="border-t border-border pt-4">
                            <div className="flex justify-between">
                               <span className="text-lg font-semibold text-foreground">
-                                 Total
+                                 Tổng cộng
                               </span>
                               <span className="text-lg font-semibold text-foreground">
                                  ${total.toFixed(2)}
@@ -181,14 +181,13 @@ export default function CartPage() {
 
                      <div className="mt-6 space-y-3">
                         <Button className="w-full" size="lg">
-                           Proceed to Checkout
+                           Thanh toán
                         </Button>
 
                         <div className="text-sm text-muted-foreground text-center">
                            {shipping > 0 && (
                               <p>
-                                 Add ${(50 - subtotal).toFixed(2)} more for free
-                                 shipping!
+                                 Thêm {(50 - subtotal).toFixed(2)}₫ nữa để được miễn phí vận chuyển!
                               </p>
                            )}
                         </div>
@@ -198,12 +197,12 @@ export default function CartPage() {
                      <div className="mt-6 pt-6 border-t border-border">
                         <div className="text-center">
                            <p className="text-sm text-muted-foreground mb-2">
-                              Secure Checkout
+                              Thanh toán an toàn
                            </p>
                            <div className="flex justify-center space-x-2 text-xs text-muted-foreground/80">
-                              <span>🔒 SSL Encrypted</span>
+                              <span>🔒 Mã hóa SSL</span>
                               <span>•</span>
-                              <span>💳 Safe Payment</span>
+                              <span>💳 Thanh toán an toàn</span>
                            </div>
                         </div>
                      </div>
