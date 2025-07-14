@@ -243,11 +243,11 @@ export default function ProductsPage() {
                      <div className="flex items-center justify-between">
                         <div className="flex items-baseline space-x-2">
                            <span className="text-xl font-bold text-foreground">
-                              ${product.price}
+                              {Math.round(product.price).toLocaleString()}₫
                            </span>
                            {product.originalPrice > product.price && (
                               <span className="text-sm text-muted-foreground line-through">
-                                 ${product.originalPrice}
+                                 {product.originalPrice.toLocaleString()}₫
                               </span>
                            )}
                         </div>
@@ -321,11 +321,11 @@ export default function ProductsPage() {
                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-baseline space-x-2">
                      <span className="text-lg font-bold text-foreground">
-                        ${product.price}
+                        {Math.round(product.price).toLocaleString()}₫
                      </span>
                      {product.originalPrice > product.price && (
                         <span className="text-sm text-muted-foreground line-through">
-                           ${product.originalPrice}
+                           {product.originalPrice.toLocaleString()}₫
                         </span>
                      )}
                   </div>
@@ -356,7 +356,7 @@ export default function ProductsPage() {
             {/* Header */}
             <div className="mb-8">
                <h1 className="text-3xl font-bold text-foreground mb-2">
-                 Sản phẩm
+                  Sản phẩm
                </h1>
                <p className="text-muted-foreground">
                   Khám phá bộ sưu tập sản phẩm tuyệt vời của chúng tôi

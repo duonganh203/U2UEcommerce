@@ -2,18 +2,39 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function Dashboard() {
    const { data: session, status } = useSession();
    const router = useRouter();
+   const [orders, setOrders] = useState([]);
+   const [loading, setLoading] = useState(true);
 
    useEffect(() => {
       if (status === "loading") return; // Still loading
       if (!session) {
          router.push("/login");
          return;
+      }
+
+      // Fetch user orders
+      const fetchOrders = async () => {
+         try {
+            const response = await fetch("/api/orders");
+            if (response.ok) {
+               const data = await response.json();
+               setOrders(data.orders);
+            }
+         } catch (error) {
+            console.error("Error fetching orders:", error);
+         } finally {
+            setLoading(false);
+         }
+      };
+
+      if (session?.user?.id) {
+         fetchOrders();
       }
    }, [session, status, router]);
    if (status === "loading") {
@@ -65,7 +86,7 @@ export default function Dashboard() {
                                        Tổng đơn hàng
                                     </dt>
                                     <dd className="text-lg font-medium text-foreground">
-                                       0
+                                       {loading ? "..." : orders.length}
                                     </dd>
                                  </dl>
                               </div>

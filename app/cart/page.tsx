@@ -6,6 +6,7 @@ import Link from "next/link";
 import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import PaymentForm from "@/components/PaymentForm";
 
 export default function CartPage() {
    const {
@@ -76,7 +77,7 @@ export default function CartPage() {
                                        {item.name}
                                     </h3>
                                     <p className="text-muted-foreground">
-                                       ${item.price}
+                                       {item.price.toLocaleString()}₫
                                     </p>
                                  </div>
 
@@ -110,8 +111,10 @@ export default function CartPage() {
 
                                  <div className="text-right">
                                     <p className="font-semibold text-foreground">
-                                       $
-                                       {(item.price * item.quantity).toFixed(2)}
+                                       {(
+                                          item.price * item.quantity
+                                       ).toLocaleString()}
+                                       ₫
                                     </p>
                                     <button
                                        onClick={() => removeFromCart(item.id)}
@@ -145,7 +148,7 @@ export default function CartPage() {
                               Tạm tính
                            </span>
                            <span className="font-semibold text-foreground">
-                              ${subtotal.toFixed(2)}
+                              {subtotal.toLocaleString()}₫
                            </span>
                         </div>
 
@@ -155,15 +158,15 @@ export default function CartPage() {
                            </span>
                            <span className="font-semibold text-foreground">
                               {shipping === 0
-                                 ? "Free"
-                                 : `$${shipping.toFixed(2)}`}
+                                 ? "Miễn phí"
+                                 : `${shipping.toLocaleString()}₫`}
                            </span>
                         </div>
 
                         <div className="flex justify-between">
                            <span className="text-muted-foreground">Tax</span>
                            <span className="font-semibold text-foreground">
-                              ${tax.toFixed(2)}
+                              {tax.toLocaleString()}₫
                            </span>
                         </div>
 
@@ -173,24 +176,14 @@ export default function CartPage() {
                                  Tổng cộng
                               </span>
                               <span className="text-lg font-semibold text-foreground">
-                                 ${total.toFixed(2)}
+                                 {total.toLocaleString()}₫
                               </span>
                            </div>
                         </div>
                      </div>
 
-                     <div className="mt-6 space-y-3">
-                        <Button className="w-full" size="lg">
-                           Thanh toán
-                        </Button>
-
-                        <div className="text-sm text-muted-foreground text-center">
-                           {shipping > 0 && (
-                              <p>
-                                 Thêm {(50 - subtotal).toFixed(2)}₫ nữa để được miễn phí vận chuyển!
-                              </p>
-                           )}
-                        </div>
+                     <div className="mt-6">
+                        <PaymentForm totalAmount={total} />
                      </div>
 
                      {/* Security badges */}
