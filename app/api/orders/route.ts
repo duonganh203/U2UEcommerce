@@ -13,11 +13,29 @@ export async function GET(request: NextRequest) {
 
       await connectDB();
 
-      const orders = await Order.find({ user: session.user.id })
-         .populate("orderItems.product", "name image price")
-         .sort({ createdAt: -1 });
+      const orders = await Order.find({ user: session.user.id }).sort({
+         createdAt: -1,
+      });
 
-      return NextResponse.json({ orders });
+      // Transform orders to match frontend interface
+      const transformedOrders = orders.map((order) => ({
+         _id: order._id,
+         orderItems: order.orderItems,
+         shippingAddress: order.shippingAddress,
+         paymentMethod: order.paymentMethod,
+         itemsPrice: Number(order.itemsPrice),
+         shippingPrice: Number(order.shippingPrice),
+         taxPrice: Number(order.taxPrice),
+         totalPrice: Number(order.totalPrice),
+         isPaid: order.isPaid,
+         paidAt: order.paidAt,
+         isDelivered: order.isDelivered,
+         deliveredAt: order.deliveredAt,
+         createdAt: order.createdAt,
+         paymentResult: order.paymentResult,
+      }));
+
+      return NextResponse.json({ orders: transformedOrders });
    } catch (error) {
       console.error("Error fetching orders:", error);
       return NextResponse.json(

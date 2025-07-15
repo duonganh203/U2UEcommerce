@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Order } from "@/models/Order";
+import { Product } from "@/models/Product";
 import connectDB from "@/lib/db";
 
 // VNPay test configuration
@@ -30,28 +31,86 @@ export async function POST(request: NextRequest) {
          );
       }
 
-      // Create order in database
+      // Check stock availability before creating order
+      try {
+         console.log("VNPay DEBUG - Checking stock availability...");
+
+         for (const item of items) {
+            const product = await Product.findById(item.id);
+            if (!product) {
+               return NextResponse.json(
+                  { error: `Product not found: ${item.name}` },
+                  { status: 400 }
+               );
+            }
+
+            if (product.countInStock < item.quantity) {
+               return NextResponse.json(
+                  {
+                     error: `Insufficient stock for ${product.name}. Available: ${product.countInStock}, Requested: ${item.quantity}`,
+                  },
+                  { status: 400 }
+               );
+            }
+
+            console.log(
+               `VNPay DEBUG - Stock check passed for ${product.name}: ${product.countInStock} available, ${item.quantity} requested`
+            );
+         }
+
+         console.log("VNPay DEBUG - All stock checks passed");
+      } catch (stockError) {
+         console.error("VNPay DEBUG - Error checking stock:", stockError);
+         return NextResponse.json(
+            { error: "Error checking product availability" },
+            { status: 500 }
+         );
+      }
+
+      // Calculate order components
+      // Calculate itemsPrice from cart items
+      const itemsPrice = items.reduce((sum: number, item: any) => {
+         return sum + item.price * item.quantity;
+      }, 0);
+
+      const shippingPrice = itemsPrice > 50 ? 0 : 9.99;
+      const taxPrice = itemsPrice * 0.08;
+      const calculatedTotalPrice = itemsPrice + shippingPrice + taxPrice;
+
+      // Debug logs for price calculation
+      console.log("VNPay DEBUG - Price calculation:");
+      console.log("totalAmount (from frontend):", totalAmount);
+      console.log("calculated itemsPrice:", itemsPrice);
+      console.log("calculated shippingPrice:", shippingPrice);
+      console.log("calculated taxPrice:", taxPrice);
+      console.log("calculated totalPrice:", calculatedTotalPrice);
+
       const order = new Order({
          user: session.user.id,
          orderItems: items.map((item: any) => ({
             product: item.id,
             name: item.name,
-            quantity: item.quantity,
+            quantity: Number(item.quantity),
             image: item.image,
-            price: item.price,
+            price: Number(item.price),
          })),
          shippingAddress,
          paymentMethod: "VNPay",
-         itemsPrice: totalAmount,
-         shippingPrice: totalAmount > 50 ? 0 : 9.99,
-         taxPrice: totalAmount * 0.08,
-         totalPrice:
-            totalAmount + (totalAmount > 50 ? 0 : 9.99) + totalAmount * 0.08,
+         itemsPrice: Number(itemsPrice),
+         shippingPrice: Number(shippingPrice),
+         taxPrice: Number(taxPrice),
+         totalPrice: Number(calculatedTotalPrice), // Ensure it's a number
          isPaid: false,
          isDelivered: false,
       });
 
       const savedOrder = await order.save();
+
+      // Debug log for saved order
+      console.log(
+         "VNPay DEBUG - Saved order totalPrice:",
+         savedOrder.totalPrice
+      );
 
       // Generate VNPay payment URL
       const date = new Date();

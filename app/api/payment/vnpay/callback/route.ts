@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { Order } from "@/models/Order";
+import { Product } from "@/models/Product";
 import connectDB from "@/lib/db";
 
 const VNPAY_HASH_SECRET = "DLZ5B0HXFL9GQQSE6M0YSVTMGLZPB5WQ"; // Test hash secret
@@ -57,6 +58,11 @@ export async function GET(request: NextRequest) {
 
       if (responseCode === "00") {
          // Payment successful
+         console.log(
+            "VNPay Callback DEBUG - Payment successful for orderId:",
+            orderId
+         );
+
          const order = await Order.findById(orderId);
 
          if (!order) {
@@ -65,6 +71,12 @@ export async function GET(request: NextRequest) {
                new URL("/payment/failed?error=order_not_found", request.url)
             );
          }
+
+         console.log("VNPay Callback DEBUG - Order before update:", {
+            _id: order._id,
+            isPaid: order.isPaid,
+            totalPrice: order.totalPrice,
+         });
 
          // Update order status
          order.isPaid = true;
@@ -78,9 +90,60 @@ export async function GET(request: NextRequest) {
 
          await order.save();
 
-         // Redirect to success page
+         console.log("VNPay Callback DEBUG - Order after update:", {
+            _id: order._id,
+            isPaid: order.isPaid,
+            totalPrice: order.totalPrice,
+         });
+
+         // Update product stock
+         try {
+            console.log("VNPay Callback DEBUG - Updating product stock...");
+
+            for (const item of order.orderItems) {
+               const product = await Product.findById(item.product);
+               if (product) {
+                  // Check if enough stock is available
+                  if (product.countInStock < item.quantity) {
+                     console.warn(
+                        `VNPay Callback DEBUG - Insufficient stock for product ${product.name}: requested ${item.quantity}, available ${product.countInStock}`
+                     );
+                     // Continue with the order but log the warning
+                  }
+
+                  const oldStock = product.countInStock;
+                  product.countInStock = Math.max(
+                     0,
+                     product.countInStock - item.quantity
+                  );
+
+                  console.log(
+                     `VNPay Callback DEBUG - Product ${product.name}: ${oldStock} -> ${product.countInStock} (sold ${item.quantity})`
+                  );
+
+                  await product.save();
+               } else {
+                  console.error(
+                     `VNPay Callback DEBUG - Product not found: ${item.product}`
+                  );
+               }
+            }
+
+            console.log("VNPay Callback DEBUG - Stock update completed");
+         } catch (stockError) {
+            console.error(
+               "VNPay Callback DEBUG - Error updating stock:",
+               stockError
+            );
+            // Don't fail the payment if stock update fails
+         }
+
+         // Redirect to success page with cart cleared flag
          return NextResponse.redirect(
-            new URL(`/payment/success?orderId=${orderId}`, request.url)
+            new URL(
+               `/payment/success?orderId=${orderId}&cartCleared=true`,
+               request.url
+            )
          );
       } else {
          // Payment failed

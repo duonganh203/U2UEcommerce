@@ -5,24 +5,71 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, Package, Home, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
 
 export default function PaymentSuccessPage() {
    const searchParams = useSearchParams();
    const orderId = searchParams.get("orderId");
+   const cartCleared = searchParams.get("cartCleared");
    const [order, setOrder] = useState<any>(null);
    const [loading, setLoading] = useState(true);
+   const { clearCart } = useCart();
 
    useEffect(() => {
       if (orderId) {
-         // In a real app, you would fetch order details here
-         setOrder({
-            id: orderId,
-            totalPrice: "0",
-            orderItems: [],
-         });
-         setLoading(false);
+         // Clear cart if this is a successful payment (cartCleared flag is present)
+         if (cartCleared === "true") {
+            console.log(
+               "Payment Success DEBUG - Clearing cart after successful payment"
+            );
+            clearCart();
+
+            // Also call API to clear cart (for future database implementation)
+            fetch("/api/cart/clear", {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+            }).catch((error) => {
+               console.error("Error calling cart clear API:", error);
+            });
+         }
+
+         // Fetch order details from API
+         fetch(`/api/payment/success/${orderId}`)
+            .then((res) => res.json())
+            .then((data) => {
+               console.log("Payment Success DEBUG - API response:", data);
+               if (data.success) {
+                  console.log(
+                     "Payment Success DEBUG - Order data:",
+                     data.order
+                  );
+                  setOrder(data.order);
+               } else {
+                  console.error("Failed to fetch order:", data.error);
+                  // Fallback to basic order info
+                  setOrder({
+                     _id: orderId,
+                     totalPrice: 0,
+                     orderItems: [],
+                  });
+               }
+            })
+            .catch((error) => {
+               console.error("Error fetching order:", error);
+               // Fallback to basic order info
+               setOrder({
+                  _id: orderId,
+                  totalPrice: 0,
+                  orderItems: [],
+               });
+            })
+            .finally(() => {
+               setLoading(false);
+            });
       }
-   }, [orderId]);
+   }, [orderId, cartCleared, clearCart]);
 
    if (loading) {
       return (
@@ -47,7 +94,7 @@ export default function PaymentSuccessPage() {
 
                <p className="text-muted-foreground mb-8">
                   Cảm ơn bạn đã mua sắm. Đơn hàng của bạn đã được xác nhận và sẽ
-                  được xử lý sớm nhất.
+                  được xử lý sớm nhất. Giỏ hàng của bạn đã được xóa.
                </p>
 
                {order && (
@@ -62,7 +109,7 @@ export default function PaymentSuccessPage() {
                               Mã đơn hàng:
                            </span>
                            <span className="font-semibold text-foreground">
-                              #{order.id}
+                              #{order._id || order.id}
                            </span>
                         </div>
 
@@ -71,7 +118,25 @@ export default function PaymentSuccessPage() {
                               Tổng tiền:
                            </span>
                            <span className="font-semibold text-foreground">
-                              {Number(order.totalPrice).toLocaleString()}₫
+                              {(() => {
+                                 console.log(
+                                    "Payment Success DEBUG - totalPrice value:",
+                                    order.totalPrice
+                                 );
+                                 console.log(
+                                    "Payment Success DEBUG - totalPrice type:",
+                                    typeof order.totalPrice
+                                 );
+                                 const price =
+                                    typeof order.totalPrice === "number"
+                                       ? order.totalPrice
+                                       : Number(order.totalPrice || 0);
+                                 console.log(
+                                    "Payment Success DEBUG - formatted price:",
+                                    price
+                                 );
+                                 return price.toLocaleString("vi-VN") + "₫";
+                              })()}
                            </span>
                         </div>
 
