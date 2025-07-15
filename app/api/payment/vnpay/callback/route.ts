@@ -53,8 +53,10 @@ export async function GET(request: NextRequest) {
       const txnRef = vnpParams["vnp_TxnRef"];
       const amount = vnpParams["vnp_Amount"];
 
-      // Extract order ID from txnRef (format: ORDER_<orderId>_<timestamp>)
-      const orderId = txnRef.split("_")[1];
+      // Extract order ID from txnRef (format: ORDER_<orderId>_<timestamp> or AUCTION_<auctionId>_<orderId>_<timestamp>)
+      const txnRefParts = txnRef.split("_");
+      const isAuctionOrder = txnRefParts[0] === "AUCTION";
+      const orderId = isAuctionOrder ? txnRefParts[2] : txnRefParts[1];
 
       if (responseCode === "00") {
          // Payment successful
@@ -96,55 +98,60 @@ export async function GET(request: NextRequest) {
             totalPrice: order.totalPrice,
          });
 
-         // Update product stock
-         try {
-            console.log("VNPay Callback DEBUG - Updating product stock...");
+         // Update product stock (only for regular orders, not auction orders)
+         if (!isAuctionOrder) {
+            try {
+               console.log("VNPay Callback DEBUG - Updating product stock...");
 
-            for (const item of order.orderItems) {
-               const product = await Product.findById(item.product);
-               if (product) {
-                  // Check if enough stock is available
-                  if (product.countInStock < item.quantity) {
-                     console.warn(
-                        `VNPay Callback DEBUG - Insufficient stock for product ${product.name}: requested ${item.quantity}, available ${product.countInStock}`
+               for (const item of order.orderItems) {
+                  const product = await Product.findById(item.product);
+                  if (product) {
+                     // Check if enough stock is available
+                     if (product.countInStock < item.quantity) {
+                        console.warn(
+                           `VNPay Callback DEBUG - Insufficient stock for product ${product.name}: requested ${item.quantity}, available ${product.countInStock}`
+                        );
+                        // Continue with the order but log the warning
+                     }
+
+                     const oldStock = product.countInStock;
+                     product.countInStock = Math.max(
+                        0,
+                        product.countInStock - item.quantity
                      );
-                     // Continue with the order but log the warning
+
+                     console.log(
+                        `VNPay Callback DEBUG - Product ${product.name}: ${oldStock} -> ${product.countInStock} (sold ${item.quantity})`
+                     );
+
+                     await product.save();
+                  } else {
+                     console.error(
+                        `VNPay Callback DEBUG - Product not found: ${item.product}`
+                     );
                   }
-
-                  const oldStock = product.countInStock;
-                  product.countInStock = Math.max(
-                     0,
-                     product.countInStock - item.quantity
-                  );
-
-                  console.log(
-                     `VNPay Callback DEBUG - Product ${product.name}: ${oldStock} -> ${product.countInStock} (sold ${item.quantity})`
-                  );
-
-                  await product.save();
-               } else {
-                  console.error(
-                     `VNPay Callback DEBUG - Product not found: ${item.product}`
-                  );
                }
-            }
 
-            console.log("VNPay Callback DEBUG - Stock update completed");
-         } catch (stockError) {
-            console.error(
-               "VNPay Callback DEBUG - Error updating stock:",
-               stockError
+               console.log("VNPay Callback DEBUG - Stock update completed");
+            } catch (stockError) {
+               console.error(
+                  "VNPay Callback DEBUG - Error updating stock:",
+                  stockError
+               );
+               // Don't fail the payment if stock update fails
+            }
+         } else {
+            console.log(
+               "VNPay Callback DEBUG - Auction order, skipping stock update"
             );
-            // Don't fail the payment if stock update fails
          }
 
-         // Redirect to success page with cart cleared flag
-         return NextResponse.redirect(
-            new URL(
-               `/payment/success?orderId=${orderId}&cartCleared=true`,
-               request.url
-            )
-         );
+         // Redirect to success page with appropriate flags
+         const redirectUrl = isAuctionOrder
+            ? `/payment/success?orderId=${orderId}&auctionOrder=true`
+            : `/payment/success?orderId=${orderId}&cartCleared=true`;
+
+         return NextResponse.redirect(new URL(redirectUrl, request.url));
       } else {
          // Payment failed
          console.error(

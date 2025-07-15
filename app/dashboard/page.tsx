@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import WonAuctions from "@/components/WonAuctions";
 
 export default function Dashboard() {
    const { data: session, status } = useSession();
@@ -246,7 +247,11 @@ export default function Dashboard() {
                            </div>
                         </div>
                      </div>
-                  </div>{" "}
+                  </div>
+                  {/* Won Auctions Section */}
+                  <div className="mt-8">
+                     <WonAuctions />
+                  </div>
                   <div className="mt-6">
                      <Link
                         href="/"

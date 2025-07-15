@@ -11,6 +11,7 @@ export default function PaymentSuccessPage() {
    const searchParams = useSearchParams();
    const orderId = searchParams.get("orderId");
    const cartCleared = searchParams.get("cartCleared");
+   const auctionOrder = searchParams.get("auctionOrder");
    const [order, setOrder] = useState<any>(null);
    const [loading, setLoading] = useState(true);
    const { clearCart } = useCart();
@@ -69,7 +70,7 @@ export default function PaymentSuccessPage() {
                setLoading(false);
             });
       }
-   }, [orderId, cartCleared, clearCart]);
+   }, [orderId, cartCleared]);
 
    if (loading) {
       return (
@@ -93,8 +94,9 @@ export default function PaymentSuccessPage() {
                </h1>
 
                <p className="text-muted-foreground mb-8">
-                  Cảm ơn bạn đã mua sắm. Đơn hàng của bạn đã được xác nhận và sẽ
-                  được xử lý sớm nhất. Giỏ hàng của bạn đã được xóa.
+                  {auctionOrder === "true"
+                     ? "Cảm ơn bạn đã thanh toán đấu giá. Đơn hàng của bạn đã được xác nhận và sẽ được xử lý sớm nhất."
+                     : "Cảm ơn bạn đã mua sắm. Đơn hàng của bạn đã được xác nhận và sẽ được xử lý sớm nhất. Giỏ hàng của bạn đã được xóa."}
                </p>
 
                {order && (
@@ -155,7 +157,11 @@ export default function PaymentSuccessPage() {
                <div className="space-y-4">
                   <div className="flex items-center justify-center space-x-2 text-sm text-muted-foreground">
                      <Package className="w-4 h-4" />
-                     <span>Đơn hàng sẽ được giao trong 3-5 ngày làm việc</span>
+                     <span>
+                        {auctionOrder === "true"
+                           ? "Sản phẩm đấu giá sẽ được giao trong 3-5 ngày làm việc"
+                           : "Đơn hàng sẽ được giao trong 3-5 ngày làm việc"}
+                     </span>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -166,10 +172,16 @@ export default function PaymentSuccessPage() {
                         </Button>
                      </Link>
 
-                     <Link href="/products">
+                     <Link
+                        href={
+                           auctionOrder === "true" ? "/auctions" : "/products"
+                        }
+                     >
                         <Button className="w-full sm:w-auto">
                            <Home className="w-4 h-4 mr-2" />
-                           Tiếp tục mua sắm
+                           {auctionOrder === "true"
+                              ? "Xem đấu giá khác"
+                              : "Tiếp tục mua sắm"}
                         </Button>
                      </Link>
                   </div>

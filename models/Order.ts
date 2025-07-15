@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export interface IOrder extends mongoose.Document {
    user: mongoose.Types.ObjectId;
    orderItems: Array<{
-      product: mongoose.Types.ObjectId;
+      product?: mongoose.Types.ObjectId;
       name: string;
       quantity: number;
       image: string;
@@ -46,7 +46,7 @@ const orderSchema = new mongoose.Schema(
          {
             product: {
                type: mongoose.Schema.Types.ObjectId,
-               required: true,
+               required: false,
                ref: "Product",
             },
             name: {

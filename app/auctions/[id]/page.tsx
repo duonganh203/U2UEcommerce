@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import BidForm from "@/components/BidForm";
 import BidHistory from "@/components/BidHistory";
+import AuctionPaymentButton from "@/components/AuctionPaymentButton";
 import {
    Clock,
    Users,
@@ -421,6 +422,13 @@ export default function AuctionDetailPage() {
                                  {formatPrice(auction.winnerAmount!)}
                               </span>
                            </p>
+                           {session?.user?.id === auction.winner._id && (
+                              <div className="mt-4">
+                                 <AuctionPaymentButton
+                                    auctionId={auction._id}
+                                 />
+                              </div>
+                           )}
                         </div>
                      )}
                   </CardContent>

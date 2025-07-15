@@ -47,10 +47,10 @@ export async function GET(request: NextRequest) {
 
          const sellerOrderItems = order.orderItems.filter((item) => {
             // Handle both populated and unpopulated product references
-            const itemProductId = item.product._id || item.product;
+            const itemProductId = item.product?._id || item.product;
             const isSellerProduct = productIds.some(
                (productId: any) =>
-                  productId.toString() === itemProductId.toString()
+                  productId.toString() === itemProductId?.toString()
             );
             console.log(
                `Seller Orders DEBUG - Item ${item.name}: product=${itemProductId}, isSellerProduct=${isSellerProduct}`
