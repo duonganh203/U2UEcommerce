@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { uploadMultipleImages } from "@/lib/cloudinary";
 import AIPricingAssistant from "@/components/AIPricingAssistant";
+import { categoryLabels, availableCategories } from "@/utils/categoryMapping";
 
 export default function SellItemPage() {
    const { data: session, status } = useSession();
@@ -51,18 +52,7 @@ export default function SellItemPage() {
       discountPercentage: "0",
    });
 
-   const categories = [
-      "Electronics",
-      "Clothing & Fashion",
-      "Home & Garden",
-      "Sports & Outdoors",
-      "Books & Education",
-      "Toys & Games",
-      "Beauty & Health",
-      "Automotive",
-      "Art & Collectibles",
-      "Other",
-   ];
+   const categories = availableCategories;
 
    const conditions = [
       { value: "new", label: "Mới", description: "Sản phẩm mới, chưa sử dụng" },
@@ -423,7 +413,7 @@ export default function SellItemPage() {
                            <option value="">Chọn danh mục</option>
                            {categories.map((category) => (
                               <option key={category} value={category}>
-                                 {category}
+                                 {categoryLabels[category]}
                               </option>
                            ))}
                         </select>
@@ -835,7 +825,9 @@ export default function SellItemPage() {
                                  </h3>
                                  <p className="text-sm text-muted-foreground">
                                     {selectedCondition || "Condition"} •{" "}
-                                    {selectedCategory || "Category"}
+                                    {selectedCategory
+                                       ? categoryLabels[selectedCategory]
+                                       : "Category"}
                                  </p>
                                  <p className="text-lg font-bold text-primary mt-1">
                                     {formData.price

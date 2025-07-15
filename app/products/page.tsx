@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { fetchProducts, transformProductForUI, type Product } from "@/lib/api";
 import { useCart } from "@/contexts/CartContext";
 import StarRating from "@/components/StarRating";
+import { categoryLabels, allCategories } from "@/utils/categoryMapping";
 
 // Type definitions for UI components
 type Category = string;
@@ -44,19 +45,7 @@ type TransformedProduct = {
    discountPercentage: number;
 };
 
-const categories: Category[] = [
-   "All",
-   "Electronics",
-   "Fashion",
-   "Home & Living",
-   "Sports & Outdoors",
-   "Books & Education",
-   "Toys & Games",
-   "Beauty & Health",
-   "Automotive & Motorcycles",
-   "Art & Collectibles",
-   "Other",
-];
+const categories: Category[] = allCategories;
 const sortOptions: SortOption[] = [
    { value: "featured", label: "Nổi bật" },
    { value: "price-low", label: "Giá: Thấp đến Cao" },
@@ -376,7 +365,7 @@ export default function ProductsPage() {
                               : "bg-card text-foreground hover:bg-muted border border-border"
                         }`}
                      >
-                        {category}
+                        {categoryLabels[category]}
                      </button>
                   ))}
                </div>
