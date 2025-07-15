@@ -133,7 +133,10 @@ export async function DELETE(
 
       if (!session?.user?.id) {
          return NextResponse.json(
-            { success: false, error: "Bạn cần đăng nhập để thực hiện thao tác này" },
+            {
+               success: false,
+               error: "Bạn cần đăng nhập để thực hiện thao tác này",
+            },
             { status: 401 }
          );
       }
