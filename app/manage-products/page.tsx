@@ -496,22 +496,28 @@ export default function ManageProductsPage() {
 
                            {/* Actions */}
                            <div className="flex gap-2">
-                              <Button
-                                 variant="outline"
-                                 size="sm"
-                                 className="flex-1"
+                              <Link
+                                 href={`/manage-products/edit/${listing._id}`}
                               >
-                                 <Edit3 className="h-3 w-3 mr-1" />
-                                 Sửa
-                              </Button>
-                              <Button
-                                 variant="outline"
-                                 size="sm"
-                                 className="flex-1"
-                              >
-                                 <Eye className="h-3 w-3 mr-1" />
-                                Xem
-                              </Button>
+                                 <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                 >
+                                    <Edit3 className="h-3 w-3 mr-1" />
+                                    Sửa
+                                 </Button>
+                              </Link>
+                              <Link href={`/products/${listing._id}`}>
+                                 <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                 >
+                                    <Eye className="h-3 w-3 mr-1" />
+                                    Xem
+                                 </Button>
+                              </Link>
                            </div>
                         </div>
                      </div>
@@ -573,7 +579,9 @@ export default function ManageProductsPage() {
                      >
                         <Plus className="h-4 w-4" />
                         <div className="text-left">
-                           <div className="font-medium">Đăng bán sản phẩm mới</div>
+                           <div className="font-medium">
+                              Đăng bán sản phẩm mới
+                           </div>
                            <div className="text-xs text-muted-foreground">
                               Tạo sản phẩm mới để bán
                            </div>
@@ -589,7 +597,7 @@ export default function ManageProductsPage() {
                      <div className="text-left">
                         <div className="font-medium">Chỉnh sửa hàng loạt</div>
                         <div className="text-xs text-muted-foreground">
-                          Cập nhật nhiều sản phẩm cùng lúc
+                           Cập nhật nhiều sản phẩm cùng lúc
                         </div>
                      </div>
                   </Button>

@@ -74,6 +74,18 @@ export async function PUT(
    { params }: { params: { id: string } }
 ) {
    try {
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.id) {
+         return NextResponse.json(
+            {
+               success: false,
+               error: "Bạn cần đăng nhập để thực hiện thao tác này",
+            },
+            { status: 401 }
+         );
+      }
+
       await connectDB();
 
       const { id } = await params;
@@ -90,14 +102,10 @@ export async function PUT(
          );
       }
 
-      // Update product
-      const updatedProduct = await Product.findByIdAndUpdate(
-         id,
-         { ...body, updatedAt: new Date() },
-         { new: true, runValidators: true }
-      ).lean();
+      // First find the product to check ownership
+      const product = await Product.findById(id);
 
-      if (!updatedProduct) {
+      if (!product) {
          return NextResponse.json(
             {
                success: false,
@@ -106,6 +114,24 @@ export async function PUT(
             { status: 404 }
          );
       }
+
+      // Check if the user is the seller of this product
+      if (product.seller.toString() !== session.user.id) {
+         return NextResponse.json(
+            {
+               success: false,
+               error: "Bạn chỉ có thể cập nhật sản phẩm của chính mình",
+            },
+            { status: 403 }
+         );
+      }
+
+      // Update product
+      const updatedProduct = await Product.findByIdAndUpdate(
+         id,
+         { ...body, updatedAt: new Date() },
+         { new: true, runValidators: true }
+      ).lean();
 
       return NextResponse.json({
          success: true,
