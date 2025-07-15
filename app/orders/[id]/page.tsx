@@ -70,6 +70,7 @@ export default function OrderDetailPage({
    const router = useRouter();
    const [order, setOrder] = useState<Order | null>(null);
    const [loading, setLoading] = useState(true);
+   const [markingDelivered, setMarkingDelivered] = useState(false);
 
    useEffect(() => {
       if (status === "loading") return;
@@ -134,6 +135,42 @@ export default function OrderDetailPage({
          hour: "2-digit",
          minute: "2-digit",
       });
+   };
+
+   const handleMarkAsDelivered = async () => {
+      if (!order) return;
+
+      setMarkingDelivered(true);
+      try {
+         const response = await fetch(
+            `/api/orders/${order._id}/mark-delivered`,
+            {
+               method: "PATCH",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+            }
+         );
+
+         if (response.ok) {
+            const data = await response.json();
+            // Update the order state with new delivery status
+            setOrder({
+               ...order,
+               isDelivered: true,
+               deliveredAt: data.order.deliveredAt,
+            });
+            alert("Đã đánh dấu đơn hàng là đã giao thành công!");
+         } else {
+            const errorData = await response.json();
+            alert(`Lỗi: ${errorData.error}`);
+         }
+      } catch (error) {
+         console.error("Error marking order as delivered:", error);
+         alert("Có lỗi xảy ra khi đánh dấu đơn hàng");
+      } finally {
+         setMarkingDelivered(false);
+      }
    };
 
    if (status === "loading") {
@@ -444,6 +481,37 @@ export default function OrderDetailPage({
                         <CardTitle>Hành động</CardTitle>
                      </CardHeader>
                      <CardContent className="space-y-3">
+                        {/* Mark as Delivered Button - Only show for paid but not delivered orders */}
+                        {order.isPaid && !order.isDelivered && (
+                           <Button
+                              className="w-full"
+                              onClick={handleMarkAsDelivered}
+                              disabled={markingDelivered}
+                           >
+                              {markingDelivered ? (
+                                 <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                    Đang xử lý...
+                                 </>
+                              ) : (
+                                 <>
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Đánh dấu đã giao
+                                 </>
+                              )}
+                           </Button>
+                        )}
+
+                        {/* Show delivered status if already delivered */}
+                        {order.isDelivered && (
+                           <div className="flex items-center justify-center p-3 bg-green-50 border border-green-200 rounded-lg">
+                              <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                              <span className="text-green-700 font-medium">
+                                 Đã giao hàng
+                              </span>
+                           </div>
+                        )}
+
                         <Button className="w-full" variant="outline">
                            Tải hóa đơn
                         </Button>

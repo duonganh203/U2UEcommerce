@@ -60,6 +60,9 @@ export default function OrdersPage() {
    const [orders, setOrders] = useState<Order[]>([]);
    const [loading, setLoading] = useState(true);
    const [filter, setFilter] = useState<string>("all");
+   const [markingDelivered, setMarkingDelivered] = useState<string | null>(
+      null
+   );
 
    useEffect(() => {
       if (status === "loading") return;
@@ -130,6 +133,43 @@ export default function OrdersPage() {
          hour: "2-digit",
          minute: "2-digit",
       });
+   };
+
+   const handleMarkAsDelivered = async (orderId: string) => {
+      setMarkingDelivered(orderId);
+      try {
+         const response = await fetch(`/api/orders/${orderId}/mark-delivered`, {
+            method: "PATCH",
+            headers: {
+               "Content-Type": "application/json",
+            },
+         });
+
+         if (response.ok) {
+            const data = await response.json();
+            // Update the order in the list
+            setOrders((prevOrders) =>
+               prevOrders.map((order) =>
+                  order._id === orderId
+                     ? {
+                          ...order,
+                          isDelivered: true,
+                          deliveredAt: data.order.deliveredAt,
+                       }
+                     : order
+               )
+            );
+            alert("Đã đánh dấu đơn hàng là đã giao thành công!");
+         } else {
+            const errorData = await response.json();
+            alert(`Lỗi: ${errorData.error}`);
+         }
+      } catch (error) {
+         console.error("Error marking order as delivered:", error);
+         alert("Có lỗi xảy ra khi đánh dấu đơn hàng");
+      } finally {
+         setMarkingDelivered(null);
+      }
    };
 
    if (status === "loading") {
@@ -237,6 +277,31 @@ export default function OrdersPage() {
                               </div>
                               <div className="flex items-center space-x-3">
                                  {getStatusBadge(order)}
+
+                                 {/* Mark as Delivered Button - Only show for paid but not delivered orders */}
+                                 {order.isPaid && !order.isDelivered && (
+                                    <Button
+                                       variant="default"
+                                       size="sm"
+                                       onClick={() =>
+                                          handleMarkAsDelivered(order._id)
+                                       }
+                                       disabled={markingDelivered === order._id}
+                                    >
+                                       {markingDelivered === order._id ? (
+                                          <>
+                                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                             Đang xử lý...
+                                          </>
+                                       ) : (
+                                          <>
+                                             <CheckCircle className="w-4 h-4 mr-2" />
+                                             Đã giao
+                                          </>
+                                       )}
+                                    </Button>
+                                 )}
+
                                  <Link href={`/orders/${order._id}`}>
                                     <Button variant="outline" size="sm">
                                        <Eye className="w-4 h-4 mr-2" />

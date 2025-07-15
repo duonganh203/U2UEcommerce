@@ -183,6 +183,40 @@ export default function Dashboard() {
                         <div className="p-5">
                            <div className="flex items-center">
                               <div className="flex-shrink-0">
+                                 <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
+                                    <span className="text-white font-semibold">
+                                       O
+                                    </span>
+                                 </div>
+                              </div>
+                              <div className="ml-5 w-0 flex-1">
+                                 <dl>
+                                    <dt className="text-sm font-medium text-muted-foreground truncate">
+                                       Đơn hàng bán
+                                    </dt>
+                                    <dd className="text-lg font-medium text-foreground">
+                                       Quản lý đơn hàng
+                                    </dd>
+                                 </dl>
+                              </div>
+                           </div>
+                        </div>
+                        <div className="bg-muted px-5 py-3">
+                           <div className="text-sm">
+                              <Link
+                                 href="/seller/orders"
+                                 className="font-medium text-primary hover:text-primary/80"
+                              >
+                                 Xem đơn hàng bán
+                              </Link>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="bg-card overflow-hidden shadow rounded-lg border border-border">
+                        <div className="p-5">
+                           <div className="flex items-center">
+                              <div className="flex-shrink-0">
                                  <div className="w-8 h-8 bg-accent rounded-md flex items-center justify-center">
                                     <span className="text-accent-foreground font-semibold">
                                        U
