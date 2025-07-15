@@ -1,97 +1,121 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import RevenueChart from "@/components/charts/RevenueChart";
+import CategoryChart from "@/components/charts/CategoryChart";
+import OrderStatusChart from "@/components/charts/OrderStatusChart";
+import DailyRevenueChart from "@/components/charts/DailyRevenueChart";
+import StatsOverview from "@/components/charts/StatsOverview";
+import QuickStats from "@/components/charts/QuickStats";
+
+interface AdminStats {
+   totalUsers: number;
+   activeProducts: number;
+   pendingProducts: number;
+   totalRevenue: number;
+   revenueChange: string;
+   totalOrders: number;
+   completedOrders: number;
+   averageOrderValue: number;
+   topCategory: string;
+   chartData: {
+      monthlyRevenue: Array<{ month: string; revenue: number }>;
+      productsByCategory: Array<{ category: string; count: number }>;
+      ordersByStatus: Array<{ status: string; count: number }>;
+      dailyRevenue: Array<{ date: string; revenue: number }>;
+   };
+   recentUsers: Array<{
+      id: string;
+      name: string;
+      email: string;
+      joined: string;
+      status: string;
+   }>;
+   pendingProductsList: Array<{
+      id: string;
+      name: string;
+      seller: string;
+      category: string;
+      price: string;
+      submitted: string;
+   }>;
+}
 
 const AdminDashboard = () => {
-   // Mock data for demonstration
-   const stats = [
-      { name: "Total Users", value: "450", icon: "👥", change: "+5.2%" },
-      { name: "Active Products", value: "182", icon: "📦", change: "+2.4%" },
-      { name: "Pending Products", value: "24", icon: "⏳", change: "+18.7%" },
-      { name: "Total Revenue", value: "$24,500", icon: "💰", change: "+12.1%" },
-   ];
+   const [stats, setStats] = useState<AdminStats | null>(null);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState<string | null>(null);
 
-   const recentUsers = [
-      {
-         id: "1",
-         name: "John Smith",
-         email: "john@example.com",
-         joined: "June 1, 2025",
-         status: "Active",
-      },
-      {
-         id: "2",
-         name: "Sarah Johnson",
-         email: "sarah@example.com",
-         joined: "May 28, 2025",
-         status: "Active",
-      },
-      {
-         id: "3",
-         name: "Michael Brown",
-         email: "michael@example.com",
-         joined: "May 25, 2025",
-         status: "Inactive",
-      },
-      {
-         id: "4",
-         name: "Emily Davis",
-         email: "emily@example.com",
-         joined: "May 22, 2025",
-         status: "Active",
-      },
-   ];
+   useEffect(() => {
+      const fetchStats = async () => {
+         try {
+            const response = await fetch("/api/admin/stats");
+            if (!response.ok) {
+               throw new Error("Failed to fetch stats");
+            }
+            const data = await response.json();
+            setStats(data);
+         } catch (err) {
+            setError(err instanceof Error ? err.message : "An error occurred");
+         } finally {
+            setLoading(false);
+         }
+      };
 
-   const pendingProducts = [
-      {
-         id: "1",
-         name: "Wireless Earbuds",
-         seller: "TechStore",
-         category: "Electronics",
-         price: "$89.99",
-         submitted: "May 31, 2025",
-      },
-      {
-         id: "2",
-         name: "Fitness Tracker",
-         seller: "SportGoods",
-         category: "Wearables",
-         price: "$59.99",
-         submitted: "May 30, 2025",
-      },
-      {
-         id: "3",
-         name: "Organic Coffee Beans",
-         seller: "GreenCoffee",
-         category: "Food & Beverages",
-         price: "$24.99",
-         submitted: "May 29, 2025",
-      },
-   ];
+      fetchStats();
+   }, []);
+
+   if (loading) {
+      return (
+         <div className="flex items-center justify-center min-h-screen">
+            <div className="text-lg">Đang tải dữ liệu...</div>
+         </div>
+      );
+   }
+
+   if (error) {
+      return (
+         <div className="flex items-center justify-center min-h-screen">
+            <div className="text-red-600">Lỗi: {error}</div>
+         </div>
+      );
+   }
+
+   if (!stats) {
+      return (
+         <div className="flex items-center justify-center min-h-screen">
+            <div className="text-gray-600">Không có dữ liệu</div>
+         </div>
+      );
+   }
 
    return (
       <div className="space-y-6">
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {stats.map((stat) => (
-               <div
-                  key={stat.name}
-                  className="bg-white rounded-lg shadow p-5 transition-all hover:shadow-md"
-               >
-                  <div className="flex justify-between items-center">
-                     <div>
-                        <p className="text-gray-500 text-sm font-medium">
-                           {stat.name}
-                        </p>
-                        <p className="text-2xl font-bold mt-1">{stat.value}</p>
-                     </div>
-                     <div className="text-3xl">{stat.icon}</div>
-                  </div>
-                  <div className="mt-2 text-sm text-green-600">
-                     {stat.change} từ tháng trước
-                  </div>
-               </div>
-            ))}
+         <StatsOverview
+            totalRevenue={stats.totalRevenue}
+            totalUsers={stats.totalUsers}
+            activeProducts={stats.activeProducts}
+            pendingProducts={stats.pendingProducts}
+            revenueChange={stats.revenueChange}
+         />
+
+         <QuickStats
+            totalOrders={stats.totalOrders}
+            completedOrders={stats.completedOrders}
+            averageOrderValue={stats.averageOrderValue}
+            topCategory={stats.topCategory}
+         />
+
+         {/* Charts Section */}
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <RevenueChart data={stats.chartData.monthlyRevenue} />
+            <DailyRevenueChart data={stats.chartData.dailyRevenue} />
+         </div>
+
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <CategoryChart data={stats.chartData.productsByCategory} />
+            <OrderStatusChart data={stats.chartData.ordersByStatus} />
          </div>
 
          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -127,7 +151,7 @@ const AdminDashboard = () => {
                         </tr>
                      </thead>
                      <tbody className="bg-white divide-y divide-gray-200">
-                        {recentUsers.map((user) => (
+                        {stats.recentUsers.map((user) => (
                            <tr key={user.id} className="hover:bg-gray-50">
                               <td className="px-6 py-4 whitespace-nowrap">
                                  <div className="font-medium text-gray-900">
@@ -143,12 +167,14 @@ const AdminDashboard = () => {
                               <td className="px-6 py-4 whitespace-nowrap">
                                  <span
                                     className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                       user.status === "Active"
+                                       user.status === "active"
                                           ? "bg-green-100 text-green-800"
                                           : "bg-red-100 text-red-800"
                                     }`}
                                  >
-                                    {user.status}
+                                    {user.status === "active"
+                                       ? "Hoạt động"
+                                       : "Không hoạt động"}
                                  </span>
                               </td>
                            </tr>
@@ -190,7 +216,7 @@ const AdminDashboard = () => {
                         </tr>
                      </thead>
                      <tbody className="bg-white divide-y divide-gray-200">
-                        {pendingProducts.map((product) => (
+                        {stats.pendingProductsList.map((product) => (
                            <tr key={product.id} className="hover:bg-gray-50">
                               <td className="px-6 py-4 whitespace-nowrap">
                                  <div className="font-medium text-gray-900">
@@ -250,7 +276,7 @@ const AdminDashboard = () => {
                   <div className="text-3xl mb-2">⚙️</div>
                   <h4 className="font-medium">Cài đặt hệ thống</h4>
                   <p className="text-sm text-gray-600 mt-1">
-                     Cấu hình cài đặt cửa hàng
+                     Cấu hình các thông số hệ thống
                   </p>
                </Link>
             </div>
