@@ -122,7 +122,11 @@ export default function PricingPage() {
                                             : "text-blue-500"
                                     }`}
                                 >
-                                    🏠
+                                    {plan.id === "basic"
+                                        ? "🆓"
+                                        : plan.id === "pro"
+                                        ? "⭐"
+                                        : "👑"}
                                 </div>
                                 <h3 className='text-xl font-bold text-foreground mb-1 text-center'>
                                     {plan.title}
@@ -184,7 +188,7 @@ export default function PricingPage() {
                         >
                             <div className='text-center mb-6'>
                                 <div className='inline-block text-5xl mb-4 text-purple-500'>
-                                    🚀
+                                    📢
                                 </div>
                             </div>
                             <div className='text-center mb-6'>
