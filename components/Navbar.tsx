@@ -24,6 +24,7 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
 import { ModeToggle } from "./ModeToggle";
+import SubscriptionBadge from "./SubscriptionBadge";
 
 export default function Navbar() {
     const { data: session, status } = useSession();
@@ -137,6 +138,9 @@ export default function Navbar() {
                                             </p>
                                         </div>
                                     </DropdownMenuLabel>
+                                    <div className='px-2 py-1'>
+                                        <SubscriptionBadge />
+                                    </div>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem asChild>
                                         <Link

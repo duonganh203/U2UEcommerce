@@ -1,9 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import SubscriptionStatus from "@/components/SubscriptionStatus";
 
 export default function PricingPage() {
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState<{
+        type: "success" | "error";
+        text: string;
+    } | null>(null);
+    const { data: session } = useSession();
+    const searchParams = useSearchParams();
+
+    // Xử lý thông báo từ URL params
+    useEffect(() => {
+        const success = searchParams.get("success");
+        const error = searchParams.get("error");
+        const plan = searchParams.get("plan");
+
+        if (success === "true" && plan) {
+            setMessage({
+                type: "success",
+                text: `Thanh toán thành công! Gói ${plan} đã được kích hoạt.`,
+            });
+        } else if (error) {
+            let errorText = "Có lỗi xảy ra";
+            switch (error) {
+                case "payment_failed":
+                    errorText = "Thanh toán thất bại. Vui lòng thử lại.";
+                    break;
+                case "invalid_signature":
+                    errorText = "Lỗi xác thực thanh toán.";
+                    break;
+                case "user_not_found":
+                    errorText = "Không tìm thấy thông tin người dùng.";
+                    break;
+                default:
+                    errorText = "Có lỗi xảy ra trong quá trình thanh toán.";
+            }
+            setMessage({
+                type: "error",
+                text: errorText,
+            });
+        }
+    }, [searchParams]);
 
     const sellerPlans = [
         {
@@ -70,10 +113,60 @@ export default function PricingPage() {
         },
     ];
 
-    const handlePlanSelect = (planId: string) => {
-        setSelectedPlan(planId);
-        // Có thể thêm logic chuyển hướng đến trang thanh toán ở đây
-        console.log("Selected plan:", planId);
+    const handlePlanSelect = async (planId: string) => {
+        if (!session?.user) {
+            setMessage({
+                type: "error",
+                text: "Vui lòng đăng nhập để đăng ký gói dịch vụ.",
+            });
+            return;
+        }
+
+        setLoading(true);
+        setMessage(null);
+
+        try {
+            const response = await fetch("/api/payment/subscription", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ planId }),
+            });
+
+            const data = await response.json();
+
+            console.log("API Response:", data);
+
+            if (data.success) {
+                if (planId === "basic") {
+                    // Gói basic được kích hoạt ngay lập tức
+                    setMessage({
+                        type: "success",
+                        text: "Gói Basic đã được kích hoạt thành công!",
+                    });
+                    // Reload trang để cập nhật trạng thái
+                    window.location.reload();
+                } else {
+                    // Chuyển hướng đến VNPay cho các gói trả phí
+                    console.log("Redirecting to VNPay:", data.paymentUrl);
+                    window.location.href = data.paymentUrl;
+                }
+            } else {
+                setMessage({
+                    type: "error",
+                    text: data.error || "Có lỗi xảy ra khi đăng ký gói.",
+                });
+            }
+        } catch (error) {
+            console.error("Error subscribing to plan:", error);
+            setMessage({
+                type: "error",
+                text: "Có lỗi xảy ra khi kết nối đến server.",
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -89,6 +182,29 @@ export default function PricingPage() {
                         bạn
                     </p>
                 </div>
+
+                {/* Thông báo */}
+                {message && (
+                    <div
+                        className={`mb-8 p-4 rounded-lg ${
+                            message.type === "success"
+                                ? "bg-green-100 border border-green-400 text-green-700"
+                                : "bg-red-100 border border-red-400 text-red-700"
+                        }`}
+                    >
+                        {message.text}
+                    </div>
+                )}
+
+                {/* Hiển thị trạng thái gói hiện tại */}
+                {session?.user && (
+                    <div className='mb-8'>
+                        <h2 className='text-xl font-semibold text-foreground mb-4'>
+                            Gói dịch vụ hiện tại
+                        </h2>
+                        <SubscriptionStatus />
+                    </div>
+                )}
 
                 {/* Seller Plans */}
                 <h2 className='text-2xl font-bold text-foreground mb-6'>
@@ -164,13 +280,14 @@ export default function PricingPage() {
                             </div>
                             <button
                                 onClick={() => handlePlanSelect(plan.id)}
+                                disabled={loading}
                                 className={`mt-auto w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
                                     plan.isPopular
-                                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                                        : "border border-primary text-primary hover:bg-primary/10"
+                                        ? "bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                                        : "border border-primary text-primary hover:bg-primary/10 disabled:opacity-50"
                                 }`}
                             >
-                                Đăng ký ngay
+                                {loading ? "Đang xử lý..." : "Đăng ký ngay"}
                             </button>
                         </div>
                     ))}
@@ -227,9 +344,10 @@ export default function PricingPage() {
                             </ul>
                             <button
                                 onClick={() => handlePlanSelect(plan.id)}
-                                className='w-full py-3 px-6 rounded-lg font-semibold bg-purple-600 text-white hover:bg-purple-700 transition-all duration-200'
+                                disabled={loading}
+                                className='w-full py-3 px-6 rounded-lg font-semibold bg-purple-600 text-white hover:bg-purple-700 transition-all duration-200 disabled:opacity-50'
                             >
-                                Đăng ký ngay
+                                {loading ? "Đang xử lý..." : "Đăng ký ngay"}
                             </button>
                         </div>
                     ))}
