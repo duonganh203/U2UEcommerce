@@ -8,7 +8,7 @@ import { Order } from "@/models/Order";
 // GET /api/admin/users/[id] - Get specific user
 export async function GET(
    request: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       const session = await getServerSession(authOptions);
@@ -27,7 +27,8 @@ export async function GET(
          );
       }
 
-      const user = await User.findById(params.id).select("-password");
+      const { id } = await params;
+      const user = await User.findById(id).select("-password");
       if (!user) {
          return NextResponse.json(
             { error: "Không tìm thấy người dùng" },
@@ -70,7 +71,7 @@ export async function GET(
 // PUT /api/admin/users/[id] - Update user
 export async function PUT(
    request: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       const session = await getServerSession(authOptions);
@@ -93,7 +94,8 @@ export async function PUT(
       const { email, firstName, lastName, role, phoneNumber, status } = body;
 
       // Find the user to update
-      const user = await User.findById(params.id);
+      const { id } = await params;
+      const user = await User.findById(id);
       if (!user) {
          return NextResponse.json(
             { error: "Không tìm thấy người dùng" },
@@ -160,7 +162,7 @@ export async function PUT(
 // DELETE /api/admin/users/[id] - Delete user (soft delete)
 export async function DELETE(
    request: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       const session = await getServerSession(authOptions);
@@ -179,15 +181,17 @@ export async function DELETE(
          );
       }
 
+      const { id } = await params;
+
       // Don't allow deleting self
-      if (currentUser._id.toString() === params.id) {
+      if (currentUser._id.toString() === id) {
          return NextResponse.json(
             { error: "Không thể xóa tài khoản của chính bạn" },
             { status: 400 }
          );
       }
 
-      const user = await User.findById(params.id);
+      const user = await User.findById(id);
       if (!user) {
          return NextResponse.json(
             { error: "Không tìm thấy người dùng" },

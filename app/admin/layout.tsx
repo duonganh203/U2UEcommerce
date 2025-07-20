@@ -45,12 +45,10 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             />
 
             {/* Main content */}
-            <div
-               className={`flex-1 lg:ml-0 ${
-                  collapsed ? "lg:ml-16" : "lg:ml-64"
-               } transition-all duration-300`}
-            >
-               <main className="p-6">{children}</main>
+            <div className="flex-1 transition-all duration-300">
+               <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <main className="py-6">{children}</main>
+               </div>
             </div>
          </div>
       </div>

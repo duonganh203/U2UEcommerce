@@ -6,7 +6,7 @@ import connectDB from "@/lib/db";
 
 export async function PATCH(
    request: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       const session = await getServerSession(authOptions);
@@ -16,7 +16,7 @@ export async function PATCH(
 
       await connectDB();
 
-      const orderId = params.id;
+      const { id: orderId } = await params;
 
       // Find the order and verify it belongs to the current user
       const order = await Order.findOne({

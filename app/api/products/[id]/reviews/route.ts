@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 // Add or update a review
 export async function POST(
    request: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       const session = await getServerSession(authOptions);
@@ -40,7 +40,8 @@ export async function POST(
          );
       }
 
-      const product = await Product.findById(params.id);
+      const { id } = await params;
+      const product = await Product.findById(id);
 
       if (!product) {
          return NextResponse.json(
@@ -79,7 +80,7 @@ export async function POST(
 // Delete a review
 export async function DELETE(
    request: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       const session = await getServerSession(authOptions);
@@ -93,7 +94,8 @@ export async function DELETE(
 
       await connectDB();
 
-      const product = await Product.findById(params.id);
+      const { id } = await params;
+      const product = await Product.findById(id);
 
       if (!product) {
          return NextResponse.json(
@@ -132,12 +134,13 @@ export async function DELETE(
 // Get reviews for a product
 export async function GET(
    request: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       await connectDB();
 
-      const product = await Product.findById(params.id)
+      const { id } = await params;
+      const product = await Product.findById(id)
          .populate("reviews.user", "name email")
          .select("reviews rating numReviews");
 
@@ -156,7 +159,7 @@ export async function GET(
    } catch (error) {
       console.error("Error fetching reviews:", error);
       return NextResponse.json(
-         { error:"Lỗi máy chủ nội bộ"},
+         { error: "Lỗi máy chủ nội bộ" },
          { status: 500 }
       );
    }

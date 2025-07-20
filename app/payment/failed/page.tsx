@@ -1,11 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { XCircle, RefreshCw, Home, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function PaymentFailedPage() {
+function PaymentFailedContent() {
    const searchParams = useSearchParams();
    const error = searchParams.get("error");
    const code = searchParams.get("code");
@@ -104,5 +105,31 @@ export default function PaymentFailedPage() {
             </div>
          </div>
       </div>
+   );
+}
+
+function PaymentFailedFallback() {
+   return (
+      <div className="min-h-screen bg-background">
+         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div className="text-center">
+               <XCircle className="w-24 h-24 text-red-500 mx-auto mb-6" />
+               <h1 className="text-3xl font-bold text-foreground mb-4">
+                  Đang tải...
+               </h1>
+               <p className="text-muted-foreground">
+                  Đang xử lý thông tin thanh toán...
+               </p>
+            </div>
+         </div>
+      </div>
+   );
+}
+
+export default function PaymentFailedPage() {
+   return (
+      <Suspense fallback={<PaymentFailedFallback />}>
+         <PaymentFailedContent />
+      </Suspense>
    );
 }

@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, Package, Home, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
    const searchParams = useSearchParams();
    const orderId = searchParams.get("orderId");
    const cartCleared = searchParams.get("cartCleared");
@@ -102,7 +102,7 @@ export default function PaymentSuccessPage() {
                {order && (
                   <div className="bg-card rounded-lg shadow-md p-6 mb-8">
                      <h2 className="text-lg font-semibold text-foreground mb-4">
-                        Thông tin đơn hàng
+                        Chi tiết đơn hàng
                      </h2>
 
                      <div className="space-y-2 text-left">
@@ -111,7 +111,7 @@ export default function PaymentSuccessPage() {
                               Mã đơn hàng:
                            </span>
                            <span className="font-semibold text-foreground">
-                              #{order._id || order.id}
+                              {order._id}
                            </span>
                         </div>
 
@@ -119,26 +119,20 @@ export default function PaymentSuccessPage() {
                            <span className="text-muted-foreground">
                               Tổng tiền:
                            </span>
+                           <span className="font-semibold text-green-600">
+                              {new Intl.NumberFormat("vi-VN", {
+                                 style: "currency",
+                                 currency: "VND",
+                              }).format(order.totalPrice)}
+                           </span>
+                        </div>
+
+                        <div className="flex justify-between">
+                           <span className="text-muted-foreground">
+                              Số lượng sản phẩm:
+                           </span>
                            <span className="font-semibold text-foreground">
-                              {(() => {
-                                 console.log(
-                                    "Payment Success DEBUG - totalPrice value:",
-                                    order.totalPrice
-                                 );
-                                 console.log(
-                                    "Payment Success DEBUG - totalPrice type:",
-                                    typeof order.totalPrice
-                                 );
-                                 const price =
-                                    typeof order.totalPrice === "number"
-                                       ? order.totalPrice
-                                       : Number(order.totalPrice || 0);
-                                 console.log(
-                                    "Payment Success DEBUG - formatted price:",
-                                    price
-                                 );
-                                 return price.toLocaleString("vi-VN") + "₫";
-                              })()}
+                              {order.orderItems?.length || 0}
                            </span>
                         </div>
 
@@ -196,5 +190,30 @@ export default function PaymentSuccessPage() {
             </div>
          </div>
       </div>
+   );
+}
+
+function PaymentSuccessFallback() {
+   return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+         <div className="text-center">
+            <CheckCircle className="w-24 h-24 text-green-500 mx-auto mb-6" />
+            <h1 className="text-3xl font-bold text-foreground mb-4">
+               Đang tải...
+            </h1>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">
+               Đang xử lý thông tin thanh toán...
+            </p>
+         </div>
+      </div>
+   );
+}
+
+export default function PaymentSuccessPage() {
+   return (
+      <Suspense fallback={<PaymentSuccessFallback />}>
+         <PaymentSuccessContent />
+      </Suspense>
    );
 }

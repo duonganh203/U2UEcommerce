@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 
 export async function POST(
    request: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       await connectDB();
@@ -16,7 +16,8 @@ export async function POST(
          return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
 
-      const auction = await Auction.findById(params.id);
+      const { id } = await params;
+      const auction = await Auction.findById(id);
       if (!auction) {
          return NextResponse.json(
             { error: "Auction not found" },
@@ -44,7 +45,7 @@ export async function POST(
       auction.participants.push(session.user.id);
       await auction.save();
 
-      const updatedAuction = await Auction.findById(params.id)
+      const updatedAuction = await Auction.findById(id)
          .populate("createdBy", "name email")
          .populate("participants", "name email")
          .lean();
