@@ -9,8 +9,11 @@ import connectDB from "@/lib/db";
 const VNPAY_TMN_CODE = "UDPRUCJX";
 const VNPAY_HASH_SECRET = "DLZ5B0HXFL9GQQSE6M0YSVTMGLZPB5WQ";
 const VNPAY_URL = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+const ENV = process.env.NODE_ENV;
 const VNPAY_RETURN_URL =
-    "http://localhost:3000/api/payment/subscription/callback";
+    ENV === "production"
+        ? "https://u2-u-ecommerce.vercel.app/api/payment/subscription/callback"
+        : "http://localhost:3000/api/payment/subscription/callback";
 
 // Định nghĩa các gói dịch vụ
 const SUBSCRIPTION_PLANS = {
