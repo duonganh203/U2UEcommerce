@@ -5,6 +5,7 @@ import AuthProvider from "@/components/providers/AuthProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Suspense } from "react";
 
 const poppins = Poppins({
     weight: ["300", "400", "500", "600", "700"],
@@ -25,17 +26,19 @@ export default function RootLayout({
     return (
         <html lang='en' className={poppins.variable} suppressHydrationWarning>
             <body className='font-sans antialiased'>
-                <ThemeProvider>
-                    <AuthProvider>
-                        {" "}
-                        <CartProvider>
-                            <div className='min-h-screen bg-background text-foreground'>
-                                <ConditionalNavbar />
-                                {children}
-                            </div>
-                        </CartProvider>
-                    </AuthProvider>
-                </ThemeProvider>
+                <Suspense>
+                    <ThemeProvider>
+                        <AuthProvider>
+                            {" "}
+                            <CartProvider>
+                                <div className='min-h-screen bg-background text-foreground'>
+                                    <ConditionalNavbar />
+                                    {children}
+                                </div>
+                            </CartProvider>
+                        </AuthProvider>
+                    </ThemeProvider>
+                </Suspense>
             </body>
         </html>
     );
